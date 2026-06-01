@@ -94,13 +94,27 @@ onUnmounted(() => {
 const menuItems = ['SKILLS','PROJECTS','STACK','PROFILE','EXPERIENCE','TIMELINE','SOCIAL LINK','CALENDAR','RESUME']
 const hoveredIndex = ref<number | null>(null)
 
-function setHover(i: number) { hoveredIndex.value = i }
+// throttle hover sound to avoid overlap when moving between items
+let lastHoverPlay = 0
+const HOVER_THROTTLE_MS = 150
+
+function setHover(i: number) {
+	if (hoveredIndex.value === i) return
+	hoveredIndex.value = i
+	const now = Date.now()
+	if (now - lastHoverPlay > HOVER_THROTTLE_MS) {
+		lastHoverPlay = now
+		playHoverSound()
+	}
+}
+
 function clearHover() { hoveredIndex.value = null }
 
 // Preload Audio objects via Vite imports so the paths are correct in production
 const hoverAudio = new Audio(hoverSoundUrl)
 hoverAudio.volume = 0.35
 hoverAudio.preload = 'auto'
+hoverAudio.loop = false
 
 const clickAudio = new Audio(clickSoundUrl)
 clickAudio.volume = 0.6
@@ -108,6 +122,8 @@ clickAudio.preload = 'auto'
 
 const playHoverSound = () => {
 	try {
+		// stop any currently playing hover sound so sounds don't overlap
+		hoverAudio.pause()
 		hoverAudio.currentTime = 0
 		hoverAudio.play().catch(() => {})
 	} catch (e) {
@@ -181,15 +197,13 @@ const playClickSound = () => {
 				<li v-for="(item, i) in menuItems" :key="item">
 					<button
 						class="persona-btn"
+						:data-index="i"
 						:class="{ 'is-active': hoveredIndex === i }"
-						@mouseenter="setHover(i)"
-						@mouseleave="clearHover"
 						@click="playClickSound"
-						@mouseover="playHoverSound"
 					>
 						<div class="btn-bg-slash"></div>
-						<span class="text-layer shadow-text" :data-text="item">{{ item }}</span>
-						<span class="text-layer main-text" :data-text="item">{{ item }}</span>
+						<span class="text-layer shadow-text" :data-text="item" @pointerenter="setHover(i)" @pointerleave="clearHover">{{ item }}</span>
+						<span class="text-layer main-text" :data-text="item" @pointerenter="setHover(i)" @pointerleave="clearHover">{{ item }}</span>
 					</button>
 				</li>
 			</ul>
