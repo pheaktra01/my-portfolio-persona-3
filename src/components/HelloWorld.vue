@@ -88,6 +88,13 @@ onUnmounted(() => {
 	}
 })
 
+// Menu state
+const menuItems = ['SKILLS','PROJECTS','STACK','PROFILE','EXPERIENCE','TIMELINE','SOCIAL LINK','CALENDAR','RESUME']
+const hoveredIndex = ref<number | null>(null)
+
+function setHover(i: number) { hoveredIndex.value = i }
+function clearHover() { hoveredIndex.value = null }
+
 </script>
 
 <template>
@@ -140,8 +147,21 @@ onUnmounted(() => {
 			</template>
 		</button>
 
-		<div class="page-content">
-			<slot />
+		<div class="menu-container">
+			<ul class="menu-list">
+				<li v-for="(item, i) in menuItems" :key="item">
+					<button
+						class="persona-btn"
+						:class="{ 'is-active': hoveredIndex === i }"
+						@mouseenter="setHover(i)"
+						@mouseleave="clearHover"
+					>
+						<div class="btn-bg-slash"></div>
+						<span class="text-layer shadow-text" :data-text="item">{{ item }}</span>
+						<span class="text-layer main-text" :data-text="item">{{ item }}</span>
+					</button>
+				</li>
+			</ul>
 		</div>
 	</div>
 </template>
@@ -174,6 +194,7 @@ onUnmounted(() => {
 	z-index: 10;
 	width: 100%;
 }
+/* Removed legacy .menu/.menu-btn styles — using .menu-container and .persona-btn now */
 .controls {
 	display: flex;
 	gap: 0.5rem;
@@ -208,5 +229,116 @@ onUnmounted(() => {
 	width: 20px;
 	height: 20px;
 	color: white;
+}
+
+/* Container styling just for presentation */
+.menu-container {
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%) rotate(-6deg) skewX(-8deg);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 20;
+}
+
+.menu-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0; /* remove extra gap between items */
+}
+.menu-list li + li { margin-top: -1.0rem } /* overlap items to tighten spacing */
+
+/* Base Button Styling */
+.persona-btn {
+  position: relative;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+	padding: 6px 20px;
+	font-family: 'Impact', 'Arial Black', sans-serif;
+	font-size: 3.8rem;
+  font-style: italic;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  outline: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+	white-space: nowrap;
+}
+
+/* Subtle pop/scale effect when active */
+.persona-btn:hover {
+  transform: scale(1.05) rotate(-2deg);
+}
+
+/* --- THE BACKGROUND SLASH --- */
+.btn-bg-slash {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #ff4a73; /* Persona bright pink/red */
+  z-index: 1;
+  
+  /* Creates the sharp jagged banner look */
+  clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
+  
+  /* Hidden by default, scale from center-left */
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* --- TEXT LAYERS --- */
+.text-layer {
+  position: relative;
+  transition: all 0.2s ease-in-out;
+  display: inline-block;
+	white-space: nowrap;
+}
+
+/* The Black Offset Text (Default State) */
+.text-layer.shadow-text {
+  color: #000000;
+  z-index: 2;
+  transform: translateX(4px) translateY(2px) skewX(-10deg);
+}
+
+/* The Light Blue Text (Default State) */
+.text-layer.main-text {
+  color: #61e1ff; /* Ice blue from your image */
+  position: absolute;
+  z-index: 3;
+  transform: skewX(-10deg);
+  /* Cutout look mix-blend-mode if needed, but solid color works best here */
+}
+
+
+/* --- HOVER / ACTIVE STATES --- */
+
+/* 1. Reveal Background Slash */
+.persona-btn.is-active .btn-bg-slash {
+  transform: scaleX(1);
+}
+
+/* 2. Shift the Main Front Text to White */
+.persona-btn.is-active .text-layer.main-text {
+  color: #ffffff;
+  transform: skewX(-15deg) translate(-4px, -2px);
+}
+
+/* 3. Shift the Shadow Text to Black/Strong Contrast against Pink */
+.persona-btn.is-active .text-layer.shadow-text {
+  color: #000000;
+  transform: skewX(-15deg) translate(2px, 2px) scale(1.02);
 }
 </style>
