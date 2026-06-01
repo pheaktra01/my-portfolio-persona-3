@@ -122,6 +122,8 @@ clickAudio.preload = 'auto'
 
 const playHoverSound = () => {
 	try {
+		// don't play hover sounds on mobile devices
+		if (isMobile.value) return
 		// stop any currently playing hover sound so sounds don't overlap
 		hoverAudio.pause()
 		hoverAudio.currentTime = 0
@@ -137,6 +139,27 @@ const playClickSound = () => {
 		clickAudio.play().catch(() => {})
 	} catch (e) {
 		// ignore
+	}
+}
+
+// On mobile/touch devices, tapping should show the hover/active style
+function onPress(i: number) {
+	// On non-mobile, show hover-style immediately on press
+	if (!isMobile.value) setHover(i)
+}
+
+function onRelease() {
+	// On non-mobile, keep the active style visible briefly after release so user sees feedback
+	if (!isMobile.value) setTimeout(() => { clearHover() }, 220)
+}
+
+function handleClick(i: number) {
+	// Play click sound
+	playClickSound()
+	// On mobile, show the hover/active style after the tap and keep it visible briefly
+	if (isMobile.value) {
+		setHover(i)
+		setTimeout(() => { clearHover() }, 2000)
 	}
 }
 
@@ -199,7 +222,10 @@ const playClickSound = () => {
 						class="persona-btn"
 						:data-index="i"
 						:class="{ 'is-active': hoveredIndex === i }"
-						@click="playClickSound"
+						@click="handleClick(i)"
+						@pointerdown="onPress(i)"
+						@pointerup="onRelease"
+						@pointercancel="onRelease"
 					>
 						<div class="btn-bg-slash"></div>
 						<span class="text-layer shadow-text" :data-text="item" @pointerenter="setHover(i)" @pointerleave="clearHover">{{ item }}</span>
@@ -385,5 +411,25 @@ const playClickSound = () => {
 .persona-btn.is-active .text-layer.shadow-text {
   color: #000000;
   transform: skewX(-15deg) translate(2px, 2px) scale(1.02);
+}
+
+/* Mobile adjustments: smaller buttons, tighter spacing, no heavy transforms */
+@media (max-width: 767px) {
+	.persona-btn {
+		font-size: 2.2rem;
+		padding: 4px 12px;
+		letter-spacing: 1px;
+	}
+
+	.menu-container {
+		transform: translate(-50%, -50%) rotate(-2deg) skewX(-4deg);
+	}
+
+	.menu-list li + li { margin-top: -0.6rem }
+
+	/* reduce the background slash prominence on small screens */
+	.btn-bg-slash {
+		clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
+	}
 }
 </style>
