@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import desktopVideoSrc from '../assets/videos/mylivewallpapers.com-Makoto-Yuki-Persona-3.mp4'
 import mobileVideoSrc from '../assets/videos/MOBILE-Makoto-Yuki-Persona-3.mp4'
 import musicSrc from '../assets/musics/Color-Your-Night.mp3'
 
@@ -33,7 +34,6 @@ function toggleMute() {
 }
 
 async function tryAutoplay() {
-	if (!isMobile.value) return
 	const v = videoRef.value
 	const a = audioRef.value
 	if (!v) return
@@ -92,9 +92,20 @@ onUnmounted(() => {
 
 <template>
 	<div class="video-wrapper">
-		<!-- Video only mounted/loaded on mobile to save bandwidth on larger screens -->
+		<!-- Desktop uses the main (first) video; mobile uses the MOBILE (second) video -->
 		<video
-			v-if="isMobile"
+			v-if="!isMobile"
+			ref="videoRef"
+			:src="desktopVideoSrc"
+			playsinline
+			autoplay
+			loop
+			muted
+			class="video-bg"
+		></video>
+
+		<video
+			v-else
 			ref="videoRef"
 			:src="mobileVideoSrc"
 			playsinline
@@ -104,12 +115,9 @@ onUnmounted(() => {
 			class="video-bg"
 		></video>
 
-		<!-- Desktop fallback: simple static background (gradient) — replace with an image if you add one -->
-		<div v-else class="desktop-bg"></div>
+		<audio ref="audioRef" :src="musicSrc" preload="auto" class="audio-hidden"></audio>
 
-		<audio v-if="isMobile" ref="audioRef" :src="musicSrc" preload="auto" class="audio-hidden"></audio>
-
-		<button class="mute-btn" @click="toggleMute" v-if="isMobile">{{ isMuted ? '🔇' : '🔊' }}</button>
+		<button class="mute-btn" @click="toggleMute">{{ isMuted ? '🔇' : '🔊' }}</button>
 
 		<div class="page-content">
 			<slot />
