@@ -1,11 +1,22 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import videoSrc from '../assets/videos/mylivewallpapers.com-Makoto-Yuki-Persona-3.mp4'
+import { ref, onMounted, onUnmounted } from 'vue'
+import mobileVideoSrc from '../assets/videos/MOBILE-Makoto-Yuki-Persona-3.mp4'
 import musicSrc from '../assets/musics/Color-Your-Night.mp3'
 
 const videoRef = ref<HTMLVideoElement | null>(null)
 const audioRef = ref<HTMLAudioElement | null>(null)
 const isMuted = ref(true)
+
+// Track whether viewport is considered "mobile". We only load/play the video on mobile
+const isMobile = ref<boolean>(false)
+
+function updateIsMobile() {
+	try {
+		isMobile.value = window.matchMedia('(max-width: 767px)').matches
+	} catch (e) {
+		isMobile.value = false
+	}
+}
 
 function setMutedState(muted: boolean) {
 	const a = audioRef.value
@@ -22,14 +33,13 @@ function toggleMute() {
 }
 
 async function tryAutoplay() {
+	if (!isMobile.value) return
 	const v = videoRef.value
 	const a = audioRef.value
 	if (!v) return
- 	// Always allow the video to autoplay muted (improves UX)
 	v.muted = false
 	v.loop = true
 	try {
-		// Respect stored mute preference
 		const stored = localStorage.getItem('audioMuted')
 		const prefMuted = stored === '1'
 		if (a) {
@@ -40,43 +50,53 @@ async function tryAutoplay() {
 		await v.play()
 		isMuted.value = prefMuted
 	} catch (e) {
-		// audible autoplay blocked — nothing else can be done programmatically
-		// the audio will not play until the user interacts with the page
+		// autoplay blocked
 	}
 }
 
 function resumePlaybackAfterGesture() {
-  const v = videoRef.value
-  const a = audioRef.value
-  if (a) { a.muted = false; a.play().catch(() => {}) }
-  if (v) { v.muted = true; v.play().catch(() => {}) } // keep video muted or adjust as needed
-  localStorage.setItem('audioAllowed', '1')
+	const v = videoRef.value
+	const a = audioRef.value
+	if (a) { a.muted = false; a.play().catch(() => {}) }
+	if (v) { v.muted = true; v.play().catch(() => {}) }
+	localStorage.setItem('audioAllowed', '1')
 }
 
-onMounted(() => {
-  // Try autoplay as before
-  tryAutoplay()
+let mq: MediaQueryList | null = null
 
-  // If user previously allowed audio, listen for the next user gesture and resume
-  if (localStorage.getItem('audioAllowed') === '1') {
-    document.addEventListener('pointerdown', () => {
-      resumePlaybackAfterGesture()
-    }, { once: true })
-  } else {
-    // attach a one-time gesture to remember user's choice if they interact
-    document.addEventListener('pointerdown', () => {
-      resumePlaybackAfterGesture()
-    }, { once: true })
-  }
+onMounted(() => {
+	updateIsMobile()
+	try {
+		mq = window.matchMedia('(max-width: 767px)')
+		const handler = (ev: MediaQueryListEvent) => { isMobile.value = ev.matches }
+		if (mq.addEventListener) mq.addEventListener('change', handler)
+		else if (mq.addListener) mq.addListener(handler)
+
+		tryAutoplay()
+
+		document.addEventListener('pointerdown', () => {
+			resumePlaybackAfterGesture()
+		}, { once: true })
+	} catch (e) {
+		// ignore
+	}
+})
+
+onUnmounted(() => {
+	if (mq) {
+		try { if (mq.removeEventListener) mq.removeEventListener('change', () => {}) } catch {}
+	}
 })
 
 </script>
 
 <template>
 	<div class="video-wrapper">
+		<!-- Video only mounted/loaded on mobile to save bandwidth on larger screens -->
 		<video
+			v-if="isMobile"
 			ref="videoRef"
-			:src="videoSrc"
+			:src="mobileVideoSrc"
 			playsinline
 			autoplay
 			loop
@@ -84,12 +104,14 @@ onMounted(() => {
 			class="video-bg"
 		></video>
 
-		<audio ref="audioRef" :src="musicSrc" preload="auto" class="audio-hidden"></audio>
+		<!-- Desktop fallback: simple static background (gradient) — replace with an image if you add one -->
+		<div v-else class="desktop-bg"></div>
 
-		<button class="mute-btn" @click="toggleMute">{{ isMuted ? '🔇' : '🔊' }}</button>
+		<audio v-if="isMobile" ref="audioRef" :src="musicSrc" preload="auto" class="audio-hidden"></audio>
+
+		<button class="mute-btn" @click="toggleMute" v-if="isMobile">{{ isMuted ? '🔇' : '🔊' }}</button>
 
 		<div class="page-content">
-			<!-- Your page content goes here; it's layered over the background video -->
 			<slot />
 		</div>
 	</div>
@@ -110,6 +132,13 @@ onMounted(() => {
 	object-fit: cover;
 	z-index: -1;
 	pointer-events: none;
+}
+.desktop-bg {
+	position: fixed;
+	inset: 0;
+	z-index: -1;
+	pointer-events: none;
+	background: linear-gradient(180deg,#0b1020 0%, #1b2a44 100%);
 }
 .page-content {
 	position: relative;
