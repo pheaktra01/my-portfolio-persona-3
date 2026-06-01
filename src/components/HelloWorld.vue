@@ -3,6 +3,8 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import desktopVideoSrc from '../assets/videos/mylivewallpapers.com-Makoto-Yuki-Persona-3.mp4'
 import mobileVideoSrc from '../assets/videos/MOBILE-Makoto-Yuki-Persona-3.mp4'
 import musicSrc from '../assets/musics/Color-Your-Night.mp3'
+import hoverSoundUrl from '../assets/sounds/hover.wav'
+import clickSoundUrl from '../assets/sounds/click.wav'
 
 const videoRef = ref<HTMLVideoElement | null>(null)
 const audioRef = ref<HTMLAudioElement | null>(null)
@@ -95,6 +97,33 @@ const hoveredIndex = ref<number | null>(null)
 function setHover(i: number) { hoveredIndex.value = i }
 function clearHover() { hoveredIndex.value = null }
 
+// Preload Audio objects via Vite imports so the paths are correct in production
+const hoverAudio = new Audio(hoverSoundUrl)
+hoverAudio.volume = 0.35
+hoverAudio.preload = 'auto'
+
+const clickAudio = new Audio(clickSoundUrl)
+clickAudio.volume = 0.6
+clickAudio.preload = 'auto'
+
+const playHoverSound = () => {
+	try {
+		hoverAudio.currentTime = 0
+		hoverAudio.play().catch(() => {})
+	} catch (e) {
+		// ignoring play errors (autoplay restrictions on some browsers)
+	}
+}
+
+const playClickSound = () => {
+	try {
+		clickAudio.currentTime = 0
+		clickAudio.play().catch(() => {})
+	} catch (e) {
+		// ignore
+	}
+}
+
 </script>
 
 <template>
@@ -155,6 +184,8 @@ function clearHover() { hoveredIndex.value = null }
 						:class="{ 'is-active': hoveredIndex === i }"
 						@mouseenter="setHover(i)"
 						@mouseleave="clearHover"
+						@click="playClickSound"
+						@mouseover="playHoverSound"
 					>
 						<div class="btn-bg-slash"></div>
 						<span class="text-layer shadow-text" :data-text="item">{{ item }}</span>
