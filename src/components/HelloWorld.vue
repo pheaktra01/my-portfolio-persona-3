@@ -117,7 +117,28 @@ onUnmounted(() => {
 
 		<audio ref="audioRef" :src="musicSrc" preload="auto" class="audio-hidden"></audio>
 
-		<button class="mute-btn" @click="toggleMute">{{ isMuted ? '🔇' : '🔊' }}</button>
+		<button
+			class="mute-btn"
+			@click="toggleMute"
+			:aria-label="isMuted ? 'Unmute audio' : 'Mute audio'"
+			title="Toggle mute"
+		>
+			<template v-if="isMuted">
+				<!-- Muted icon (speaker with X) -->
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+					<path d="M11 5L6 9H3v6h3l5 4V5z" />
+					<path d="M16 9l4 4M20 9l-4 4" />
+				</svg>
+			</template>
+			<template v-else>
+				<!-- Unmuted icon (speaker with waves) -->
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+					<path d="M11 5L6 9H3v6h3l5 4V5z" />
+					<path d="M15 9a4 4 0 010 6" />
+					<path d="M17.5 7a7 7 0 010 10" />
+				</svg>
+			</template>
+		</button>
 
 		<div class="page-content">
 			<slot />
@@ -181,5 +202,11 @@ onUnmounted(() => {
 	align-items: center;
 	justify-content: center;
 	cursor: pointer;
+}
+
+.mute-btn svg {
+	width: 20px;
+	height: 20px;
+	color: white;
 }
 </style>
