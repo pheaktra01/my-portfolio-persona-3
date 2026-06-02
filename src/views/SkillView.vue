@@ -1,330 +1,473 @@
 <template>
-  <div class="persona-page">
-    <div class="background-circle"></div>
+  <div class="skill-page">
 
-    <header class="hero">
-      <div class="hero-text">
-        <span class="small-title">STATUS</span>
+    <!-- BACKGROUND VIDEO -->
+    <video
+      v-if="!isMobile"
+      class="bg-video"
+      :src="desktopVideoSrc"
+      autoplay
+      loop
+      muted
+      playsinline
+    ></video>
+
+    <video
+      v-else
+      class="bg-video"
+      :src="mobileVideoSrc"
+      autoplay
+      loop
+      muted
+      playsinline
+    ></video>
+
+    <!-- LEFT PANEL (NEW WRAPPER) -->
+    <div class="panel">
+
+      <button
+        class="back-btn"
+        @click="goBack"
+        @pointerenter="onBackHover"
+      >
+        <div class="btn-bg-slash"></div>
+
+        <span class="text-layer shadow">BACK</span>
+        <span class="text-layer main">BACK</span>
+      </button>
+
+      <!-- BACKGROUND SLASH LAYER -->
+      <div class="bg-slash"></div>
+
+      <!-- HEADER -->
+      <header class="top">
+        <div class="status">STATUS</div>
         <h1>SKILLS</h1>
-        <p>FULL STACK DEVELOPER</p>
-      </div>
-    </header>
+        <p class="subtitle">DEVELOPER</p>
+      </header>
 
-    <div class="content">
-      <!-- Profile Card -->
-      <section class="profile-card panel">
-        <div class="avatar-wrapper">
-          <div class="avatar-ring"></div>
-          <img
-            src="https://i.pravatar.cc/300"
-            alt="avatar"
-            class="avatar"
-          />
-        </div>
+      <!-- MAIN GRID -->
+      <div class="grid">
 
-        <div class="profile-info">
-          <h2>PHEAKTRA</h2>
-          <p>Software Engineering Student</p>
-
-          <div class="level-box">
-            <span>LEVEL</span>
-            <strong>28</strong>
-          </div>
-        </div>
-      </section>
-
-      <!-- Skills -->
-      <section class="panel skills-panel">
-        <div class="panel-title">
-          TECHNICAL SKILLS
-        </div>
-
-        <div
-          v-for="skill in skills"
-          :key="skill.name"
-          class="skill"
-        >
-          <div class="skill-header">
-            <span>{{ skill.name }}</span>
-            <span>{{ skill.level }}%</span>
+        <!-- PROFILE -->
+        <section class="card profile">
+          <div class="avatar-wrap">
+            <div class="avatar-ring"></div>
+            <img src="../assets/images/profile.png" class="avatar" />
           </div>
 
-          <div class="skill-bar">
-            <div
-              class="skill-fill"
-              :style="{ width: skill.level + '%' }"
-            ></div>
+          <div class="info">
+            <h2>YAGAMI DEVILATHAN</h2>
+            <p>STUDENT</p>
+
+            <div class="level">
+              LEVEL <span>22</span>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <!-- Specializations -->
-      <section class="panel">
-        <div class="panel-title">
-          SPECIALIZATIONS
-        </div>
+        <!-- SKILLS -->
+        <section class="card skills">
+          <div class="title">TECHNICAL SKILLS</div>
 
-        <div class="tags">
-          <span>Vue.js</span>
-          <span>NestJS</span>
-          <span>Flutter</span>
-          <span>MongoDB</span>
-          <span>Docker</span>
-          <span>Azure</span>
-        </div>
-      </section>
+          <div v-for="s in skills" :key="s.name" class="skill">
+            <div class="row">
+              <span>{{ s.name }}</span>
+              <span>{{ s.level }}%</span>
+            </div>
 
-      <!-- XP -->
-      <section class="panel">
-        <div class="panel-title">
-          EXPERIENCE
-        </div>
-
-        <div class="xp-box">
-          <div class="xp-label">
-            8500 / 10000 XP
+            <div class="bar">
+              <div class="fill" :style="{ width: s.level + '%' }"></div>
+            </div>
           </div>
+        </section>
+
+        <!-- TAGS -->
+        <section class="card tags">
+          <div class="title">SPECIALIZATION</div>
+
+          <div class="tag-list">
+            <span>Vue</span>
+            <span>NestJS</span>
+            <span>Flutter</span>
+            <span>MongoDB</span>
+            <span>Docker</span>
+            <span>Azure</span>
+          </div>
+        </section>
+
+        <!-- XP -->
+        <section class="card xp">
+          <div class="title">EXPERIENCE</div>
+
+          <div class="xp-text">168 / 10000 XP</div>
 
           <div class="xp-bar">
             <div class="xp-fill"></div>
           </div>
-        </div>
-      </section>
+        </section>
+
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 const skills = [
-  { name: 'Vue.js', level: 95 },
-  { name: 'TypeScript', level: 90 },
-  { name: 'NestJS', level: 85 },
-  { name: 'MongoDB', level: 80 },
-  { name: 'Flutter', level: 75 },
-  { name: 'Docker', level: 70 }
+  { name: 'Vue.js', level: 50 },
+  { name: 'TypeScript', level: 40 },
+  { name: 'NestJS', level: 30 },
+  { name: 'MongoDB', level: 20 },
+  { name: 'Flutter', level: 10 },
+  { name: 'Docker', level: 5 }
 ]
+
+import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { playHover, playClick } from '../utils/sound'
+import desktopVideoSrc from '../assets/videos/makoto-yuki-persona-3-reload-1-moewalls-com.mp4'
+import mobileVideoSrc from '../assets/videos/MOBILE-Makoto-Yuki-Persona-3.mp4'
+
+const router = useRouter()
+
+const isMobile = ref(false)
+
+function updateIsMobile() {
+  isMobile.value = window.matchMedia('(max-width: 767px)').matches
+}
+
+function goBack() {
+  playClick()
+  router.push('/')
+}
+
+function onBackHover() {
+  playHover(isMobile.value)
+}
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800&display=swap');
 
-.persona-page {
-  min-height: 100vh;
-  background: #07111f;
-  color: white;
-  overflow: hidden;
-  position: relative;
-  font-family: 'Orbitron', sans-serif;
-  padding: 50px;
-}
-
-/* Background */
-
-.background-circle {
+/* ================= LEFT HALF PANEL ================= */
+.panel {
   position: fixed;
-  width: 700px;
-  height: 700px;
-  border: 2px solid rgba(0, 174, 255, 0.2);
-  border-radius: 50%;
-  top: -150px;
-  right: -150px;
-  animation: rotate 25s linear infinite;
+  top: 0;
+  left: 0;
+
+  width: 40%;
+  height: 100vh;
+
+  padding: 40px;
+  box-sizing: border-box; /* 👈 IMPORTANT */
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  z-index: 10;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-.background-circle::before {
-  content: '';
+/* hide scrollbar (Chrome, Edge, Safari) */
+.panel::-webkit-scrollbar {
+  display: none;
+}
+
+
+
+/* ================= BASE ================= */
+.skill-page {
+  min-height: 100vh;
+  background: #070a12;
+  color: white;
+  font-family: Impact, Arial Black, sans-serif;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skill-page {
+  overflow-x: hidden;
+}
+
+/* make sure UI is above video */
+.skill-page {
+  position: relative;
+  z-index: 1;
+}
+
+.skill-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 0;
+
+  pointer-events: none;
+}
+
+/* ================= BACKGROUND ================= */
+.bg-slash {
   position: absolute;
-  inset: 40px;
-  border-radius: 50%;
-  border: 2px dashed rgba(0, 174, 255, 0.15);
+  width: 120%;
+  height: 120%;
+  background: linear-gradient(120deg, #ff2e63 0%, transparent 60%);
+  transform: skewY(-12deg);
+  top: -20%;
+  left: -10%;
+  opacity: 0.15;
 }
 
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Hero */
-
-.hero {
+/* ================= HEADER ================= */
+.top {
+  position: relative;
+  z-index: 2;
+  top: 30px;
   margin-bottom: 40px;
 }
 
-.small-title {
-  color: #00d4ff;
-  letter-spacing: 5px;
+.status {
+  color: #ff2e63;
+  letter-spacing: 4px;
+  font-weight: 900;
 }
 
-.hero h1 {
-  font-size: 6rem;
+.top h1 {
+  font-size: 5rem;
   margin: 0;
-  line-height: 1;
-  color: transparent;
-  -webkit-text-stroke: 2px #00d4ff;
+  color: white;
+  transform: skewX(-10deg);
 }
 
-.hero p {
-  color: rgba(255,255,255,0.7);
+.subtitle {
+  opacity: 0.7;
 }
 
-/* Layout */
-
-.content {
+/* ================= GRID ================= */
+.grid {
   display: grid;
-  gap: 25px;
+  gap: 20px;
 }
 
-/* Panels */
-
-.panel {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-  backdrop-filter: blur(15px);
-  padding: 25px;
+/* ================= CARD (PERSONA STYLE) ================= */
+.card {
   position: relative;
+  background: #0d0f1a;
+  border: 2px solid #1a1d2e;
+  padding: 20px;
+  transform: skewX(-6deg);
   overflow: hidden;
 }
 
-.panel::before {
+.card::before {
   content: '';
   position: absolute;
-  top: 0;
   left: 0;
+  top: 0;
   width: 6px;
   height: 100%;
-  background: #00d4ff;
+  background: #ff2e63;
 }
 
-.panel-title {
-  color: #00d4ff;
-  margin-bottom: 20px;
-  letter-spacing: 3px;
-  font-weight: 700;
-}
-
-/* Profile */
-
-.profile-card {
+/* ================= PROFILE ================= */
+.profile {
   display: flex;
   align-items: center;
-  gap: 30px;
+  gap: 25px;
 }
 
-.avatar-wrapper {
+.avatar-wrap {
   position: relative;
 }
 
 .avatar-ring {
   position: absolute;
-  inset: -10px;
-  border-radius: 50%;
-  border: 2px solid #00d4ff;
-  animation: rotate 12s linear infinite;
+  inset: -8px;
+  border: 2px solid #ff2e63;
+  animation: spin 10s linear infinite;
 }
 
 .avatar {
-  width: 140px;
-  height: 140px;
-  object-fit: cover;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
 }
 
-.profile-info h2 {
+.info h2 {
   margin: 0;
   font-size: 2rem;
 }
 
-.level-box {
-  margin-top: 15px;
-  display: inline-flex;
-  gap: 15px;
-  align-items: center;
-  padding: 10px 20px;
-  background: rgba(0, 212, 255, 0.15);
+.level {
+  margin-top: 10px;
+  background: #ff2e63;
+  padding: 6px 12px;
+  display: inline-block;
+  font-weight: 900;
 }
 
-.level-box strong {
-  font-size: 1.8rem;
-  color: #00d4ff;
+/* ================= SKILLS ================= */
+.title {
+  color: #ff2e63;
+  margin-bottom: 15px;
+  letter-spacing: 2px;
 }
-
-/* Skills */
 
 .skill {
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
-.skill-header {
+.row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 8px;
 }
 
-.skill-bar {
-  height: 12px;
-  background: rgba(255,255,255,0.08);
+.bar {
+  height: 10px;
+  background: #1a1d2e;
+  margin-top: 6px;
   overflow: hidden;
 }
 
-.skill-fill {
+.fill {
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    #00d4ff,
-    #0077ff
-  );
-  box-shadow: 0 0 20px #00d4ff;
+  background: linear-gradient(90deg, #ff2e63, #ff7a18);
 }
 
-/* Tags */
-
-.tags {
+/* ================= TAGS ================= */
+.tag-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 10px;
 }
 
-.tags span {
-  border: 1px solid #00d4ff;
-  padding: 10px 18px;
-  background: rgba(0, 212, 255, 0.1);
+.tag-list span {
+  background: #ff2e63;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  transform: skewX(-10deg);
 }
 
-/* XP */
+/* ================= XP ================= */
+.xp-text {
+  margin-bottom: 10px;
+}
 
 .xp-bar {
-  height: 14px;
-  background: rgba(255,255,255,0.08);
-  margin-top: 10px;
+  height: 10px;
+  background: #1a1d2e;
 }
 
 .xp-fill {
-  width: 85%;
+  width: 30%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    #00d4ff,
-    #0077ff
-  );
+  background: linear-gradient(90deg, #ff2e63, #ff7a18);
 }
 
+/* ================= ANIMATION ================= */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ================= MOBILE ================= */
 @media (max-width: 768px) {
-  .persona-page {
-    padding: 25px;
+  .top h1 {
+    font-size: 2.8rem;
   }
 
-  .hero h1 {
-    font-size: 3rem;
-  }
-
-  .profile-card {
+  .profile {
     flex-direction: column;
     text-align: center;
   }
+
+  .card {
+    transform: none;
+  }
+}
+
+/* ================= PERSONA BACK BUTTON ================= */
+.back-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 50;
+
+  background: transparent;
+  border: none;
+  cursor: pointer;
+
+  padding: 10px 18px;
+
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-style: italic;
+  letter-spacing: 2px;
+
+  transform: skewX(-10deg);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: transform 0.15s ease;
+}
+
+/* hover like Persona menu */
+.back-btn:hover {
+  transform: skewX(-10deg) scale(1.08);
+}
+
+/* slash background (same style as home buttons) */
+.btn-bg-slash {
+  position: absolute;
+  inset: 0;
+  background: #ff4a73;
+  z-index: 1;
+
+  clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
+  transform: scaleX(1);
+}
+
+/* text layers */
+.text-layer {
+  position: relative;
+  z-index: 2;
+  display: inline-block;
+}
+
+/* shadow */
+.text-layer.shadow {
+  position: absolute;
+  color: black;
+  transform: translate(3px, 2px) skewX(-10deg);
+}
+
+/* main */
+.text-layer.main {
+  color: #61e1ff;
+  transform: skewX(-10deg);
+}
+
+/* hover animation (Persona feel) */
+.back-btn:hover .text-layer.main {
+  color: white;
+  transform: skewX(-12deg) translate(-2px, -2px);
+}
+
+.back-btn:hover .text-layer.shadow {
+  transform: skewX(-12deg) translate(4px, 3px);
+}
+
+/* ===== FULLSCREEN VIDEO BACKGROUND ===== */
+.bg-video {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  z-index: 0;
+  pointer-events: none;
 }
 </style>

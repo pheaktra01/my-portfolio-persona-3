@@ -1,186 +1,133 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+
 import desktopVideoSrc from '../assets/videos/mylivewallpapers.com-Makoto-Yuki-Persona-3.mp4'
 import mobileVideoSrc from '../assets/videos/MOBILE-Makoto-Yuki-Persona-3.mp4'
-import musicSrc from '../assets/musics/Color-Your-Night.mp3'
+
 import hoverSoundUrl from '../assets/sounds/hover.wav'
 import clickSoundUrl from '../assets/sounds/click.wav'
 
+// add vide ref
 const videoRef = ref<HTMLVideoElement | null>(null)
-const audioRef = ref<HTMLAudioElement | null>(null)
-const isMuted = ref(true)
 
-// Track whether viewport is considered "mobile". We only load/play the video on mobile
-const isMobile = ref<boolean>(false)
-
-function updateIsMobile() {
-	try {
-		isMobile.value = window.matchMedia('(max-width: 767px)').matches
-	} catch (e) {
-		isMobile.value = false
-	}
-}
-
-function setMutedState(muted: boolean) {
-	const a = audioRef.value
-	if (a) {
-		a.muted = muted
-		if (!muted) a.play().catch(() => {})
-	}
-	isMuted.value = muted
-	localStorage.setItem('audioMuted', muted ? '1' : '0')
-}
-
-function toggleMute() {
-	setMutedState(!isMuted.value)
-}
-
-async function tryAutoplay() {
-	const v = videoRef.value
-	const a = audioRef.value
-	if (!v) return
-	v.muted = false
-	v.loop = true
-	try {
-		const stored = localStorage.getItem('audioMuted')
-		const prefMuted = stored === '1'
-		if (a) {
-			a.muted = prefMuted
-			a.loop = true
-			if (!prefMuted) await a.play()
-		}
-		await v.play()
-		isMuted.value = prefMuted
-	} catch (e) {
-		// autoplay blocked
-	}
-}
-
-function resumePlaybackAfterGesture() {
-	const v = videoRef.value
-	const a = audioRef.value
-	if (a) { a.muted = false; a.play().catch(() => {}) }
-	if (v) { v.muted = true; v.play().catch(() => {}) }
-	localStorage.setItem('audioAllowed', '1')
-}
-
-let mq: MediaQueryList | null = null
-
-onMounted(() => {
-	updateIsMobile()
-	try {
-		mq = window.matchMedia('(max-width: 767px)')
-		const handler = (ev: MediaQueryListEvent) => { isMobile.value = ev.matches }
-		if (mq.addEventListener) mq.addEventListener('change', handler)
-		else if (mq.addListener) mq.addListener(handler)
-
-		tryAutoplay()
-
-		document.addEventListener('pointerdown', () => {
-			resumePlaybackAfterGesture()
-		}, { once: true })
-	} catch (e) {
-		// ignore
-	}
-})
-
-onUnmounted(() => {
-	if (mq) {
-		try { if (mq.removeEventListener) mq.removeEventListener('change', () => {}) } catch {}
-	}
-})
-
-// Menu state
-const menuItems = ['SKILLS','PROJECTS','STACK','PROFILE','EXPERIENCE','TIMELINE','SOCIAL LINK','CALENDAR','RESUME']
-const hoveredIndex = ref<number | null>(null)
-
-// throttle hover sound to avoid overlap when moving between items
-let lastHoverPlay = 0
-const HOVER_THROTTLE_MS = 150
-
-function setHover(i: number) {
-	if (hoveredIndex.value === i) return
-	hoveredIndex.value = i
-	const now = Date.now()
-	if (now - lastHoverPlay > HOVER_THROTTLE_MS) {
-		lastHoverPlay = now
-		playHoverSound()
-	}
-}
-
-function clearHover() { hoveredIndex.value = null }
-
-// Preload Audio objects via Vite imports so the paths are correct in production
-const hoverAudio = new Audio(hoverSoundUrl)
-hoverAudio.volume = 0.35
-hoverAudio.preload = 'auto'
-hoverAudio.loop = false
-
-const clickAudio = new Audio(clickSoundUrl)
-clickAudio.volume = 0.6
-clickAudio.preload = 'auto'
-
-const playHoverSound = () => {
-	try {
-		// don't play hover sounds on mobile devices
-		if (isMobile.value) return
-		// stop any currently playing hover sound so sounds don't overlap
-		hoverAudio.pause()
-		hoverAudio.currentTime = 0
-		hoverAudio.play().catch(() => {})
-	} catch (e) {
-		// ignoring play errors (autoplay restrictions on some browsers)
-	}
-}
-
-const playClickSound = () => {
-	try {
-		clickAudio.currentTime = 0
-		clickAudio.play().catch(() => {})
-	} catch (e) {
-		// ignore
-	}
-}
-
-// On mobile/touch devices, tapping should show the hover/active style
-function onPress(i: number) {
-	// On non-mobile, show hover-style immediately on press
-	if (!isMobile.value) setHover(i)
-}
-
-function onRelease() {
-	// On non-mobile, keep the active style visible briefly after release so user sees feedback
-	if (!isMobile.value) setTimeout(() => { clearHover() }, 220)
-}
-
-function handleClick(i: number) {
-	// Play click sound
-	playClickSound()
-	// On mobile, show the hover/active style after the tap and keep it visible briefly
-	if (isMobile.value) {
-		setHover(i)
-		setTimeout(() => { clearHover() }, 2000)
-	}
-
-	router.push(routes[i])
-}
-
-import { useRouter } from 'vue-router'
-
+/* ================= ROUTER ================= */
 const router = useRouter()
 
 const routes = [
   '/skills',
-  '/projects',
-  '/stack',
-  '/profile',
-  '/experience',
-  '/timeline',
-  '/social',
-  '/calendar',
-  '/resume'
+  '/',
+  '/',
+  '/',
+  '/',
+  '/',
+  '/',
+  '/',
+  '/'
 ]
 
+/* ================= MOBILE CHECK ================= */
+const isMobile = ref(false)
+
+function updateIsMobile() {
+  try {
+    isMobile.value = window.matchMedia('(max-width: 767px)').matches
+  } catch {
+    isMobile.value = false
+  }
+}
+
+/* ================= MENU ================= */
+const menuItems = [
+  'SKILLS','PROJECTS','STACK','PROFILE',
+  'EXPERIENCE','TIMELINE','SOCIAL LINK',
+  'CALENDAR','RESUME'
+]
+
+const hoveredIndex = ref<number | null>(null)
+
+/* ================= HOVER SOUND ================= */
+let lastHoverPlay = 0
+const HOVER_THROTTLE_MS = 150
+
+const hoverAudio = new Audio(hoverSoundUrl)
+hoverAudio.volume = 0.35
+hoverAudio.preload = 'auto'
+
+function playHoverSound() {
+  if (isMobile.value) return
+
+  const now = Date.now()
+  if (now - lastHoverPlay < HOVER_THROTTLE_MS) return
+
+  lastHoverPlay = now
+  hoverAudio.pause()
+  hoverAudio.currentTime = 0
+  hoverAudio.play().catch(() => {})
+}
+
+/* ================= CLICK SOUND ================= */
+const clickAudio = new Audio(clickSoundUrl)
+clickAudio.volume = 0.6
+clickAudio.preload = 'auto'
+
+function playClickSound() {
+  clickAudio.currentTime = 0
+  clickAudio.play().catch(() => {})
+}
+
+/* ================= MENU INTERACTIONS ================= */
+function setHover(i: number) {
+  if (hoveredIndex.value === i) return
+  hoveredIndex.value = i
+  playHoverSound()
+}
+
+function clearHover() {
+  hoveredIndex.value = null
+}
+
+function onPress(i: number) {
+  if (!isMobile.value) setHover(i)
+}
+
+function onRelease() {
+  if (!isMobile.value) {
+    setTimeout(() => clearHover(), 220)
+  }
+}
+
+function handleClick(i: number) {
+  playClickSound()
+
+  if (isMobile.value) {
+    setHover(i)
+    setTimeout(() => clearHover(), 2000)
+  }
+
+  router.push(routes[i])
+}
+
+/* ================= INIT ================= */
+onMounted(() => {
+  updateIsMobile()
+
+  const v = videoRef.value
+  if (v) {
+    v.muted = true        // MUST be real runtime mute
+    v.loop = true
+
+    const playVideo = async () => {
+      try {
+        await v.play()
+      } catch (e) {
+        console.log('Autoplay blocked, waiting for interaction')
+      }
+    }
+
+    playVideo()
+  }
+})
 </script>
 
 <template>
@@ -207,31 +154,6 @@ const routes = [
 			muted
 			class="video-bg"
 		></video>
-
-		<audio ref="audioRef" :src="musicSrc" preload="auto" class="audio-hidden"></audio>
-
-		<button
-			class="mute-btn"
-			@click="toggleMute"
-			:aria-label="isMuted ? 'Unmute audio' : 'Mute audio'"
-			title="Toggle mute"
-		>
-			<template v-if="isMuted">
-				<!-- Muted icon (speaker with X) -->
-				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-					<path d="M11 5L6 9H3v6h3l5 4V5z" />
-					<path d="M16 9l4 4M20 9l-4 4" />
-				</svg>
-			</template>
-			<template v-else>
-				<!-- Unmuted icon (speaker with waves) -->
-				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-					<path d="M11 5L6 9H3v6h3l5 4V5z" />
-					<path d="M15 9a4 4 0 010 6" />
-					<path d="M17.5 7a7 7 0 010 10" />
-				</svg>
-			</template>
-		</button>
 
 		<div class="menu-container">
 			<ul class="menu-list">
