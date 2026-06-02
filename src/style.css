@@ -1,0 +1,22 @@
+.page-slash-enter {
+  position: fixed;
+  inset: 0;
+  background: #ff2e63;
+  z-index: 9999;
+  transform: translateX(-120%) skewX(-20deg);
+  animation: slashEnter 0.6s ease forwards;
+  pointer-events: none;
+}
+
+@keyframes slashEnter {
+  0% {
+    transform: translateX(-120%) skewX(-20deg);
+  }
+  60% {
+    transform: translateX(10%) skewX(-20deg);
+  }
+  100% {
+    transform: translateX(120%) skewX(-20deg);
+  }
+}
+

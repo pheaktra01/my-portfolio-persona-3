@@ -8,6 +8,8 @@ import mobileVideoSrc from '../assets/videos/MOBILE-Makoto-Yuki-Persona-3.mp4'
 import hoverSoundUrl from '../assets/sounds/hover.wav'
 import clickSoundUrl from '../assets/sounds/click.wav'
 
+import IntroSlash from '../components/IntroSlash.vue'
+
 // add vide ref
 const videoRef = ref<HTMLVideoElement | null>(null)
 
@@ -16,14 +18,14 @@ const router = useRouter()
 
 const routes = [
   '/skills',
-  '/',
-  '/',
-  '/',
-  '/',
-  '/',
-  '/',
-  '/',
-  '/'
+  '/projects',
+  '/stack',
+  '/profile',
+  '/experience',
+  '/timeline',
+  '/social-links',
+  '/calendar',
+  '/resume'
 ]
 
 /* ================= MOBILE CHECK ================= */
@@ -154,6 +156,8 @@ onMounted(() => {
 			muted
 			class="video-bg"
 		></video>
+
+		<IntroSlash />
 
 		<div class="menu-container">
 			<ul class="menu-list">

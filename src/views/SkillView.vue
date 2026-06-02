@@ -22,19 +22,11 @@
       playsinline
     ></video>
 
+    <BackBtn />
+    <IntroSlash />
+
     <!-- LEFT PANEL (NEW WRAPPER) -->
-    <div class="panel">
-
-      <button
-        class="back-btn"
-        @click="goBack"
-        @pointerenter="onBackHover"
-      >
-        <div class="btn-bg-slash"></div>
-
-        <span class="text-layer shadow">BACK</span>
-        <span class="text-layer main">BACK</span>
-      </button>
+    <div class="panel" :class="{ enter: pageReady }">
 
       <!-- BACKGROUND SLASH LAYER -->
       <div class="bg-slash"></div>
@@ -50,7 +42,7 @@
       <div class="grid">
 
         <!-- PROFILE -->
-        <section class="card profile">
+        <section class="card profile" :style="{ '--i': 0 }">
           <div class="avatar-wrap">
             <div class="avatar-ring"></div>
             <img src="../assets/images/profile.png" class="avatar" />
@@ -67,7 +59,7 @@
         </section>
 
         <!-- SKILLS -->
-        <section class="card skills">
+        <section class="card skills" :style="{ '--i': 1 }">
           <div class="title">TECHNICAL SKILLS</div>
 
           <div v-for="s in skills" :key="s.name" class="skill">
@@ -83,7 +75,7 @@
         </section>
 
         <!-- TAGS -->
-        <section class="card tags">
+        <section class="card tags" :style="{ '--i': 2 }">
           <div class="title">SPECIALIZATION</div>
 
           <div class="tag-list">
@@ -97,7 +89,7 @@
         </section>
 
         <!-- XP -->
-        <section class="card xp">
+        <section class="card xp" :style="{ '--i': 3 }">
           <div class="title">EXPERIENCE</div>
 
           <div class="xp-text">168 / 10000 XP</div>
@@ -122,24 +114,22 @@ const skills = [
   { name: 'Docker', level: 5 }
 ]
 
-import { useRouter } from 'vue-router'
-import { ref } from 'vue'
-import { playHover, playClick } from '../utils/sound'
+import { ref, onMounted } from 'vue'
 import desktopVideoSrc from '../assets/videos/persona-p3-skill.mp4'
 import mobileVideoSrc from '../assets/videos/MOBILE-Makoto-Yuki-Persona-3.mp4'
-
-const router = useRouter()
+import  BackBtn  from '../components/BackBtn.vue'
+import IntroSlash from '../components/IntroSlash.vue'
 
 const isMobile = ref(false)
 
-function goBack() {
-  playClick()
-  router.push('/')
-}
+const pageReady = ref(false)
 
-function onBackHover() {
-  playHover(isMobile.value)
-}
+onMounted(() => {
+  requestAnimationFrame(() => {
+    pageReady.value = true
+  })
+})
+
 </script>
 
 <style scoped>
@@ -147,14 +137,14 @@ function onBackHover() {
 /* ================= LEFT HALF PANEL ================= */
 .panel {
   position: fixed;
-  top: 0;
+  top: 30px;
   left: 0;
 
   width: 40%;
   height: 100vh;
 
   padding: 40px;
-  box-sizing: border-box; /* 👈 IMPORTANT */
+  box-sizing: border-box;
 
   overflow-y: auto;
   overflow-x: hidden;
@@ -169,8 +159,6 @@ function onBackHover() {
 .panel::-webkit-scrollbar {
   display: none;
 }
-
-
 
 /* ================= BASE ================= */
 .skill-page {
@@ -383,78 +371,6 @@ function onBackHover() {
   }
 }
 
-/* ================= PERSONA BACK BUTTON ================= */
-.back-btn {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 50;
-
-  background: transparent;
-  border: none;
-  cursor: pointer;
-
-  padding: 10px 18px;
-
-  font-family: 'Impact', 'Arial Black', sans-serif;
-  font-style: italic;
-  letter-spacing: 2px;
-
-  transform: skewX(-10deg);
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  transition: transform 0.15s ease;
-}
-
-/* hover like Persona menu */
-.back-btn:hover {
-  transform: skewX(-10deg) scale(1.08);
-}
-
-/* slash background (same style as home buttons) */
-.btn-bg-slash {
-  position: absolute;
-  inset: 0;
-  background: #ff4a73;
-  z-index: 1;
-
-  clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
-  transform: scaleX(1);
-}
-
-/* text layers */
-.text-layer {
-  position: relative;
-  z-index: 2;
-  display: inline-block;
-}
-
-/* shadow */
-.text-layer.shadow {
-  position: absolute;
-  color: black;
-  transform: translate(3px, 2px) skewX(-10deg);
-}
-
-/* main */
-.text-layer.main {
-  color: #61e1ff;
-  transform: skewX(-10deg);
-}
-
-/* hover animation (Persona feel) */
-.back-btn:hover .text-layer.main {
-  color: white;
-  transform: skewX(-12deg) translate(-2px, -2px);
-}
-
-.back-btn:hover .text-layer.shadow {
-  transform: skewX(-12deg) translate(4px, 3px);
-}
-
 /* ===== FULLSCREEN VIDEO BACKGROUND ===== */
 .bg-video {
   position: fixed;
@@ -465,5 +381,59 @@ function onBackHover() {
 
   z-index: 0;
   pointer-events: none;
+}
+
+/* ===== Intro Animation ===== */
+.panel {
+  opacity: 0;
+  transform: translateX(-40px);
+}
+
+/* PANEL ENTER */
+.panel.enter {
+  animation: panelIn 0.6s ease forwards;
+}
+
+@keyframes panelIn {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* STAGGER CARDS */
+.card {
+  opacity: 0;
+  transform: translateX(-30px) skewX(-6deg);
+}
+
+.panel.enter .card {
+  animation: cardIn 0.5s ease forwards;
+  animation-delay: calc(var(--i) * 0.12s);
+}
+
+@keyframes cardIn {
+  to {
+    opacity: 1;
+    transform: translateX(0) skewX(-6deg);
+  }
+}
+
+/* HEADER POP */
+.top {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.panel.enter .top {
+  animation: headerIn 0.5s ease forwards;
+  animation-delay: 0.1s;
+}
+
+@keyframes headerIn {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 </style>
