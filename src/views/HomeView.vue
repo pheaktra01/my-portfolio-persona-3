@@ -161,7 +161,25 @@ function handleClick(i: number) {
 		setHover(i)
 		setTimeout(() => { clearHover() }, 2000)
 	}
+
+	router.push(routes[i])
 }
+
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const routes = [
+  '/skills',
+  '/projects',
+  '/stack',
+  '/profile',
+  '/experience',
+  '/timeline',
+  '/social',
+  '/calendar',
+  '/resume'
+]
 
 </script>
 
