@@ -8,6 +8,7 @@
       loop
       muted
       playsinline
+      preload="none"
     ></video>
 
     <div class="overlay"></div>
@@ -48,9 +49,24 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import videoSrc from '../assets/videos/persona-p3-calendar.mp4'
 import BackBtn from '../components/BackBtn.vue'
 import IntroSlash from '../components/IntroSlash.vue'
+
+onMounted(() => {
+//   isMobile.value = window.innerWidth <= 768
+
+  videoSrc.value = new URL(
+    '../assets/videos/persona-p3-skill.mp4',
+    import.meta.url
+  ).href
+
+//   mobileVideoSrc.value = new URL(
+//     '../assets/videos/MOBILE-Makoto-Yuki-Persona-3.mp4',
+//     import.meta.url
+//   ).href
+})
 
 const events = [
   {

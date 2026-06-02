@@ -144,6 +144,7 @@ onMounted(() => {
 			loop
 			muted
 			class="video-bg"
+			preload="none"
 		></video>
 
 		<video
@@ -155,6 +156,7 @@ onMounted(() => {
 			loop
 			muted
 			class="video-bg"
+			preload="none"
 		></video>
 
 		<IntroSlash />

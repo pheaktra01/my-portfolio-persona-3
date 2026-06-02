@@ -10,6 +10,7 @@
       loop
       muted
       playsinline
+      preload="none"
     ></video>
 
     <video
@@ -20,6 +21,7 @@
       loop
       muted
       playsinline
+      preload="none"
     ></video>
 
     <BackBtn />
@@ -125,6 +127,18 @@ const isMobile = ref(false)
 const pageReady = ref(false)
 
 onMounted(() => {
+  isMobile.value = window.innerWidth <= 768
+
+  desktopVideoSrc.value = new URL(
+    '../assets/videos/persona-p3-skill.mp4',
+    import.meta.url
+  ).href
+
+  mobileVideoSrc.value = new URL(
+    '../assets/videos/MOBILE-Makoto-Yuki-Persona-3.mp4',
+    import.meta.url
+  ).href
+
   requestAnimationFrame(() => {
     pageReady.value = true
   })
