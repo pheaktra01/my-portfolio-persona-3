@@ -123,7 +123,7 @@ const skills = [
 ]
 
 import { useRouter } from 'vue-router'
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { playHover, playClick } from '../utils/sound'
 import desktopVideoSrc from '../assets/videos/makoto-yuki-persona-3-reload-1-moewalls-com.mp4'
 import mobileVideoSrc from '../assets/videos/MOBILE-Makoto-Yuki-Persona-3.mp4'
@@ -131,10 +131,6 @@ import mobileVideoSrc from '../assets/videos/MOBILE-Makoto-Yuki-Persona-3.mp4'
 const router = useRouter()
 
 const isMobile = ref(false)
-
-function updateIsMobile() {
-  isMobile.value = window.matchMedia('(max-width: 767px)').matches
-}
 
 function goBack() {
   playClick()
