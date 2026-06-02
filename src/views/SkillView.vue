@@ -117,14 +117,14 @@ const skills = [
 ]
 
 import { ref, onMounted } from 'vue'
-import desktopVideoSrc from '../assets/videos/persona-p3-skill.mp4'
-import mobileVideoSrc from '../assets/videos/MOBILE-Makoto-Yuki-Persona-3.mp4'
 import  BackBtn  from '../components/BackBtn.vue'
 import IntroSlash from '../components/IntroSlash.vue'
 
 const isMobile = ref(false)
-
 const pageReady = ref(false)
+
+const desktopVideoSrc = ref('')
+const mobileVideoSrc = ref('')
 
 onMounted(() => {
   isMobile.value = window.innerWidth <= 768

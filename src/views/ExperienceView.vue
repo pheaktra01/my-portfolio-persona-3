@@ -64,16 +64,17 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import videoSrc from '../assets/videos/persona-p3-experience.mp4'
+import { onMounted, ref } from 'vue'
 import BackBtn from '../components/BackBtn.vue'
 import IntroSlash from '../components/IntroSlash.vue'
+
+const videoSrc = ref('')
 
 onMounted(() => {
 //   isMobile.value = window.innerWidth <= 768
 
   videoSrc.value = new URL(
-    '../assets/videos/persona-p3-skill.mp4',
+    '../assets/videos/persona-p3-experience.mp4',
     import.meta.url
   ).href
 
