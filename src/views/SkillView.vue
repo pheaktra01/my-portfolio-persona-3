@@ -125,7 +125,7 @@ const skills = [
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 import { playHover, playClick } from '../utils/sound'
-import desktopVideoSrc from '../assets/videos/makoto-yuki-persona-3-reload-1-moewalls-com.mp4'
+import desktopVideoSrc from '../assets/videos/persona-p3-skill.mp4'
 import mobileVideoSrc from '../assets/videos/MOBILE-Makoto-Yuki-Persona-3.mp4'
 
 const router = useRouter()
