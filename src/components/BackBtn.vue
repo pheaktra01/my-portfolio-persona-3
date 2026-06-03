@@ -115,4 +115,13 @@ const emit = defineEmits(['finished'])
 .back-btn:hover .text-layer.shadow {
   transform: skewX(-12deg) translate(4px, 3px);
 }
+
+.back-btn {
+  animation: backIn 0.4s ease-out;
+}
+
+@keyframes backIn {
+  from { opacity: 0; transform: translateX(-20px) skewX(-10deg); }
+  to { opacity: 1; transform: translateX(0) skewX(-10deg); }
+} 
 </style>

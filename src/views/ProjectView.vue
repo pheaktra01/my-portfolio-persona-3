@@ -11,15 +11,15 @@
       playsinline
       preload="metadata"
     ></video>
-
-    <BackBtn />
-    <IntroSlash />
     
     <!-- DARK OVERLAY -->
     <div class="overlay"></div>
 
+    <BackBtn />
+    <IntroSlash />
+
     <!-- LEFT PANEL -->
-    <div class="panel">
+    <div class="panel" ref="panelRef">
 
       <!-- HEADER -->
       <header class="top">
@@ -110,10 +110,11 @@ const projects = [
 
 /* PAGE */
 .project-page {
-    padding-top: 20px;
+  padding-top: 20px;
   overflow: hidden;
   font-family: Impact, Arial Black, sans-serif;
   color: white;
+  height: 100%;
 }
 
 /* BACKGROUND VIDEO */
@@ -131,10 +132,12 @@ const projects = [
   position: fixed;
   inset: 0;
   z-index: 1;
+  pointer-events: none;
 }
 
 /* LEFT PANEL */
 .panel {
+  position: fixed;
   left: 0;
   top: 60px;
   width: 42%;
@@ -240,25 +243,6 @@ const projects = [
   display: none;
 }
 
-.back-btn {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-
-  background: transparent;
-  border: none;
-  cursor: pointer;
-
-  padding: 10px 18px;
-  margin-bottom: 20px;
-
-  font-family: Impact, Arial Black, sans-serif;
-  font-style: italic;
-  letter-spacing: 2px;
-
-  transform: skewX(-10deg);
-}
-
 .btn-bg-slash {
   position: absolute;
   inset: 0;
@@ -280,11 +264,6 @@ const projects = [
 
 .text-layer.main {
   color: #61e1ff;
-}
-
-.back-btn:hover .text-layer.main {
-  color: white;
-  transform: skewX(-12deg) translate(-2px, -2px);
 }
 
 /* ===== Animation ===== */
