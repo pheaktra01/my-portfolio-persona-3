@@ -3,7 +3,7 @@
 
     <video
       class="bg-video"
-      :src="videoSrc"
+      :src="currentVideo"
       autoplay
       loop
       muted
@@ -56,12 +56,21 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted } from 'vue'
 import BackBtn from '../components/BackBtn.vue'
 import IntroSlash from '../components/IntroSlash.vue'
 import { videos } from '../config/videos'
+import { useVideoManager } from '../composables/useVideoManager.ts'
 
-const videoSrc = ref(videos.social)
+const { setVideo, clearVideo, currentVideo } = useVideoManager()
+
+onMounted(() => {
+  setVideo(videos.social)
+})
+
+onBeforeUnmount(() => {
+  clearVideo()
+})
 
 onMounted(() => {
 //   isMobile.value = window.innerWidth <= 768

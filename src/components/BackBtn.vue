@@ -47,8 +47,8 @@ const emit = defineEmits(['finished'])
 .back-btn {
   position: fixed;
   top: 20px;
-  left: 20px;
-  z-index: 50;
+  left: 40px;
+  z-index: 9999;
 
   background: transparent;
   border: none;

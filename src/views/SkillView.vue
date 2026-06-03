@@ -4,7 +4,7 @@
     <!-- BACKGROUND VIDEO -->
     <video
       class="bg-video"
-      :src="isMobile ? mobileVideoSrc : desktopVideoSrc"
+      :src="currentVideo"
       autoplay
       loop
       muted
@@ -95,36 +95,40 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount } from "vue"
+import BackBtn from "../components/BackBtn.vue"
+import IntroSlash from "../components/IntroSlash.vue"
+
+import { videos } from "../config/videos"
+import { useVideoManager } from "../composables/useVideoManager"
+
 const skills = [
-  { name: 'Vue.js', level: 50 },
-  { name: 'TypeScript', level: 40 },
-  { name: 'NestJS', level: 30 },
-  { name: 'MongoDB', level: 20 },
-  { name: 'Flutter', level: 10 },
-  { name: 'Docker', level: 5 }
+  { name: "Vue.js", level: 50 },
+  { name: "TypeScript", level: 40 },
+  { name: "NestJS", level: 30 },
+  { name: "MongoDB", level: 20 },
+  { name: "Flutter", level: 10 },
+  { name: "Docker", level: 5 }
 ]
 
-import { ref, onMounted } from 'vue'
-import  BackBtn  from '../components/BackBtn.vue'
-import IntroSlash from '../components/IntroSlash.vue'
-
-import { videos } from '../config/videos'
-
-const desktopVideoSrc = ref(videos.skill)
-
-const isMobile = ref(window.innerWidth <= 768)
+const isMobile = ref(false)
 const pageReady = ref(false)
 
-const mobileVideoSrc = ref(videos.mobile)
+const { setVideo, clearVideo, currentVideo } = useVideoManager()
 
 onMounted(() => {
-  isMobile.value = window.innerWidth <= 768
+  isMobile.value = window.matchMedia("(max-width: 768px)").matches
+
+  setVideo(videos.skill)
 
   requestAnimationFrame(() => {
     pageReady.value = true
   })
 })
 
+onBeforeUnmount(() => {
+  clearVideo()
+})
 </script>
 
 <style scoped>

@@ -4,7 +4,7 @@
     <!-- BACKGROUND (optional video) -->
     <video
       class="bg-video"
-      :src="videoSrc"
+      :src="currentVideo"
       autoplay
       loop
       muted
@@ -56,14 +56,23 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import BackBtn from '../components/BackBtn.vue'
 import IntroSlash from '../components/IntroSlash.vue'
 import { videos } from '../config/videos'
+import { useVideoManager } from '../composables/useVideoManager.ts'
 
-const videoSrc = ref(videos.timeline)
+const { setVideo, clearVideo, currentVideo } = useVideoManager()
 
 onMounted(() => {
+  setVideo(videos.timeline)
+})
+
+onBeforeUnmount(() => {
+  clearVideo()
+})
+
+// onMounted(() => {
 //   isMobile.value = window.innerWidth <= 768
 
   // videoSrc.value = new URL(
@@ -75,7 +84,7 @@ onMounted(() => {
 //     '../assets/videos/MOBILE-Makoto-Yuki-Persona-3.mp4',
 //     import.meta.url
 //   ).href
-})
+// })
 
 const items = ref([
   {

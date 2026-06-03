@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useAudioStore } from './stores/audio'
 import musicSrc from './assets/musics/Color-Your-Night.mp3'
 
@@ -8,9 +8,17 @@ const audio = useAudioStore()
 onMounted(() => {
   audio.init(musicSrc)
 })
+
+import { useVideoManager } from "./composables/useVideoManager"
+
+const { currentVideo } = useVideoManager()
+
+const currentVideoSrc = computed(() => currentVideo.value)
 </script>
 
 <template>
+  <video :src="currentVideoSrc" class="bg-video" />
+
   <router-view />
 
   <!-- GLOBAL Persona-style mute button -->
