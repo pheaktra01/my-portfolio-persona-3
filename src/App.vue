@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted } from 'vue'
 import { useAudioStore } from './stores/audio'
 import musicSrc from './assets/musics/Color-Your-Night.mp3'
+import Albums from './components/Albums.vue'
 
 const audioStore = useAudioStore()
 
@@ -25,6 +26,8 @@ const currentVideoSrc = computed(() => currentVideo.value)
   <video :src="currentVideoSrc" class="bg-video" />
 
   <router-view />
+
+  <Albums />
 
   <!-- GLOBAL Persona-style mute button -->
   <button class="mute-btn persona-mute" @click="audioStore.toggleMute">
