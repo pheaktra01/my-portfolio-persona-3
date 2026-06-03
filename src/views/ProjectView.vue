@@ -141,7 +141,7 @@ const projects = [
   left: 0;
   top: 60px;
   width: 42%;
-  height: 100vh;
+  height: calc(100vh - 60px);
   padding: 40px;
   overflow-y: auto;
   z-index: 2;
@@ -330,4 +330,60 @@ const projects = [
   transform: skewX(-6deg) translateX(10px) scale(1.02);
 }
 
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+
+  .project-page {
+    padding: 10px;
+  }
+
+  .panel {
+    width: 90%;
+    left: 50%;
+    top: 60px;
+
+    height: calc(100vh - 40px);
+    padding: 20px;
+
+    transform: translateX(-50%) translateY(-10px);
+
+    /* override desktop animation conflict */
+    animation: panelEnterMobile 0.55s ease-out forwards;
+  }
+
+  @keyframes panelEnterMobile {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
+  .top h1 {
+    font-size: 2.6rem;
+  }
+
+  .grid {
+    gap: 12px;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  .content h2 {
+    font-size: 1.2rem;
+  }
+
+  .tags span {
+    font-size: 0.65rem;
+  }
+
+  .open-btn {
+    width: 100%;
+  }
+}
 </style>

@@ -133,6 +133,8 @@ const links = [
   width: 100%;
   height: 100%;
   object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .overlay {
@@ -145,10 +147,24 @@ const links = [
   left: 0;
   top: 60px;
   width: 42%;
-  height: 100vh;
+  height: calc(100vh - 60px);
   padding: 40px;
   overflow-y: auto;
   z-index: 2;
+}
+
+/* ================= SCROLL FIX ================= */
+.panel {
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding-bottom: 120px;
+
+  box-sizing: border-box;
+
+  -webkit-overflow-scrolling: touch;
+
+  scrollbar-width: none;
 }
 
 .top h1 {
@@ -309,6 +325,90 @@ const links = [
   }
   to {
     left: 120%;
+  }
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+
+  .social-page {
+    overflow: hidden;
+  }
+
+  .panel {
+    width: 90%;
+    left: 50%;
+    top: 60px;
+
+    height: calc(100vh - 80px);
+
+    padding: 20px;
+    padding-bottom: 120px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    transform: translateX(-50%);
+
+    box-sizing: border-box;
+
+    -webkit-overflow-scrolling: touch;
+
+    animation: panelEnterMobile 0.5s ease-out forwards;
+  }
+
+  @keyframes panelEnterMobile {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
+  /* HEADER */
+  .top h1 {
+    font-size: 2.6rem;
+    line-height: 1;
+  }
+
+  .status {
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
+  }
+
+  /* GRID */
+  .grid {
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  /* CARD */
+  .card {
+    padding: 14px;
+  }
+
+  .arcana {
+    font-size: 0.7rem;
+  }
+
+  .content h2 {
+    font-size: 1.1rem;
+  }
+
+  .content p {
+    font-size: 0.8rem;
+  }
+
+  .rank {
+    font-size: 0.7rem;
+    padding: 4px 8px;
   }
 }
 </style>

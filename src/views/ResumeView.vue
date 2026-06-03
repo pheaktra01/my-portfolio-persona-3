@@ -152,7 +152,7 @@ onMounted(() => {
   top: 60px;
 
   width: 42%;
-  height: 100vh;
+  height: calc(100vh - 60px);
 
   padding: 40px;
 
@@ -160,6 +160,20 @@ onMounted(() => {
   overflow-x: hidden;
 
   z-index: 2;
+}
+
+/* ================= SCROLL FIX ================= */
+.panel {
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding-bottom: 120px;
+
+  box-sizing: border-box;
+
+  -webkit-overflow-scrolling: touch;
+
+  scrollbar-width: none;
 }
 
 .panel::-webkit-scrollbar {
@@ -347,5 +361,104 @@ onMounted(() => {
   to {
     left: 120%;
   }
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+
+  .resume-page {
+    overflow: hidden;
+  }
+
+  .panel {
+    width: 90%;
+    left: 50%;
+    top: 60px;
+
+    height: calc(100vh - 80px);
+
+    padding: 20px;
+    padding-bottom: 120px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    transform: translateX(-50%);
+
+    box-sizing: border-box;
+
+    -webkit-overflow-scrolling: touch;
+
+    /* override desktop animation */
+    animation: panelEnterMobile 0.5s ease-out forwards;
+  }
+
+  @keyframes panelEnterMobile {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
+  /* HEADER */
+  .top h1 {
+    font-size: 2.8rem;
+    line-height: 1;
+  }
+
+  .status {
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
+  }
+
+  /* CARD */
+  .card {
+    padding: 14px;
+  }
+
+  .title {
+    font-size: 0.9rem;
+  }
+
+  /* ROWS */
+  .row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  /* TAGS */
+  .tags span {
+    font-size: 0.65rem;
+    padding: 4px 8px;
+  }
+
+  /* BUTTON */
+.download-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  max-width: 768px;
+
+  padding: 10px 18px;
+
+  border: 2px solid #ff2e63;
+  color: white;
+  text-decoration: none;
+
+  transition: 0.2s;
+
+  box-sizing: border-box;
+}
 }
 </style>

@@ -132,15 +132,45 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+/* ================= BASE ================= */
+.skill-page {
+  min-height: 100vh;
+  color: white;
+  font-family: Impact, Arial Black, sans-serif;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  overflow-x: hidden;
+}
 
-/* ================= LEFT HALF PANEL ================= */
+.skill-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ================= BACKGROUND VIDEO ================= */
+.bg-video {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ================= PANEL ================= */
 .panel {
   position: fixed;
   top: 30px;
   left: 0;
-
   width: 40%;
-  height: 100vh;
+  height: calc(100vh - 60px);
 
   padding: 40px;
   box-sizing: border-box;
@@ -152,50 +182,33 @@ onBeforeUnmount(() => {
 
   scrollbar-width: none;
   -ms-overflow-style: none;
+
+  /* FIX: DO NOT LOCK VISIBILITY HERE */
+  opacity: 1;
+  transform: translateX(-40px);
 }
 
-/* hide scrollbar (Chrome, Edge, Safari) */
 .panel::-webkit-scrollbar {
   display: none;
 }
 
-/* ================= BASE ================= */
-.skill-page {
-  min-height: 100vh;
-  background: #070a12;
-  color: white;
-  font-family: Impact, Arial Black, sans-serif;
-  padding: 40px;
-  position: relative;
-  overflow: hidden;
+/* ================= ENTER ANIMATION ================= */
+.panel.enter {
+  animation: panelIn 0.6s ease forwards;
 }
 
-.skill-page {
-  overflow-x: hidden;
+@keyframes panelIn {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
-/* make sure UI is above video */
-.skill-page {
-  position: relative;
-  z-index: 1;
-}
-
-.skill-page::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-  z-index: 0;
-
-  pointer-events: none;
-}
-
-/* ================= BACKGROUND ================= */
+/* ================= BACKGROUND SLASH ================= */
 .bg-slash {
   position: absolute;
   width: 120%;
   height: 120%;
-  background: linear-gradient(120deg, #ff2e63 0%, transparent 60%);
   transform: skewY(-12deg);
   top: -20%;
   left: -10%;
@@ -208,6 +221,21 @@ onBeforeUnmount(() => {
   z-index: 2;
   top: 30px;
   margin-bottom: 40px;
+
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.panel.enter .top {
+  animation: headerIn 0.5s ease forwards;
+  animation-delay: 0.1s;
+}
+
+@keyframes headerIn {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .status {
@@ -233,7 +261,7 @@ onBeforeUnmount(() => {
   gap: 20px;
 }
 
-/* ================= CARD (PERSONA STYLE) ================= */
+/* ================= CARD ================= */
 .card {
   position: relative;
   background: #0d0f1a;
@@ -241,6 +269,9 @@ onBeforeUnmount(() => {
   padding: 20px;
   transform: skewX(-6deg);
   overflow: hidden;
+
+  opacity: 0;
+  transform: translateX(-30px) skewX(-6deg);
 }
 
 .card::before {
@@ -251,6 +282,18 @@ onBeforeUnmount(() => {
   width: 6px;
   height: 100%;
   background: #ff2e63;
+}
+
+.panel.enter .card {
+  animation: cardIn 0.5s ease forwards;
+  animation-delay: calc(var(--i) * 0.12s);
+}
+
+@keyframes cardIn {
+  to {
+    opacity: 1;
+    transform: translateX(0) skewX(-6deg);
+  }
 }
 
 /* ================= PROFILE ================= */
@@ -354,8 +397,47 @@ onBeforeUnmount(() => {
   to { transform: rotate(360deg); }
 }
 
+/* ================= TABLET ================= */
+@media (max-width: 1024px) {
+  .panel {
+    width: 55%;
+    padding: 30px;
+  }
+
+  .top h1 {
+    font-size: 3.8rem;
+  }
+}
+
 /* ================= MOBILE ================= */
 @media (max-width: 768px) {
+  .skill-page {
+    padding: 15px;
+  }
+
+  .panel {
+    width: 90%;
+    left: 50%;
+    top: 30px;
+
+    transform: translateX(-50%) translateY(-10px);
+    padding: 20px;
+
+    height: calc(100vh - 40px);
+  }
+
+  /* fix animation conflict on mobile */
+  .panel.enter {
+    animation: panelInMobile 0.6s ease forwards;
+  }
+
+  @keyframes panelInMobile {
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
   .top h1 {
     font-size: 2.8rem;
   }
@@ -365,74 +447,9 @@ onBeforeUnmount(() => {
     text-align: center;
   }
 
-  .card {
-    transform: none;
-  }
-}
-
-/* ===== FULLSCREEN VIDEO BACKGROUND ===== */
-.bg-video {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-
-  z-index: 0;
-  pointer-events: none;
-}
-
-/* ===== Intro Animation ===== */
-.panel {
-  opacity: 0;
-  transform: translateX(-40px);
-}
-
-/* PANEL ENTER */
-.panel.enter {
-  animation: panelIn 0.6s ease forwards;
-}
-
-@keyframes panelIn {
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* STAGGER CARDS */
-.card {
-  opacity: 0;
-  transform: translateX(-30px) skewX(-6deg);
-}
-
-.panel.enter .card {
-  animation: cardIn 0.5s ease forwards;
-  animation-delay: calc(var(--i) * 0.12s);
-}
-
-@keyframes cardIn {
-  to {
-    opacity: 1;
-    transform: translateX(0) skewX(-6deg);
-  }
-}
-
-/* HEADER POP */
-.top {
-  opacity: 0;
-  transform: translateX(-20px);
-}
-
-.panel.enter .top {
-  animation: headerIn 0.5s ease forwards;
-  animation-delay: 0.1s;
-}
-
-@keyframes headerIn {
-  to {
-    opacity: 1;
-    transform: translateX(0);
+  .avatar {
+    width: 90px;
+    height: 90px;
   }
 }
 </style>

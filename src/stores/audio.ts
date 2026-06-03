@@ -8,6 +8,35 @@ export const useAudioStore = defineStore('audio', {
   }),
 
   actions: {
+
+    play() {
+      if (!this.audio) return
+      if (!this.muted) {
+        this.audio.play().catch(() => {})
+      }
+    },
+
+    pause() {
+      if (!this.audio) return
+      this.audio.pause()
+    },
+
+    setupVisibilityControl() {
+      const handleVisibility = () => {
+        if (!this.audio) return
+
+        if (document.hidden) {
+          this.audio.pause()
+        } else {
+          if (!this.muted) {
+            this.audio.play().catch(() => {})
+          }
+        }
+      }
+
+      document.addEventListener('visibilitychange', handleVisibility)
+    },
+
     init(src: string) {
       if (this.started) return
 
@@ -21,11 +50,23 @@ export const useAudioStore = defineStore('audio', {
       this.audio.muted = this.muted
       this.started = true
 
-      // try play immediately (like your current tryAutoplay)
-      this.audio.play().catch(() => {})
-
-      // unlock on first interaction (like your resumePlaybackAfterGesture)
       this.unlock()
+      this.setupVisibilityControl() // 🔥 add this
+    },
+
+    fadeOut() {
+      if (!this.audio) return
+
+      const interval = setInterval(() => {
+        if (!this.audio) return
+
+        if (this.audio.volume > 0.05) {
+          this.audio.volume -= 0.05
+        } else {
+          this.audio.pause()
+          clearInterval(interval)
+        }
+      }, 50)
     },
 
     unlock() {

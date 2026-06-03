@@ -142,13 +142,25 @@ onMounted(() => {
   top: 60px;
 
   width: 42%;
-  height: 100%;
+  height: calc(100vh - 60px);
 
   padding: 40px;
+  padding-bottom: 120px;
+
   overflow-y: auto;
-  padding-bottom: 40px;
+  overflow-x: hidden;
 
   z-index: 2;
+
+  box-sizing: border-box;
+
+  -webkit-overflow-scrolling: touch;
+
+  scrollbar-width: none;
+}
+
+.panel::-webkit-scrollbar {
+  display: none;
 }
 
 /* HEADER */
@@ -241,5 +253,64 @@ onMounted(() => {
 /* scrollbar hidden */
 .panel::-webkit-scrollbar {
   display: none;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+
+  .panel {
+    width: 90%;
+    left: 50%;
+    top: 60px;
+
+    height: calc(100vh - 80px);
+
+    padding: 20px;
+    padding-bottom: 120px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    transform: translateX(-50%);
+
+    box-sizing: border-box;
+
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* header scaling */
+  .top h1 {
+    font-size: 2.6rem;
+  }
+
+  .status {
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+  }
+
+  /* cards spacing */
+  .grid {
+    gap: 12px;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  .content h2 {
+    font-size: 1.2rem;
+  }
+
+  .content p {
+    font-size: 0.8rem;
+  }
+
+  .percent {
+    font-size: 0.75rem;
+  }
 }
 </style>

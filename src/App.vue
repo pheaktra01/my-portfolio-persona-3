@@ -1,12 +1,17 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, onUnmounted } from 'vue'
 import { useAudioStore } from './stores/audio'
 import musicSrc from './assets/musics/Color-Your-Night.mp3'
 
-const audio = useAudioStore()
+const audioStore = useAudioStore()
 
 onMounted(() => {
-  audio.init(musicSrc)
+  audioStore.init(musicSrc)
+  audioStore.play()
+})
+
+onUnmounted(() => {
+  audioStore.pause()
 })
 
 import { useVideoManager } from "./composables/useVideoManager"
@@ -22,8 +27,8 @@ const currentVideoSrc = computed(() => currentVideo.value)
   <router-view />
 
   <!-- GLOBAL Persona-style mute button -->
-  <button class="mute-btn persona-mute" @click="audio.toggleMute">
-    <span v-if="audio.muted">
+  <button class="mute-btn persona-mute" @click="audioStore.toggleMute">
+    <span v-if="audioStore.muted">
       <!-- Muted icon -->
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
         <path d="M11 5L6 9H3v6h3l5 4V5z" />
@@ -84,6 +89,6 @@ html, body {
   padding: 0;
   width: 100%;
   min-height: 100%;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 </style>

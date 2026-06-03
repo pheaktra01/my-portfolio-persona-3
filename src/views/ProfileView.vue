@@ -140,12 +140,25 @@ onMounted(() => {
   top: 60px;
 
   width: 42%;
-  height: 100vh;
+  height: calc(100vh - 60px);
 
   padding: 40px;
+  padding-bottom: 120px;
 
   overflow-y: auto;
+  overflow-x: hidden;
+
   z-index: 2;
+
+  box-sizing: border-box;
+
+  -webkit-overflow-scrolling: touch;
+
+  scrollbar-width: none;
+}
+
+.panel::-webkit-scrollbar {
+  display: none;
 }
 
 /* HEADER */
@@ -331,5 +344,101 @@ onMounted(() => {
 .card:hover {
   transform: skewX(-6deg) translateX(6px) scale(1.01);
   border-color: #ff2e63;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+
+  .profile-page {
+    overflow: auto;
+  }
+
+  .panel {
+    width: 90%;
+    left: 50%;
+    top: 60px;
+
+    height: calc(100vh - 80px);
+
+    padding: 20px;
+    padding-bottom: 120px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    transform: translateX(-50%);
+
+    box-sizing: border-box;
+
+    -webkit-overflow-scrolling: touch;
+
+    animation: panelEnterMobile 0.6s ease-out forwards;
+  }
+
+  @keyframes panelEnterMobile {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
+  /* HEADER */
+  .top h1 {
+    font-size: 2.7rem;
+  }
+
+  .status {
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+  }
+
+  /* HERO */
+  .hero {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .avatar {
+    width: 90px;
+    height: 90px;
+  }
+
+  .info h2 {
+    font-size: 1.3rem;
+  }
+
+  .role {
+    font-size: 0.85rem;
+  }
+
+  .level {
+    font-size: 0.8rem;
+  }
+
+  /* GRID */
+  .grid {
+    gap: 12px;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  .card h3 {
+    font-size: 1rem;
+  }
+
+  .card p {
+    font-size: 0.8rem;
+  }
 }
 </style>

@@ -98,15 +98,17 @@ function onRelease() {
   }
 }
 
+const clickedIndex = ref<number | null>(null)
+
 function handleClick(i: number) {
   playClickSound()
 
-  if (isMobile.value) {
-    setHover(i)
-    setTimeout(() => clearHover(), 2000)
-  }
+  clickedIndex.value = i
 
-  router.push(routes[i])
+  setTimeout(() => {
+    clickedIndex.value = null
+    router.push(routes[i])
+  }, 180) // fast Persona hit feel
 }
 
 /* ================= INIT ================= */
@@ -166,7 +168,10 @@ onMounted(() => {
 					<button
 						class="persona-btn"
 						:data-index="i"
-						:class="{ 'is-active': hoveredIndex === i }"
+						:class="{
+							'is-active': hoveredIndex === i,
+							'is-clicked': clickedIndex === i
+						}"
 						@click="handleClick(i)"
 						@pointerdown="onPress(i)"
 						@pointerup="onRelease"
@@ -376,5 +381,57 @@ onMounted(() => {
 	.btn-bg-slash {
 		clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
 	}
+}
+
+/* ================= PERSONA CLICK IMPACT ================= */
+
+.persona-btn.is-clicked {
+  animation: btnImpact 0.18s ease-out;
+}
+
+/* quick punch scale + rotate */
+@keyframes btnImpact {
+  0% {
+    transform: scale(1) rotate(-2deg);
+  }
+
+  40% {
+    transform: scale(0.92) rotate(1deg);
+  }
+
+  100% {
+    transform: scale(1.05) rotate(-2deg);
+  }
+}
+
+/* slash flash intensifies on click */
+.persona-btn.is-clicked .btn-bg-slash {
+  transform: scaleX(1);
+  filter: brightness(1.4);
+  animation: slashFlash 0.18s ease-out;
+}
+
+@keyframes slashFlash {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.9;
+  }
+}
+
+/* text micro jitter (Persona "impact feel") */
+.persona-btn.is-clicked .text-layer.main-text {
+  animation: textJolt 0.18s ease-out;
+}
+
+@keyframes textJolt {
+  0%   { transform: skewX(-10deg) translate(0,0); }
+  30%  { transform: skewX(-12deg) translate(-2px,-1px); }
+  60%  { transform: skewX(-9deg) translate(2px,1px); }
+  100% { transform: skewX(-10deg) translate(0,0); }
 }
 </style>

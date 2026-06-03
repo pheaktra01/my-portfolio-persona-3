@@ -1,6 +1,18 @@
 <template>
-    <div class="intro-slash"></div>
+    <div v-if="show" class="intro-slash"></div>
 </template>
+
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+
+const show = ref(true)
+
+onMounted(() => {
+  setTimeout(() => {
+    show.value = false
+  }, 700) // match animation duration
+})
+</script>
 
 <style scoped>
 /* ===== INTRO SLASH ===== */
@@ -16,9 +28,10 @@
 
   transform: skewX(-20deg);
 
-  z-index: 999;
+  z-index: 9999;
 
-  animation: slashEnter .7s ease-out forwards;
+  animation: slashEnter 0.7s ease-out forwards;
+  pointer-events: none;
 }
 
 @keyframes slashEnter {
@@ -31,10 +44,9 @@
   }
 }
 
-/* transition slash */
+/* ===== TRANSITION SLASH ===== */
 .transition-slash {
   position: fixed;
-
   top: 0;
   left: -150%;
 
@@ -51,7 +63,7 @@
 }
 
 .transition-slash.active {
-  animation: slashExit .10s ease forwards;
+  animation: slashExit 0.7s ease forwards;
 }
 
 @keyframes slashExit {
@@ -61,6 +73,45 @@
 
   to {
     left: 150%;
+  }
+}
+
+/* ================= RESPONSIVE FIX ================= */
+
+/* TABLET */
+@media (max-width: 1024px) {
+  .intro-slash {
+    transform: skewX(-18deg);
+  }
+
+  .transition-slash {
+    transform: skewX(-20deg);
+  }
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .intro-slash {
+    transform: skewX(-12deg);
+    width: 140%;
+  }
+
+  .transition-slash {
+    transform: skewX(-15deg);
+    width: 160%;
+  }
+}
+
+/* SMALL MOBILE */
+@media (max-width: 480px) {
+  .intro-slash {
+    transform: skewX(-10deg);
+    width: 160%;
+  }
+
+  .transition-slash {
+    transform: skewX(-12deg);
+    width: 180%;
   }
 }
 </style>

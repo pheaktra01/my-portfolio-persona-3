@@ -126,6 +126,7 @@ const items = ref([
   height: 100%;
   object-fit: cover;
   z-index: 0;
+  pointer-events: none;
 }
 
 /* DARK OVERLAY */
@@ -141,13 +142,31 @@ const items = ref([
   left: 0;
   top: 60px;
   width: 42%;
-  height: 100vh;
+  height: calc(100vh - 60px);
   padding: 40px;
 
   overflow-y: auto;
   overflow-x: hidden;
 
   z-index: 2;
+}
+
+/* ================= PANEL SCROLL FIX ================= */
+.panel {
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding-bottom: 120px;
+
+  box-sizing: border-box;
+
+  -webkit-overflow-scrolling: touch;
+
+  scrollbar-width: none;
+}
+
+.panel::-webkit-scrollbar {
+  display: none;
 }
 
 /* HEADER */
@@ -322,6 +341,113 @@ const items = ref([
   100% {
     transform: scale(1);
     box-shadow: 0 0 0 rgba(255, 46, 99, 0);
+  }
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+
+  .timeline-page {
+    overflow: hidden;
+  }
+
+  .panel {
+    width: 90%;
+    left: 50%;
+    top: 60px;
+
+    height: calc(100vh - 80px);
+
+    padding: 20px;
+    padding-bottom: 120px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    transform: translateX(-50%);
+
+    box-sizing: border-box;
+
+    -webkit-overflow-scrolling: touch;
+
+    /* override desktop animation */
+    animation: panelEnterMobile 0.6s ease-out forwards;
+  }
+
+  @keyframes panelEnterMobile {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
+  /* HEADER */
+  .top h1 {
+    font-size: 2.5rem;
+    line-height: 1;
+  }
+
+  .status {
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
+  }
+
+  /* TIMELINE */
+  .timeline {
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  .timeline::before {
+    left: 8px;
+  }
+
+  .item {
+    gap: 12px;
+    padding-left: 14px;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    margin-top: 8px;
+  }
+
+  /* CONTENT */
+  .content {
+    padding: 12px;
+  }
+
+  .year {
+    font-size: 0.75rem;
+  }
+
+  .content h2 {
+    font-size: 1rem;
+    margin: 4px 0;
+  }
+
+  .content p {
+    font-size: 0.78rem;
+    line-height: 1.5;
+  }
+
+  /* TAGS */
+  .tags {
+    gap: 4px;
+  }
+
+  .tags span {
+    font-size: 0.62rem;
+    padding: 4px 6px;
   }
 }
 </style>

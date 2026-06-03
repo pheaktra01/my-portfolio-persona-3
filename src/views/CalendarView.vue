@@ -66,14 +66,14 @@ onBeforeUnmount(() => {
   clearVideo()
 })
 
-onMounted(() => {
+// onMounted(() => {
 //   isMobile.value = window.innerWidth <= 768
 
 //   mobileVideoSrc.value = new URL(
 //     '../assets/videos/MOBILE-Makoto-Yuki-Persona-3.mp4',
 //     import.meta.url
 //   ).href
-})
+// })
 
 const events = [
   {
@@ -132,14 +132,37 @@ const events = [
   top: 60px;
 
   width: 42%;
-  height: 100vh;
+  height: calc(100vh - 60px);
 
-  padding: 40px;
+  padding: 40px 40px 120px;
 
   overflow-y: auto;
   overflow-x: hidden;
 
   z-index: 2;
+
+  -webkit-overflow-scrolling: touch;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* ================= SCROLL FIX ================= */
+.panel {
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding-bottom: 120px;
+
+  box-sizing: border-box;
+
+  -webkit-overflow-scrolling: touch;
+
+  scrollbar-width: none;
+}
+
+.panel::-webkit-scrollbar {
+  display: none;
 }
 
 .top h1 {
@@ -208,10 +231,6 @@ const events = [
   margin-top: 8px;
   opacity: .8;
   font-size: .9rem;
-}
-
-.panel::-webkit-scrollbar {
-  display: none;
 }
 
 /* ===== ANIMATION ===== */
@@ -297,6 +316,95 @@ const events = [
   }
   to {
     left: 120%;
+  }
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+
+  .calendar-page {
+    overflow: hidden;
+  }
+
+  .panel {
+    width: 90%;
+    left: 50%;
+    top: 60px;
+
+    height: calc(100vh - 80px);
+
+    padding: 20px;
+    padding-bottom: 120px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    transform: translateX(-50%);
+
+    box-sizing: border-box;
+
+    -webkit-overflow-scrolling: touch;
+
+    animation: panelEnterMobile 0.5s ease-out forwards;
+  }
+
+  @keyframes panelEnterMobile {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
+  /* HEADER */
+  .top h1 {
+    font-size: 2.5rem;
+  }
+
+  .status {
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+  }
+
+  .subtitle {
+    font-size: 0.85rem;
+  }
+
+  /* GRID */
+  .calendar-grid {
+    gap: 12px;
+  }
+
+  /* CARD */
+  .day-card {
+    flex-direction: column;
+  }
+
+  .date {
+    width: 100%;
+    min-width: unset;
+    padding: 8px;
+    font-size: 0.8rem;
+  }
+
+  .content {
+    padding: 12px;
+  }
+
+  .content h2 {
+    font-size: 1rem;
+  }
+
+  .content p {
+    font-size: 0.8rem;
+  }
+
+  /* hover fix for touch devices */
+  .day-card:hover {
+    transform: skewX(-6deg);
   }
 }
 </style>
