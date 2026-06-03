@@ -1,21 +1,18 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useAudioStore } from './stores/audio'
-import musicSrc from './assets/musics/Color-Your-Night.mp3'
 import Albums from './components/Albums.vue'
+import { useVideoManager } from "./composables/useVideoManager"
 
 const audioStore = useAudioStore()
 
 onMounted(() => {
-  audioStore.init(musicSrc)
+  audioStore.init(
+    new URL('./assets/musics/Color-Your-Night.mp3', import.meta.url).href
+  )
+
   audioStore.play()
 })
-
-onUnmounted(() => {
-  audioStore.pause()
-})
-
-import { useVideoManager } from "./composables/useVideoManager"
 
 const { currentVideo } = useVideoManager()
 
@@ -28,26 +25,6 @@ const currentVideoSrc = computed(() => currentVideo.value)
   <router-view />
 
   <Albums />
-
-  <!-- GLOBAL Persona-style mute button -->
-  <button class="mute-btn persona-mute" @click="audioStore.toggleMute">
-    <span v-if="audioStore.muted">
-      <!-- Muted icon -->
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path d="M11 5L6 9H3v6h3l5 4V5z" />
-        <path d="M16 9l4 4M20 9l-4 4" />
-      </svg>
-    </span>
-
-    <span v-else>
-      <!-- Unmuted icon -->
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path d="M11 5L6 9H3v6h3l5 4V5z" />
-        <path d="M15 9a4 4 0 010 6" />
-        <path d="M17.5 7a7 7 0 010 10" />
-      </svg>
-    </span>
-  </button>
 </template>
 
 <style setup>
