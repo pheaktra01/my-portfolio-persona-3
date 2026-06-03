@@ -9,7 +9,7 @@
       loop
       muted
       playsinline
-      preload="none"
+      preload="metadata"
     ></video>
 
     <BackBtn />
@@ -67,8 +67,9 @@
 import { onMounted, ref } from 'vue'
 import BackBtn from '../components/BackBtn.vue'
 import IntroSlash from '../components/IntroSlash.vue'
+import { videos } from '../config/videos'
 
-const videoSrc = ref('')
+const videoSrc = ref(videos.experience)
 
 onMounted(() => {
 //   isMobile.value = window.innerWidth <= 768

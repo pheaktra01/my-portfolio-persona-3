@@ -3,26 +3,14 @@
 
     <!-- BACKGROUND VIDEO -->
     <video
-      v-if="!isMobile"
       class="bg-video"
-      :src="desktopVideoSrc"
+      :src="isMobile ? mobileVideoSrc : desktopVideoSrc"
       autoplay
       loop
       muted
       playsinline
-      preload="none"
-    ></video>
-
-    <video
-      v-else
-      class="bg-video"
-      :src="mobileVideoSrc"
-      autoplay
-      loop
-      muted
-      playsinline
-      preload="none"
-    ></video>
+      preload="metadata"
+    />
 
     <BackBtn />
     <IntroSlash />
@@ -120,24 +108,17 @@ import { ref, onMounted } from 'vue'
 import  BackBtn  from '../components/BackBtn.vue'
 import IntroSlash from '../components/IntroSlash.vue'
 
-const isMobile = ref(false)
+import { videos } from '../config/videos'
+
+const desktopVideoSrc = ref(videos.skill)
+
+const isMobile = ref(window.innerWidth <= 768)
 const pageReady = ref(false)
 
-const desktopVideoSrc = ref('')
-const mobileVideoSrc = ref('')
+const mobileVideoSrc = ref(videos.mobile)
 
 onMounted(() => {
   isMobile.value = window.innerWidth <= 768
-
-  desktopVideoSrc.value = new URL(
-    '../assets/videos/persona-p3-skill.mp4',
-    import.meta.url
-  ).href
-
-  mobileVideoSrc.value = new URL(
-    '../assets/videos/MOBILE-Makoto-Yuki-Persona-3.mp4',
-    import.meta.url
-  ).href
 
   requestAnimationFrame(() => {
     pageReady.value = true

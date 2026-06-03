@@ -2,13 +2,12 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
-import desktopVideoSrc from '../assets/videos/mylivewallpapers.com-Makoto-Yuki-Persona-3.mp4'
-import mobileVideoSrc from '../assets/videos/MOBILE-Makoto-Yuki-Persona-3.mp4'
-
 import hoverSoundUrl from '../assets/sounds/hover.wav'
 import clickSoundUrl from '../assets/sounds/click.wav'
 
 import IntroSlash from '../components/IntroSlash.vue'
+
+import { videos } from '../config/videos'
 
 // add vide ref
 const videoRef = ref<HTMLVideoElement | null>(null)
@@ -138,25 +137,25 @@ onMounted(() => {
 		<video
 			v-if="!isMobile"
 			ref="videoRef"
-			:src="desktopVideoSrc"
+			:src="videos.home"
 			playsinline
 			autoplay
 			loop
 			muted
 			class="video-bg"
-			preload="none"
+			preload="metadata"
 		></video>
 
 		<video
 			v-else
 			ref="videoRef"
-			:src="mobileVideoSrc"
+			:src="videos.mobile"
 			playsinline
 			autoplay
 			loop
 			muted
 			class="video-bg"
-			preload="none"
+			preload="metadata"
 		></video>
 
 		<IntroSlash />

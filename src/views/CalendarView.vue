@@ -8,7 +8,7 @@
       loop
       muted
       playsinline
-      preload="none"
+      preload="metadata"
     ></video>
 
     <div class="overlay"></div>
@@ -52,16 +52,12 @@
 import { onMounted, ref } from 'vue'
 import BackBtn from '../components/BackBtn.vue'
 import IntroSlash from '../components/IntroSlash.vue'
+import { videos } from '../config/videos'
 
-const videoSrc = ref('')
+const videoSrc = ref(videos.calendar)
 
 onMounted(() => {
 //   isMobile.value = window.innerWidth <= 768
-
-  videoSrc.value = new URL(
-    '../assets/videos/persona-p3-calendar.mp4',
-    import.meta.url
-  ).href
 
 //   mobileVideoSrc.value = new URL(
 //     '../assets/videos/MOBILE-Makoto-Yuki-Persona-3.mp4',
