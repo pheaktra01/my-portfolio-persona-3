@@ -13,11 +13,11 @@
         name: docker
         state: started
         enabled: yes
-    
-    - name: Copy project from Jenkins workspace (Optional)
+
+    - name: Copy project from Jenkins workspace
       copy:
-      src: "{{ workspace }}"
-      dest: /opt/vue-app/
+        src: "{{ workspace }}"
+        dest: /opt/vue-app/
 
     - name: Build Docker image
       command: docker build -t vue-app /opt/vue-app/
