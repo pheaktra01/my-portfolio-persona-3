@@ -7,12 +7,6 @@ pipeline {
 
     stages {
 
-        stage('Clone Repository') {
-            steps {
-                git branch: 'main', url: 'https://github.com/pheaktra01/my-portfolio-persona-3.git'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t vue-app .'
