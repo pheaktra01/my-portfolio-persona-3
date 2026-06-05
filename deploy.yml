@@ -19,6 +19,11 @@
         src: "{{ lookup('env', 'WORKSPACE') }}/"
         dest: /home/ubuntu/app/
 
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: present
+
     - name: Build Docker image
       command: docker build -t vue-app /home/ubuntu/app/
 
@@ -31,4 +36,4 @@
       ignore_errors: yes
 
     - name: Run new container
-      command: docker run -d --name vue-container -p 80:80 vue-app
+      command: docker run -d --name vue-container -p 3000:80 vue-app
