@@ -14,10 +14,10 @@
         state: started
         enabled: yes
 
-    - name: Copy project from Jenkins workspace
+    - name: Copy project to server
       copy:
-        src: "{{ lookup('env', 'WORKSPACE') }}/dist"
-        dest: /home/ubuntu/app
+        src: "{{ lookup('env', 'WORKSPACE') }}/"
+        dest: /home/ubuntu/app/
 
     - name: Build Docker image
       command: docker build -t vue-app /home/ubuntu/app/
