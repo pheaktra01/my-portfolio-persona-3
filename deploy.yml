@@ -17,10 +17,10 @@
     - name: Copy project from Jenkins workspace
       copy:
         src: "{{ lookup('env', 'WORKSPACE') }}/dist"
-        dest: /opt/vue-app/
+        dest: /home/ubuntu/app
 
     - name: Build Docker image
-      command: docker build -t vue-app /opt/vue-app/
+      command: docker build -t vue-app /home/ubuntu/app/
 
     - name: Stop old container
       command: docker stop vue-container
