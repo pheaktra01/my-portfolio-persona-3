@@ -26,36 +26,47 @@ pipeline {
 
         failure {
 
-            sh '''
-            docker logs vue-container > docker.log || true
-            '''
+            script {
 
-            emailext (
-                subject: "❌ FAILED: ${JOB_NAME} #${BUILD_NUMBER}",
-                mimeType: "text/html",
-                body: """
-                <h2 style="color:red;">🚨 Deployment Failed</h2>
+                // Get last commit message
+                def commitMsg = sh(
+                    script: "git log -1 --pretty=%B",
+                    returnStdout: true
+                ).trim()
 
-                <table border="1" cellpadding="5">
-                    <tr><td><b>Job</b></td><td>${JOB_NAME}</td></tr>
-                    <tr><td><b>Build</b></td><td>#${BUILD_NUMBER}</td></tr>
-                    <tr><td><b>Branch</b></td><td>${GIT_BRANCH}</td></tr>
-                    <tr><td><b>Commit</b></td><td>${GIT_COMMIT}</td></tr>
-                </table>
+                // Get last error lines (clean)
+                def errorLog = sh(
+                    script: "tail -n 50 /var/lib/jenkins/workspace/${JOB_NAME}/console.log || true",
+                    returnStdout: true
+                ).trim()
 
-                <p>
-                🔗 <a href="${BUILD_URL}console">Console Output</a>
-                </p>
-                """,
+                emailext (
+                    subject: "❌ FAILED: ${JOB_NAME} #${BUILD_NUMBER}",
+                    mimeType: "text/html",
+                    body: """
+                    <h2 style="color:red;">🚨 Build Failed</h2>
 
-                attachLog: true,
-                attachmentsPattern: "docker.log",
+                    <p><b>Job:</b> ${JOB_NAME}</p>
+                    <p><b>Build:</b> #${BUILD_NUMBER}</p>
+                    <p><b>Branch:</b> ${GIT_BRANCH}</p>
 
-                recipientProviders: [
-                    [$class: 'DevelopersRecipientProvider'],
-                    [$class: 'RequesterRecipientProvider']
-                ]
-            )
+                    <h3>📝 Last Commit Message</h3>
+                    <pre>${commitMsg}</pre>
+
+                    <h3>❌ Error Summary</h3>
+                    <pre style="color:red;">${errorLog}</pre>
+
+                    <p>
+                    🔗 <a href="${BUILD_URL}console">Full Console Output</a>
+                    </p>
+                    """,
+
+                    recipientProviders: [
+                        [$class: 'DevelopersRecipientProvider'],
+                        [$class: 'RequesterRecipientProvider']
+                    ]
+                )
+            }
         }
     }
 }
