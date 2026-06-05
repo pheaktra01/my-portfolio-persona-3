@@ -14,7 +14,7 @@ onMounted(() => {
   audioStore.play()
 })
 
-cons { currentVideo } = useVideoManager()
+const { currentVideo } = useVideoManager()
 
 const currentVideoSrc = computed(() => currentVideo.value)
 </script>
