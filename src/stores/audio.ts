@@ -1,12 +1,13 @@
 import { defineStore } from 'pinia'
 
 export const useAudioStore = defineStore('audio', {
-  state: () => ({
+state: () => ({
     audio: null as HTMLAudioElement | null,
     muted: true,
     started: false,
-    currentSrc: '' as string,
-    isPlaying: false
+    currentSrc: '',
+    isPlaying: false, // user intention (IMPORTANT)
+    wasPlayingBeforeHide: false // NEW
   }),
 
   actions: {
@@ -72,12 +73,9 @@ export const useAudioStore = defineStore('audio', {
       this.muted = !this.muted
       this.audio.muted = this.muted
 
-      if (!this.muted) {
-        this.audio.play().catch(() => {})
-        this.isPlaying = true
-      }
-
       localStorage.setItem('audioMuted', this.muted ? '1' : '0')
+
+      // ❌ REMOVE auto play here
     },
 
     setupVisibilityControl() {
@@ -85,10 +83,15 @@ export const useAudioStore = defineStore('audio', {
         if (!this.audio) return
 
         if (document.hidden) {
+          // store real intent BEFORE hiding
+          this.wasPlayingBeforeHide = this.isPlaying
           this.audio.pause()
-        } else {
-          if (!this.muted) {
+        } 
+        else {
+          // only resume if user was playing BEFORE tab switch
+          if (this.wasPlayingBeforeHide && !this.muted) {
             this.audio.play().catch(() => {})
+            this.isPlaying = true
           }
         }
       }
