@@ -9,6 +9,7 @@
       loop
       muted
       playsinline
+      poster="../assets/images/experience.jpg"
       preload="metadata"
     ></video>
 

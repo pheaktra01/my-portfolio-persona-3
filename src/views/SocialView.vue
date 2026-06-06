@@ -8,6 +8,7 @@
       loop
       muted
       playsinline
+      poster="../assets/images/social.jpg"
       preload="metadata"
     ></video>
 

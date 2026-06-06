@@ -9,6 +9,7 @@
       loop
       muted
       playsinline
+      poster="../assets/images/profile.jpg"
       preload="metadata"
     ></video>
 
@@ -33,7 +34,7 @@
 
         <div class="avatar-wrap">
           <div class="avatar-ring"></div>
-          <img src="../assets/images/profile.png" class="avatar" />
+          <img src="../assets/images/e20220993.png" class="avatar" />
         </div>
 
         <div class="info">

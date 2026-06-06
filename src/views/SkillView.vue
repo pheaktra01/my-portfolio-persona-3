@@ -9,6 +9,7 @@
       loop
       muted
       playsinline
+      poster="../assets/images/skill.jpg"
       preload="metadata"
     />
 
@@ -35,12 +36,12 @@
         <section class="card profile" :style="{ '--i': 0 }">
           <div class="avatar-wrap">
             <div class="avatar-ring"></div>
-            <img src="../assets/images/profile.png" class="avatar" />
+            <img src="../assets/images/e20220993.png" class="avatar" />
           </div>
 
           <div class="info">
-            <h2>YAGAMI DEVILATHAN</h2>
-            <p>STUDENT</p>
+            <h2>LOENG PHEAKTRA</h2>
+            <p>DEVOPS ENGINEER</p>
 
             <div class="level">
               LEVEL <span>22</span>
@@ -69,12 +70,19 @@
           <div class="title">SPECIALIZATION</div>
 
           <div class="tag-list">
-            <span>Vue</span>
-            <span>NestJS</span>
-            <span>Flutter</span>
-            <span>MongoDB</span>
-            <span>Docker</span>
-            <span>Azure</span>
+            <span>Linux Ubuntu</span>
+            <span>Jenkins</span>
+            <span>Nginx</span>
+            <span>Kubernetes</span>
+            <span>Docker Container</span>
+            <span>Cloud AWS</span>
+            <span>Springboot</span>
+            <span>Nest Js</span>
+            <span>Vue Js</span>
+            <span>Reverse Proxy</span>
+            <span>Load Balancing</span>
+            <span>Ansible</span>
+            <span>Git/GitHub</span>
           </div>
         </section>
 

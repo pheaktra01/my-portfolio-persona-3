@@ -8,6 +8,7 @@
       loop
       muted
       playsinline
+      poster="../assets/images/calendar.jpg"
       preload="metadata"
     ></video>
 

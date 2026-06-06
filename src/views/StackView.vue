@@ -13,6 +13,7 @@
       loop
       muted
       playsinline
+      poster="../assets/images/stack.jpg"
       preload="metadata"
     ></video>
 

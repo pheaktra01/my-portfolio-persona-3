@@ -8,6 +8,7 @@
       loop
       muted
       playsinline
+      poster="../assets/images/resume.jpg"
       preload="metadata"
     ></video>
 
@@ -51,7 +52,7 @@
           <div class="title">EDUCATION</div>
 
           <div class="entry">
-            <h3>Information Technology</h3>
+            <h3>Computer Science</h3>
             <p>University Student</p>
           </div>
         </section>
@@ -74,13 +75,15 @@
         <section class="card">
           <div class="title">DOCUMENT</div>
 
-          <a
-            href="/resume.pdf"
-            target="_blank"
-            class="download-btn"
-          >
+          <button class="downloadCV" @click="downloadCV">
             DOWNLOAD CV
+          </button>
+
+          <a :href="cvFile" target="_blank" class="downloadCV view">
+            VIEW CV
           </a>
+
+          <div v-if="slashActive" class="transition-slash"></div>
         </section>
 
       </div>
@@ -90,13 +93,32 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import BackBtn from '../components/BackBtn.vue'
 import IntroSlash from '../components/IntroSlash.vue'
 import { videos } from '../config/videos'
 import { useVideoManager } from '../composables/useVideoManager.ts'
+import cvFile from "../assets/files/TP01-i4a-2026.pdf"
 
 const { setVideo, clearVideo, currentVideo } = useVideoManager()
+
+
+const slashActive = ref(false)
+
+const downloadCV = () => {
+  slashActive.value = true
+
+  setTimeout(() => {
+    const link = document.createElement("a")
+    link.href = cvFile
+    link.download = "Yagami-CV.pdf"
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+
+    slashActive.value = false
+  }, 450) // match animation duration
+}
 
 onMounted(() => {
   setVideo(videos.resume)
@@ -253,20 +275,33 @@ onMounted(() => {
 }
 
 /* BUTTON */
-.download-btn {
-  display: inline-block;
+.downloadCV,
+button.downloadCV,
+a.downloadCV {
+  all: unset;
+  display: inline-flex;
 
-  padding: 10px 18px;
+  align-items: center;
+  justify-content: center;
 
-  border: 2px solid #ff2e63;
+  font-family: Impact, Arial Black, sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 1px;
 
   color: white;
-  text-decoration: none;
 
-  transition: .2s;
+  border: 2px solid #ff2e63;
+  padding: 10px 18px;
+  margin-top: 10px;
+  margin-right: 10px;
+
+  cursor: pointer;
+
+  box-sizing: border-box;
 }
 
-.download-btn:hover {
+.downloadCV:hover {
   background: #ff2e63;
 }
 
@@ -442,7 +477,9 @@ onMounted(() => {
   }
 
   /* BUTTON */
-.download-btn {
+  .downloadCV,
+  button.downloadCV,
+  a.downloadCV {
   display: inline-flex;
   align-items: center;
   justify-content: center;
