@@ -98,7 +98,7 @@ import BackBtn from '../components/BackBtn.vue'
 import IntroSlash from '../components/IntroSlash.vue'
 import { videos } from '../config/videos'
 import { useVideoManager } from '../composables/useVideoManager.ts'
-import cvFile from "../assets/files/TP01-i4a-2026.pdf"
+import cvFile from "../assets/files/LoengPheaktra_DevOps_CV.pdf"
 
 const { setVideo, clearVideo, currentVideo } = useVideoManager()
 
