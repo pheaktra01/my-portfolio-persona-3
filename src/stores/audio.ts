@@ -75,7 +75,6 @@ state: () => ({
 
       localStorage.setItem('audioMuted', this.muted ? '1' : '0')
 
-      // ❌ REMOVE auto play here
     },
 
     setupVisibilityControl() {
