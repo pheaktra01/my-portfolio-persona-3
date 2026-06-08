@@ -6,8 +6,8 @@ state: () => ({
     muted: true,
     started: false,
     currentSrc: '',
-    isPlaying: false, // user intention (IMPORTANT)
-    wasPlayingBeforeHide: false // NEW
+    isPlaying: false,
+    wasPlayingBeforeHide: false
   }),
 
   actions: {

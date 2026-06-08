@@ -117,7 +117,7 @@ onMounted(() => {
 
   const v = videoRef.value
   if (v) {
-    v.muted = true        // MUST be real runtime mute
+    v.muted = true
     v.loop = true
 
     const playVideo = async () => {
@@ -135,7 +135,6 @@ onMounted(() => {
 
 <template>
 	<div class="video-wrapper">
-		<!-- Desktop uses the main (first) video; mobile uses the MOBILE (second) video -->
 		<video
 			v-if="!isMobile"
 			ref="videoRef"
@@ -215,7 +214,7 @@ onMounted(() => {
 	z-index: 10;
 	width: 100%;
 }
-/* Removed legacy .menu/.menu-btn styles — using .menu-container and .persona-btn now */
+/* =========== Removed legacy .menu/.menu-btn styles — using .menu-container and .persona-btn now ============= */
 .controls {
 	display: flex;
 	gap: 0.5rem;
@@ -252,7 +251,7 @@ onMounted(() => {
 	color: white;
 }
 
-/* Container styling just for presentation */
+/* =========== Container styling just for presentation ============= */
 .menu-container {
 	position: fixed;
 	left: 50%;
@@ -274,7 +273,7 @@ onMounted(() => {
 }
 .menu-list li + li { margin-top: -1.0rem } /* overlap items to tighten spacing */
 
-/* Base Button Styling */
+/* =========== Base Button Styling ============= */
 .persona-btn {
   position: relative;
   background: transparent;
@@ -295,7 +294,7 @@ onMounted(() => {
 	white-space: nowrap;
 }
 
-/* Subtle pop/scale effect when active */
+/* =========== Subtle pop/scale effect when active ============= */
 .persona-btn:hover {
   transform: scale(1.05) rotate(-2deg);
 }
@@ -327,20 +326,19 @@ onMounted(() => {
 	white-space: nowrap;
 }
 
-/* The Black Offset Text (Default State) */
+/* =========== The Black Offset Text (Default State) ============= */
 .text-layer.shadow-text {
   color: #000000;
   z-index: 2;
   transform: translateX(4px) translateY(2px) skewX(-10deg);
 }
 
-/* The Light Blue Text (Default State) */
+/* =========== The Light Blue Text (Default State) ============= */
 .text-layer.main-text {
   color: #61e1ff; /* Ice blue from your image */
   position: absolute;
   z-index: 3;
   transform: skewX(-10deg);
-  /* Cutout look mix-blend-mode if needed, but solid color works best here */
 }
 
 

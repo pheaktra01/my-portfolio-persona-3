@@ -1,7 +1,6 @@
 <template>
   <div class="project-page">
 
-    <!-- BACKGROUND VIDEO -->
     <video
       class="bg-video"
       :src="currentVideo"
@@ -13,23 +12,19 @@
       preload="metadata"
     ></video>
     
-    <!-- DARK OVERLAY -->
     <div class="overlay"></div>
 
     <BackBtn />
     <IntroSlash />
 
-    <!-- LEFT PANEL -->
     <div class="panel" ref="panelRef">
 
-      <!-- HEADER -->
       <header class="top">
         <div class="status">PROJECT FILES</div>
         <h1>PROJECTS</h1>
         <p class="subtitle">PERSONA ARCHIVE</p>
       </header>
 
-      <!-- PROJECT LIST -->
       <div class="grid">
 
         <div

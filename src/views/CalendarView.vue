@@ -403,7 +403,7 @@ const events = [
     font-size: 0.8rem;
   }
 
-  /* hover fix for touch devices */
+  /* =============== hover fix for touch devices ===================== */
   .day-card:hover {
     transform: skewX(-6deg);
   }

@@ -106,7 +106,7 @@ const emit = defineEmits(['finished'])
   transform: skewX(-10deg);
 }
 
-/* hover animation (Persona feel) */
+/* =================== hover animation (Persona feel) ========================== */
 .back-btn:hover .text-layer.main {
   color: white;
   transform: skewX(-12deg) translate(-2px, -2px);

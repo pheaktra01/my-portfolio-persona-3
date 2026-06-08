@@ -13,23 +13,19 @@
       preload="metadata"
     ></video>
 
-    <!-- DARK OVERLAY -->
     <div class="overlay"></div>
 
     <BackBtn />
     <IntroSlash />
 
-    <!-- PANEL -->
     <div class="panel">
 
-      <!-- HEADER -->
       <header class="top">
         <div class="status">PERSONAL DATA</div>
         <h1>PROFILE</h1>
         <p class="subtitle">USER STATUS FILE</p>
       </header>
 
-      <!-- PROFILE CARD -->
       <section class="card hero">
 
         <div class="avatar-wrap">
@@ -48,7 +44,6 @@
 
       </section>
 
-      <!-- INFO GRID -->
       <div class="grid">
 
         <div class="card">

@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
-// Pages
+// Pages views
 import HomeView from '../views/HomeView.vue'
 import SkillsView from '../views/SkillView.vue'
 import ProjectsView from '../views/ProjectView.vue'

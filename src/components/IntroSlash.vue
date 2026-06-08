@@ -10,7 +10,7 @@ const show = ref(true)
 onMounted(() => {
   setTimeout(() => {
     show.value = false
-  }, 700) // match animation duration
+  }, 700)
 })
 </script>
 

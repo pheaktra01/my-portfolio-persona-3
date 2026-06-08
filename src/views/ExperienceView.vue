@@ -1,7 +1,6 @@
 <template>
   <div class="exp-page">
 
-    <!-- BACKGROUND VIDEO -->
     <video
       class="bg-video"
       :src="currentVideo"
@@ -15,20 +14,16 @@
 
     <BackBtn />
     <IntroSlash />
-    <!-- DARK OVERLAY -->
     <div class="overlay"></div>
 
-    <!-- PANEL -->
     <div class="panel">
 
-      <!-- HEADER -->
       <header class="top">
         <div class="status">MISSION LOG</div>
         <h1>EXPERIENCE</h1>
         <p class="subtitle">SYSTEM HISTORY</p>
       </header>
 
-      <!-- TIMELINE -->
       <div class="timeline">
 
         <div
@@ -217,7 +212,7 @@ const experience = [
   opacity: 0;
 }
 
-/* red line */
+/* ============ red line ==================== */
 .line {
   position: absolute;
   left: 0;
@@ -244,7 +239,7 @@ const experience = [
   opacity: 0.7;
 }
 
-/* TEXT */
+/* ================== TEXT ========================= */
 .company {
   color: #ff2e63;
   font-size: 0.9rem;
@@ -256,7 +251,7 @@ const experience = [
   opacity: 0.85;
 }
 
-/* TAGS */
+/* ================= TAGS ================= */
 .tags {
   margin-top: 10px;
   display: flex;

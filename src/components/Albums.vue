@@ -5,7 +5,7 @@
     :style="widgetStyle"
     :class="[currentCorner, { 'is-dragging': isDragging }]"
   >
-    <!-- Handle only triggers dragging when touching the cover assembly -->
+
     <div 
       class="album-container" 
       @pointerdown="startDrag"
@@ -92,6 +92,12 @@ const currentDiscAsset = computed(() => {
   return disc1
 })
 
+const songs = [
+  { id: 1, title: 'Color Your Night', src: new URL('', import.meta.url).href },
+  { id: 2, title: 'Memory Of You', src: new URL('', import.meta.url).href },
+  { id: 3, title: 'Full Moon Full Life', src: new URL('', import.meta.url).href }
+]
+
 // const songs = [
 //   { id: 1, title: 'Color Your Night', src: new URL('../assets/musics/Color-Your-Night.mp3', import.meta.url).href },
 //   { id: 2, title: 'Memory Of You', src: new URL('../assets/musics/Beneath-The-Mask.mp3', import.meta.url).href },
@@ -118,7 +124,6 @@ const widgetStyle = computed(() => {
 })
 
 const startDrag = (event) => {
-  // Completely prevent track interaction blocks from stepping on drag handlers
   if (event.target.closest('.song-list-panel')) return
 
   isDragging.value = true
@@ -133,7 +138,6 @@ const startDrag = (event) => {
   window.addEventListener('pointermove', handleDrag)
   window.addEventListener('pointerup', stopDrag)
   
-  // Confine track pointers safely to the draggable box target
   event.currentTarget.setPointerCapture(event.pointerId)
 }
 
