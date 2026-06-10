@@ -1,82 +1,167 @@
 <template>
-  <div class="profile-page">
+  <div class="profile-page p3r-theme">
+    <BackBtn />
+    <IntroSlash />
+    <div v-if="showSlash" class="page-slash-enter"></div>
 
-    <!-- BACKGROUND VIDEO -->
+    <div 
+      class="bg-fallback-image"
+      :class="{ 'video-is-active': isVideoLoaded }"
+    ></div>
+
     <video
       class="bg-video"
+      :class="{ 'video-ready': isVideoLoaded }"
       :src="currentVideo"
       autoplay
       loop
       muted
       playsinline
-      poster="../assets/images/profile.jpg"
-      preload="metadata"
+      preload="auto"
+      @playing="handleVideoPlaying"
     ></video>
-
+    
     <div class="overlay"></div>
+    <div class="giant-bg-text">P3R_SYS_2026</div>
 
-    <BackBtn />
-    <IntroSlash />
-
-    <div class="panel">
-
-      <header class="top">
-        <div class="status">PERSONAL DATA</div>
-        <h1>PROFILE</h1>
-        <p class="subtitle">USER STATUS FILE</p>
+    <div class="panel" :class="{ enter: pageReady }">
+      
+      <header class="top-header">
+        <div class="status-ribbon"><span>SYSTEM LOADOUT ACTIVE</span></div>
+        <div class="title-wrap">
+          <h1 class="main-title" data-text="PROFILE">PROFILE</h1>
+        </div>
+        <p class="subtitle">// USER_LOADOUT_STATUS_FILE</p>
       </header>
 
-      <section class="card hero">
-
-        <div class="avatar-wrap">
-          <div class="avatar-ring"></div>
-          <img src="../assets/images/e20220993.png" class="avatar" />
-        </div>
-
-        <div class="info">
-          <h2>YAGAMI DEVILATHAN</h2>
-          <p class="role">STUDENT / DEVELOPER</p>
-
-          <div class="level">
-            LEVEL <span>22</span>
-          </div>
-        </div>
-
-      </section>
-
       <div class="grid">
+        
+        <section 
+          class="p3r-card profile-card clickable" 
+          :style="{ '--i': 1 }"
+          @click="openProfileModal"
+        >
+          <div class="avatar-container">
+            <div class="avatar-bracket-tl"></div>
+            <div class="avatar-bracket-br"></div>
+            <div class="avatar-skew-bg"></div>
+            <img src="../assets/images/e20220993.png" class="avatar-img" alt="Avatar" />
+          </div>
 
-        <div class="card">
-          <h3>ABOUT</h3>
-          <p>
-            Passionate developer focused on Vue, NestJS, and mobile development.
-            Building Persona-style UI systems and modern web apps.
-          </p>
-        </div>
+          <div class="profile-info">
+            <div class="meta-crumbs">SYS_LINK // OPERATOR</div>
+            <h2 class="user-name">LOENG PHEAKTRA</h2>
+            <p class="user-role">DEVOPS ENGINEER / DEVELOPER</p>
 
-        <div class="card">
-          <h3>LOCATION</h3>
-          <p>Phnom Penh, Cambodia</p>
-        </div>
+            <div class="level-badge">
+              <span class="lbl">LV</span>
+              <span class="val">22</span>
+            </div>
+            <div class="click-prompt">TAP FOR DEEPER METADATA</div>
+          </div>
+        </section>
 
-        <div class="card">
-          <h3>STATUS</h3>
-          <p>Active Developer</p>
-        </div>
+        <section class="p3r-card skills-card" :style="{ '--i': 2 }">
+          <div class="card-header">
+            <span class="card-icon">◆</span>
+            <h3 class="card-title">TECHNICAL RADAR</h3>
+          </div>
 
-        <div class="card">
-          <h3>FOCUS</h3>
-          <p>Frontend UI / Backend API / Game-like UI systems</p>
-        </div>
+          <div class="skills-list">
+            <div v-for="s in skills" :key="s.name" class="skill-row">
+              <div class="skill-meta">
+                <span class="skill-name">{{ s.name }}</span>
+                <span class="skill-val">{{ s.level }}<small>%</small></span>
+              </div>
+              <div class="p3r-bar-bg">
+                <div class="p3r-bar-fill" :style="{ width: s.level + '%' }">
+                  <div class="bar-glare"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="p3r-card tags-card" :style="{ '--i': 3 }">
+          <div class="card-header">
+            <span class="card-icon">◆</span>
+            <h3 class="card-title">SPECIALIZATION LOADOUT</h3>
+          </div>
+          <div class="tag-cloud">
+            <span class="p3r-tag">Linux Ubuntu</span>
+            <span class="p3r-tag">Jenkins</span>
+            <span class="p3r-tag">Nginx</span>
+            <span class="p3r-tag">Kubernetes</span>
+            <span class="p3r-tag">Docker Container</span>
+            <span class="p3r-tag">Cloud AWS</span>
+            <span class="p3r-tag">Springboot</span>
+            <span class="p3r-tag">Nest Js</span>
+            <span class="p3r-tag">Vue Js</span>
+            <span class="p3r-tag">Ansible</span>
+            <span class="p3r-tag">Git/GitHub</span>
+          </div>
+        </section>
+
+        <section class="p3r-card xp-card" :style="{ '--i': 4 }">
+          <div class="xp-meta">
+            <span class="xp-lbl">EXP COMPILER</span>
+            <span class="xp-val">168 / 10000 NEXT</span>
+          </div>
+          <div class="p3r-bar-bg xp">
+            <div class="p3r-bar-fill xp-fill" style="width: 35%"></div>
+          </div>
+        </section>
 
       </div>
-
     </div>
+
+    <Transition name="p3r-modal">
+      <div class="modal-backdrop" v-if="isProfileOpen" @click.self="closeProfileModal">
+        <div class="p3r-modal-window">
+          <button class="p3r-close-btn" @click="closeProfileModal">
+            <span>CLOSE ▲</span>
+          </button>
+
+          <div class="modal-layout">
+            <div class="modal-portrait-deck">
+              <div class="portrait-frame">
+                <div class="scanlines"></div>
+                <div class="frame-border-decor"></div>
+                <img src="../assets/images/e20220993.png" class="modal-img" alt="Detail Portrait" />
+                <div class="hud-tag">ID_FILE // CORE_AVATAR</div>
+              </div>
+            </div>
+
+            <div class="modal-info-deck">
+              <header class="modal-info-header">
+                <div class="category-pill">OPERATOR_PROFILE</div>
+                <h2 class="modal-name">LOENG PHEAKTRA</h2>
+                <div class="sub-labels">
+                  <span class="cyan-txt">@loengpheaktra</span>
+                  <span class="magenta-txt">// STATUS: ACTIVE</span>
+                </div>
+              </header>
+
+              <div class="modal-info-body">
+                <h3 class="body-title">CORE DESCRIPTION</h3>
+                <p class="body-desc">
+                  A meticulous DevOps Engineer specializing in building robust multi-container delivery pipelines, secure reverse proxies, automation playbooks, and fluid user interfaces. Dedicated to optimizing high-availability architecture metrics.
+                </p>
+              </div>
+
+              <footer class="modal-info-footer">
+                <div class="status-code">SYS_STATUS_OK // DATA_VERIFIED</div>
+              </footer>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import BackBtn from '../components/BackBtn.vue'
 import IntroSlash from '../components/IntroSlash.vue'
 import { videos } from '../config/videos'
@@ -84,357 +169,376 @@ import { useVideoManager } from '../composables/useVideoManager.ts'
 
 const { setVideo, clearVideo, currentVideo } = useVideoManager()
 
+const skills = [
+  { name: 'Vue.js', level: 80 },
+  { name: 'TypeScript', level: 70 },
+  { name: 'NestJS', level: 60 },
+  { name: 'MongoDB', level: 55 },
+  { name: 'Flutter', level: 40 },
+  { name: 'Docker', level: 35 }
+]
+
+const pageReady = ref(false)
+const showSlash = ref(true)
+const isProfileOpen = ref(false)
+const isVideoLoaded = ref(false)
+
+const handleVideoPlaying = () => {
+  isVideoLoaded.value = true
+}
+
 onMounted(() => {
   setVideo(videos.profile)
+  
+  // CLEANED UP: No longer injecting problematic layout classes dynamically
+  requestAnimationFrame(() => {
+    pageReady.value = true
+  })
+  setTimeout(() => {
+    showSlash.value = false
+  }, 650)
 })
 
 onBeforeUnmount(() => {
   clearVideo()
 })
 
-onMounted(() => {
-//   isMobile.value = window.innerWidth <= 768
-
-//   mobileVideoSrc.value = new URL(
-//     '../assets/videos/MOBILE-Makoto-Yuki-Persona-3.mp4',
-//     import.meta.url
-//   ).href
-})
+const openProfileModal = () => { isProfileOpen.value = true }
+const closeProfileModal = () => { isProfileOpen.value = false }
 </script>
 
 <style scoped>
+/* ================= SYSTEM & THEME CONFIG ================= */
+.p3r-theme {
+  --p3r-blue: #00d2ff;
+  --p3r-dark-blue: #0f1c3f;
+  --p3r-deep-bg: #030712;
+  --p3r-magenta: #ff0055;
+  --p3r-white: #ffffff;
+  --p3r-font: 'Impact', 'Arial Black', sans-serif;
 
-/* PAGE */
-.profile-page {
+  font-family: var(--p3r-font);
+  color: var(--p3r-white);
+  background-color: var(--p3r-deep-bg);
+
+  min-height: 100vh;
   height: 100vh;
-  font-family: Impact, Arial Black, sans-serif;
-  color: white;
-  overflow: hidden;
+  position: relative;
+  overflow: hidden; /* Lock the global viewport to prevent background shifting */
 }
 
-/* BACKGROUND VIDEO */
-.bg-video {
+/* HIGH-INTEGRITY VISUAL LAYER HANDLING */
+.bg-fallback-image, .bg-video, .overlay, .giant-bg-text {
   position: fixed;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  pointer-events: none; /* Crucial: Allows finger touch events to pass cleanly to the panel */
   z-index: 0;
 }
 
-/* OVERLAY */
-.overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
+.bg-fallback-image {
+  background-image: url('../assets/images/profile.jpg');
+  background-size: cover;
+  background-position: center;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+.bg-fallback-image.video-is-active { opacity: 0; }
+
+.bg-video { object-fit: cover; opacity: 0; transition: opacity 0.5s ease; }
+.bg-video.video-ready { opacity: 1; }
+.overlay { z-index: 1; }
+
+.giant-bg-text {
+  top: auto; left: auto;
+  bottom: -50px; right: -20px;
+  width: auto; height: auto;
+  font-size: 12rem;
+  color: rgba(0, 210, 255, 0.04);
+  font-style: italic;
+  font-weight: 900;
+  user-select: none;
+  transform: rotate(-5deg);
 }
 
-/* PANEL */
+/* ================= CONTAINER PANEL (SCROLL MECHANICS RULE) ================= */
 .panel {
   position: fixed;
-  left: 0;
-  top: 60px;
-
-  width: 42%;
-  height: calc(100vh - 60px);
-
-  padding: 40px;
-  padding-bottom: 120px;
-
-  overflow-y: auto;
+  left: 5%;
+  top: 8%;
+  width: 38%;
+  height: 84vh;
+  padding: 30px;
+  
+  /* CORE TOUCH INTERACTION DEFINITIONS */
+  overflow-y: scroll !important; 
   overflow-x: hidden;
-
+  -webkit-overflow-scrolling: touch; 
+  overscroll-behavior: contain;
+  pointer-events: auto !important;
+  
   z-index: 2;
-
   box-sizing: border-box;
-
-  -webkit-overflow-scrolling: touch;
-
-  scrollbar-width: none;
+  opacity: 0;
+  transform: translateX(-100px) skewX(-4deg);
+  scrollbar-width: none; /* Hides on Firefox */
 }
 
+/* Hides on Chrome, Safari, Edge without stripping layout metrics */
 .panel::-webkit-scrollbar {
-  display: none;
+  width: 0px !important;
+  height: 0px !important;
+  background: transparent !important;
+}
+.panel::-webkit-scrollbar-thumb {
+  background: transparent !important;
 }
 
-/* HEADER */
-.top h1 {
-  font-size: 4.5rem;
+.panel.enter {
+  animation: p3rPanelIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes p3rPanelIn {
+  to {
+    opacity: 1;
+    transform: translateX(0) skewX(-4deg);
+  }
+}
+
+/* ================= TYPOGRAPHY & HEADER ================= */
+.top-header { 
+  margin-bottom: 35px; 
+  display: flex;            /* Enables Flexbox */
+  flex-direction: column;   /* Stacks children vertically */
+  align-items: flex-start;  /* Aligns everything to the left */
+}
+
+/* Optional: Adjust spacing between items */
+.top-header > * {
+  margin: 0;                /* Reset default margins to control flow */
+}
+
+.status-ribbon {
+  margin-bottom: 10px;      /* Spacing below the status ribbon */
+}
+
+.title-wrap { 
+  margin-bottom: 8px;       /* Spacing below the title */
+  display: inline-block; 
+}
+
+.status-ribbon {
+  background: var(--p3r-white);
+  color: var(--p3r-deep-bg);
+  display: inline-block;
+  padding: 3px 12px;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  transform: skewX(-15deg);
+  margin-bottom: 10px;
+  font-weight: 900;
+}
+.title-wrap { position: relative; display: inline-block; }
+.main-title {
+  font-size: 5.5rem;
   margin: 0;
-  transform: skewX(-10deg);
+  line-height: 0.9;
+  font-style: italic;
+  color: var(--p3r-white);
+  text-shadow: 4px 4px 0px var(--p3r-blue);
 }
-
-.status {
-  color: #ff2e63;
-  letter-spacing: 4px;
-}
-
 .subtitle {
-  opacity: 0.7;
+  margin: 8px 0 0 0;
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: var(--p3r-blue);
+  letter-spacing: 1px;
 }
 
-/* HERO CARD */
-.hero {
+/* ================= INTERNAL LAYOUT GRID ================= */
+.grid { display: flex; flex-direction: column; gap: 20px; }
+
+/* ================= THE STYLIZED P3R CARDS ================= */
+.p3r-card {
+  position: relative;
+  background: linear-gradient(145deg, #090e1a 0%, #111a30 100%);
+  border: 3px solid var(--p3r-white);
+  padding: 20px;
+  box-shadow: -8px 8px 0px var(--p3r-dark-blue);
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.25s, box-shadow 0.25s;
+}
+.panel.enter .p3r-card {
+  animation: p3rCardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: calc(var(--i) * 0.08s);
+}
+@keyframes p3rCardIn { to { opacity: 1; transform: translateX(0); } }
+
+.p3r-card.clickable { cursor: pointer; }
+.p3r-card.clickable:hover {
+  transform: translate(8px, -4px);
+  border-color: var(--p3r-blue);
+  box-shadow: -16px 16px 0px var(--p3r-magenta);
+}
+.p3r-card:not(.clickable):hover { border-color: var(--p3r-blue); }
+
+.card-header {
   display: flex;
   align-items: center;
-  gap: 20px;
-  margin-top: 20px;
+  gap: 8px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 6px;
 }
+.card-icon { color: var(--p3r-blue); font-size: 0.8rem; }
+.card-title { margin: 0; font-size: 1.2rem; letter-spacing: 1px; color: var(--p3r-white); }
 
-/* AVATAR */
-.avatar-wrap {
+/* ================= PROFILE CARD MODULE ================= */
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: var(--p3r-white);
+  color: var(--p3r-deep-bg);
+  border: 4px solid var(--p3r-deep-bg);
+  box-shadow: -8px 8px 0px var(--p3r-blue);
+}
+.avatar-container { position: relative; width: 100px; height: 100px; flex-shrink: 0; }
+.avatar-skew-bg { position: absolute; inset: -2px; background: var(--p3r-magenta); transform: rotate(-6deg); z-index: 1; }
+.avatar-img { position: relative; width: 100%; height: 100%; object-fit: cover; border: 2px solid var(--p3r-deep-bg); z-index: 2; transform: rotate(-2deg); }
+
+.profile-info { position: relative; width: 100%; }
+.meta-crumbs { font-family: monospace; font-size: 0.65rem; color: var(--p3r-magenta); font-weight: bold; }
+.user-name { margin: 2px 0; font-size: 1.9rem; line-height: 1; font-weight: 900; }
+.user-role { font-family: sans-serif; font-weight: 700; font-size: 0.75rem; opacity: 0.8; margin: 0; }
+
+.level-badge {
+  margin-top: 8px;
+  background: var(--p3r-deep-bg);
+  color: var(--p3r-white);
+  display: inline-flex;
+  align-items: baseline;
+  padding: 2px 10px;
+  transform: skewX(-10deg);
+}
+.level-badge .lbl { font-size: 0.7rem; color: var(--p3r-blue); margin-right: 4px; }
+.level-badge .val { font-size: 1.2rem; font-weight: 900; }
+.click-prompt { font-family: monospace; font-size: 0.65rem; color: var(--p3r-blue); margin-top: 5px; text-align: right; }
+
+/* ================= METERS & PROGRESS BARS ================= */
+.skills-list { display: flex; flex-direction: column; gap: 12px; }
+.skill-row { display: flex; flex-direction: column; }
+.skill-meta { display: flex; justify-content: space-between; font-size: 1.05rem; margin-bottom: 2px; }
+.skill-val { color: var(--p3r-blue); font-weight: 900; }
+.p3r-bar-bg { height: 12px; background: var(--p3r-deep-bg); border: 1px solid rgba(255, 255, 255, 0.2); padding: 2px; overflow: hidden; }
+.p3r-bar-fill { height: 100%; background: var(--p3r-blue); position: relative; transition: width 0.5s ease-in-out; }
+.bar-glare { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%); }
+
+/* ================= SPECIALIZATION TAG MATRIX ================= */
+.tag-cloud { display: flex; flex-wrap: wrap; gap: 6px; }
+.p3r-tag { background: var(--p3r-dark-blue); border-left: 3px solid var(--p3r-blue); padding: 4px 10px; font-size: 0.8rem; font-family: sans-serif; font-weight: bold; }
+
+/* ================= EXPERIENCE METERS ================= */
+.xp-meta { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px; }
+.xp-lbl { color: var(--p3r-blue); }
+.p3r-bar-fill.xp-fill { background: var(--p3r-magenta); }
+
+/* ================= THE STYLIZED SHARD MODAL SCREEN ================= */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 7, 18, 0.85);
+  backdrop-filter: blur(12px);
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+.p3r-modal-window {
   position: relative;
+  width: 860px;
+  background: var(--p3r-deep-bg);
+  border: 4px solid var(--p3r-white);
+  box-shadow: -20px 20px 0px var(--p3r-blue);
+  transform: rotate(-1.5deg);
 }
-
-.avatar-ring {
+.p3r-close-btn {
   position: absolute;
-  inset: -8px;
-  border: 2px solid #ff2e63;
-  animation: spin 10s linear infinite;
+  top: -44px; right: -4px;
+  background: var(--p3r-magenta);
+  border: 4px solid var(--p3r-white);
+  border-bottom: none;
+  color: var(--p3r-white);
+  font-family: var(--p3r-font);
+  font-size: 1rem;
+  padding: 6px 24px;
+  cursor: pointer;
+  transform: skewX(-10deg);
+}
+.p3r-close-btn:hover { background: var(--p3r-white); color: var(--p3r-deep-bg); }
+
+.modal-layout { padding: 40px; display: flex; gap: 40px; }
+.modal-portrait-deck { flex: 0.9; min-width: 0; }
+.portrait-frame { background: var(--p3r-dark-blue); width: 100%; height: 280px; position: relative; border: 3px solid var(--p3r-blue); display: flex; justify-content: center; align-items: center; overflow: hidden; }
+.modal-img { width: 80%; height: 80%; object-fit: cover; border: 3px solid var(--p3r-white); z-index: 2; transform: rotate(3deg); }
+.hud-tag { position: absolute; bottom: 8px; left: 8px; background: var(--p3r-deep-bg); color: var(--p3r-blue); font-family: monospace; font-size: 0.65rem; padding: 2px 6px; z-index: 3; border: 1px solid var(--p3r-blue); }
+
+.modal-info-deck { flex: 1.3; display: flex; flex-direction: column; justify-content: space-between; }
+.category-pill { background: var(--p3r-blue); color: var(--p3r-deep-bg); display: inline-block; padding: 2px 10px; font-size: 0.75rem; transform: skewX(-8deg); }
+.modal-name { font-size: 3rem; margin: 6px 0; line-height: 1; color: var(--p3r-white); text-shadow: 2px 2px 0px var(--p3r-magenta); }
+.sub-labels { display: flex; gap: 12px; font-family: monospace; font-size: 0.8rem; margin-bottom: 20px;}
+.cyan-txt { color: var(--p3r-blue); }
+.magenta-txt { color: var(--p3r-magenta); }
+.body-title { color: var(--p3r-blue); font-size: 1.2rem; margin: 0 0 6px 0; }
+.body-desc { font-family: Arial, sans-serif; font-size: 0.95rem; line-height: 1.6; color: rgba(255,255,255,0.85); margin: 0; }
+.status-code { margin-top: 20px; font-family: monospace; font-size: 0.75rem; color: var(--p3r-blue); border-top: 1px dashed rgba(0, 210, 255, 0.3); padding-top: 8px; }
+
+/* ================= SYSTEM LAYER TRANSITIONS ================= */
+.p3r-modal-enter-active, .p3r-modal-leave-active { transition: opacity 0.25s cubic-bezier(0.25, 1, 0.5, 1); }
+.p3r-modal-enter-active .p3r-modal-window { animation: p3rSlashIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.p3r-modal-leave-active .p3r-modal-window { animation: p3rSlashIn 0.2s cubic-bezier(0.25, 1, 0.5, 1) reverse forwards; }
+.p3r-modal-enter-from, .p3r-modal-leave-to { opacity: 0; }
+
+@keyframes p3rSlashIn {
+  0% { transform: scale(0.85) rotate(-6deg) translateY(50px) ; opacity: 0; }
+  100% { transform: scale(1) rotate(-1.5deg) translateY(0); opacity: 1; }
 }
 
-.avatar {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
+/* ================= RESPONSIVE VIEWPORTS (768PX FIXED CONTAINER) ================= */
+@media (max-width: 1100px) {
+  .panel { width: 50%; left: 4%; }
+  .main-title { font-size: 4.2rem; }
 }
 
-/* INFO */
-.info h2 {
-  margin: 0;
-  font-size: 1.8rem;
-}
-
-.role {
-  opacity: 0.8;
-}
-
-.level {
-  margin-top: 10px;
-  background: #ff2e63;
-  padding: 6px 12px;
-  display: inline-block;
-  font-weight: bold;
-}
-
-/* GRID */
-.grid {
-  margin-top: 20px;
-  display: grid;
-  gap: 16px;
-}
-
-/* CARD */
-.card {
-  background: #0d0f1a;
-  border: 2px solid #1a1d2e;
-  padding: 16px;
-  transform: skewX(-6deg);
-  position: relative;
-  overflow: hidden;
-}
-
-/* red slash */
-.card::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 6px;
-  height: 100%;
-  background: #ff2e63;
-}
-
-/* TEXT */
-.card h3 {
-  margin: 0 0 8px 0;
-  color: #ff2e63;
-}
-
-.card p {
-  font-size: 0.9rem;
-  opacity: 0.85;
-}
-
-/* ===== ANIMATION ===== */
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.panel {
-  animation: panelEnter 0.6s ease-out forwards;
-}
-
-@keyframes panelEnter {
-  from {
-    opacity: 0;
-    transform: translateX(-80px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.top {
-  opacity: 0;
-  animation: headerEnter 0.5s ease-out forwards;
-  animation-delay: 0.15s;
-}
-
-@keyframes headerEnter {
-  from {
-    opacity: 0;
-    transform: translateX(-40px) skewX(-10deg);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0) skewX(-10deg);
-  }
-}
-
-.hero {
-  opacity: 0;
-  animation: heroEnter 0.55s ease-out forwards;
-  animation-delay: 0.25s;
-}
-
-@keyframes heroEnter {
-  from {
-    opacity: 0;
-    transform: translateY(20px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.card {
-  opacity: 0;
-  animation: cardEnter 0.4s ease-out forwards;
-}
-
-/* stagger timing */
-.grid .card:nth-child(1) { animation-delay: 0.35s; }
-.grid .card:nth-child(2) { animation-delay: 0.45s; }
-.grid .card:nth-child(3) { animation-delay: 0.55s; }
-.grid .card:nth-child(4) { animation-delay: 0.65s; }
-
-@keyframes cardEnter {
-  from {
-    opacity: 0;
-    transform: translateX(-50px) skewX(-6deg);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0) skewX(-6deg);
-  }
-}
-
-.card {
-  transition: transform 0.2s ease, border-color 0.2s ease;
-}
-
-.card:hover {
-  transform: skewX(-6deg) translateX(6px) scale(1.01);
-  border-color: #ff2e63;
-}
-
-/* ================= MOBILE ================= */
 @media (max-width: 768px) {
-
-  .profile-page {
-    overflow: auto;
-  }
-
   .panel {
-    width: 90%;
-    left: 50%;
-    top: 60px;
+    width: 90% !important;
+    left: 5% !important;
+    top: 5% !important;
+    height: 90vh !important; /* Locks structural bounds inside mobile bounds */
+    padding: 20px !important;
+    transform: none !important; /* Drops hardware skew matrix locks so mobile scroll isn't bypassed */
+  }
 
-    height: calc(100vh - 80px);
+  .main-title { font-size: 3.2rem; }
+  .profile-card { flex-direction: column; text-align: center; padding: 30px 20px; }
+  .click-prompt { text-align: center; }
 
-    padding: 20px;
-    padding-bottom: 120px;
-
+  /* COMPACT SCREEN OVERLAY HANDLING */
+  .modal-backdrop {
     overflow-y: auto;
-    overflow-x: hidden;
-
-    transform: translateX(-50%);
-
-    box-sizing: border-box;
-
-    -webkit-overflow-scrolling: touch;
-
-    animation: panelEnterMobile 0.6s ease-out forwards;
+    align-items: flex-start;
+    padding: 60px 10px 20px 10px;
   }
-
-  @keyframes panelEnterMobile {
-    from {
-      opacity: 0;
-      transform: translateX(-50%) translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
+  .p3r-modal-window { 
+    width: 100%; 
+    transform: none !important; 
+    margin-bottom: 20px;
   }
-
-  /* HEADER */
-  .top h1 {
-    font-size: 2.7rem;
-  }
-
-  .status {
-    font-size: 0.8rem;
-    letter-spacing: 2px;
-  }
-
-  .subtitle {
-    font-size: 0.9rem;
-  }
-
-  /* HERO */
-  .hero {
-    flex-direction: column;
-    text-align: center;
-    gap: 16px;
-  }
-
-  .avatar {
-    width: 90px;
-    height: 90px;
-  }
-
-  .info h2 {
-    font-size: 1.3rem;
-  }
-
-  .role {
-    font-size: 0.85rem;
-  }
-
-  .level {
-    font-size: 0.8rem;
-  }
-
-  /* GRID */
-  .grid {
-    gap: 12px;
-  }
-
-  .card {
-    padding: 14px;
-  }
-
-  .card h3 {
-    font-size: 1rem;
-  }
-
-  .card p {
-    font-size: 0.8rem;
-  }
+  .modal-layout { flex-direction: column; padding: 25px 15px; gap: 20px; }
+  .p3r-close-btn { top: -42px; right: -4px; transform: none; }
 }
 </style>
