@@ -1,102 +1,115 @@
 <template>
-  <div class="project-page">
-    <!-- BACKGROUND VIDEO -->
+  <div class="project-page p3r-theme">
+    <!-- Background Video Layer (Touch inputs disabled via pointer-events) -->
     <video
       class="bg-video"
+      :key="currentVideo"
       :src="currentVideo"
       autoplay
       loop
       muted
       playsinline
-      poster="../assets/images/project.jpg"
       preload="metadata"
     ></video>
     
     <div class="overlay"></div>
+    <div class="moving-watermark">P3R_ARCHIVE_DATA // TYPE_PROJECT</div>
 
     <BackBtn />
     <IntroSlash />
 
-    <!-- MAIN PANEL LIST -->
+    <!-- The Interactive Scrollable Panel -->
     <div class="panel" ref="panelRef">
-      <header class="top">
-        <div class="status">PROJECT FILES</div>
-        <h1>PROJECTS</h1>
-        <p class="subtitle">PERSONA ARCHIVE</p>
+      <header class="top-header">
+        <div class="status-badge"><span>DATABASE OVERLINK</span></div>
+        <div class="title-container">
+          <h1 class="main-title" data-text="PROJECTS">PROJECTS</h1>
+        </div>
+        <p class="subtitle">// ARCHIVE_FILE_CONSTRUCTS</p>
       </header>
 
       <div class="grid">
         <div
           v-for="(p, i) in projects"
           :key="p.title"
-          class="card"
+          class="p3r-list-card"
           @mouseenter="active = i"
           @mouseleave="active = null"
           @click="openPreview(i)"
-          :class="{ active: active === i }"
+          :class="{ 'is-active': active === i }"
+          :style="{ '--i': i }"
         >
-          <div class="slash"></div>
+          <div class="card-bg-base"></div>
+          <div class="card-bg-accent"></div>
+          
+          <div class="corner-cross"></div>
 
-          <div class="content">
-            <h2>{{ p.title }}</h2>
-            <p>{{ p.shortDesc }}</p>
-
-            <div class="tags">
-              <span v-for="t in p.tags" :key="t">{{ t }}</span>
+          <div class="card-body">
+            <div class="card-index">0{{ i + 1 }}</div>
+            <div class="card-text-block">
+              <h2 class="project-title">{{ p.title }}</h2>
+              <p class="project-summary">{{ p.shortDesc }}</p>
+              
+              <div class="tag-ribbons">
+                <span v-for="t in p.tags" :key="t" class="inline-tag">{{ t }}</span>
+              </div>
             </div>
-
-            <button class="open-btn">PREVIEW</button>
+            
+            <div class="action-arrow">
+              <span class="arrow-shape">▶</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- PERSONA-STYLE INTERACTIVE MODAL OVERLAY -->
-    <Transition name="persona-modal">
-      <div class="modal-overlay" v-if="isPreviewOpen" @click.self="closePreview">
+    <!-- Modal Portal Overlay -->
+    <Transition name="p3r-modal">
+      <div class="modal-backdrop" v-if="isPreviewOpen" @click.self="closePreview">
         
-        <!-- Expanded Width Window Shell for Real Visual Screen Real Estate -->
-        <div class="modal-window">
-          <!-- Flush-aligned Close Corner Slice -->
-          <button class="close-slice" @click="closePreview">CLOSE</button>
+        <div class="p3r-modal-window">
+          <button class="p3r-close-anchor" @click="closePreview">
+            <span>CLOSE ▲</span>
+          </button>
 
-          <div class="modal-content" v-if="selectedProject">
+          <div class="modal-layout-grid" v-if="selectedProject">
             
-            <!-- LEFT COLUMN: CINEMATIC WEBSITE CAPTURE DISPLAY -->
-            <div class="modal-left-deck">
-              <div class="display-deck">
+            <div class="modal-viewport-pane">
+              <div class="cinematic-deck">
                 <div class="scanlines"></div>
-                <div class="deck-inner has-preview">
+                <div class="deck-frame-decorator"></div>
+                <div class="preview-wrap">
                   <img 
                     :src="selectedProject.image" 
                     :alt="selectedProject.title" 
-                    class="site-screenshot" 
+                    class="screenshot-asset" 
                   />
-                  <div class="hud-frame-label">SYS_LINK // ACTIVE_DISPLAY</div>
                 </div>
+                <div class="hud-watermark">SYS_LINK // PREVIEW_FEED_LIVE</div>
               </div>
             </div>
 
-            <!-- RIGHT COLUMN: ALIGNED DATA STRIP -->
-            <div class="modal-right-info">
-              <header class="modal-header">
-                <div class="meta-tag">TARGET_FILE</div>
-                <h2>{{ selectedProject.title }}</h2>
-                <div class="tags-row">
-                  <span v-for="t in selectedProject.tags" :key="t" class="info-tag">{{ t }}</span>
+            <div class="modal-dossier-pane">
+              <header class="dossier-header">
+                <div class="file-pill">TARGET_DOSSIER</div>
+                <h2 class="dossier-title">{{ selectedProject.title }}</h2>
+                <div class="dossier-tags">
+                  <span v-for="t in selectedProject.tags" :key="t" class="dossier-tag-item">{{ t }}</span>
                 </div>
               </header>
 
-              <div class="modal-body">
-                <h3>SYSTEM OVERVIEW</h3>
-                <p>{{ selectedProject.longDesc }}</p>
+              <div class="dossier-body">
+                <h3 class="section-indicator">◆ SYSTEM OVERVIEW</h3>
+                <p class="dossier-desc">{{ selectedProject.longDesc }}</p>
               </div>
 
-              <!-- Footer Launch Button -->
-              <footer class="modal-footer">
-                <button class="launch-btn" @click="launchProject(selectedProject.url)">
-                  <span class="btn-skew-bg"></span>
-                  <span class="btn-text">LAUNCH INTERFACE</span>
+              <footer class="dossier-footer">
+                <button class="p3r-action-btn" @click="launchProject(selectedProject.url)">
+                  <span class="btn-skew-fill"></span>
+                  <span class="btn-inner-content">
+                    <span class="btn-txt">LAUNCH INTERFACE</span>
+                    <span class="btn-ico">▼</span>
+                  </span>
                 </button>
               </footer>
             </div>
@@ -130,7 +143,6 @@ const active = ref<number | null>(null)
 const selectedIndex = ref<number | null>(null)
 const isPreviewOpen = ref<boolean>(false)
 
-// PROJECTS DATA MATRIX
 const projects = [
   {
     title: 'Tovrean E-commerce School Supply',
@@ -181,350 +193,539 @@ const launchProject = (url: string) => {
 </script>
 
 <style scoped>
-/* PAGE BASE CONFIG */
-.project-page {
-  padding-top: 20px;
-  overflow: hidden;
-  font-family: Impact, Arial Black, sans-serif;
-  color: white;
+/* ================= GLOBAL DESIGN PILLARS ================= */
+.p3r-theme {
+  --p3r-cyan: #00d2ff;
+  --p3r-deep-navy: #090e1a;
+  --p3r-shadow-blue: #131f3d;
+  --p3r-magenta: #ff0055;
+  --p3r-pure-white: #ffffff;
+  --p3r-font-family: 'Impact', 'Arial Black', sans-serif;
+  isolation: isolate;
+  
+  min-height: 100vh;
+  height: 100vh;
+  font-family: var(--p3r-font-family);
+  color: var(--p3r-pure-white);
+  overflow: hidden; /* Lock the viewport boundaries securely */
+  position: relative;
+  background-color: #03060f;
+}
+
+/* HIGH-INTEGRITY VISUAL LAYER HANDLING */
+.bg-video, .overlay, .moving-watermark {
+  position: fixed;
+  inset: 0;
+  width: 100%;
   height: 100%;
+  pointer-events: none; /* Allows user gestures to pass instantly onto the panel layer */
 }
 
 .bg-video {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
   object-fit: cover;
   z-index: 0;
+  opacity: 0.35;
 }
 
 .overlay {
-  position: fixed;
-  inset: 0;
   z-index: 1;
-  pointer-events: none;
-  background: rgba(0, 0, 0, 0.2);
 }
 
-/* ORIGINAL LIST PANEL CONTAINER */
+.moving-watermark {
+  top: 15%;
+  right: -5%;
+  width: auto; height: auto;
+  z-index: 1;
+  font-size: 7rem;
+  color: rgba(0, 210, 255, 0.03);
+  transform: rotate(-12deg);
+  white-space: nowrap;
+  user-select: none;
+  font-style: italic;
+  font-weight: 900;
+}
+
+/* ================= CONTAINER PANEL (MOBILE SCROLL RULES) ================= */
 .panel {
   position: fixed;
-  left: 0;
-  top: 60px;
-  width: 42%;
-  height: calc(100vh - 60px);
-  padding: 40px;
-  overflow-y: auto;
-  z-index: 2;
-}
+  left: 4%;
+  top: 8%;
+  width: 44%;
+  height: 84vh;
+  padding: 20px 40px 40px 10px;
+  
+  /* FORCE NATIVE GESTURE CAPTURE MECHANICS */
+  overflow-y: scroll !important;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  pointer-events: auto !important;
 
-.panel::-webkit-scrollbar { display: none; }
-
-.top h1 { font-size: 4.5rem; margin: 0; transform: skewX(-10deg); }
-.status { color: #ff2e63; letter-spacing: 4px; }
-.subtitle { opacity: 0.7; }
-
-.grid { display: flex; flex-direction: column; gap: 18px; margin-top: 30px; }
-
-.card {
-  position: relative;
-  background: #0d0f1a;
-  border: 2px solid #1a1d2e;
-  padding: 18px;
-  transform: skewX(-6deg);
-  overflow: hidden;
-  transition: 0.2s cubic-bezier(0.25, 1, 0.5, 1);
-  cursor: pointer;
-}
-
-.slash { position: absolute; left: 0; top: 0; width: 6px; height: 100%; background: #ff2e63; }
-
-.card:hover, .card.active {
-  transform: skewX(-6deg) translateX(15px) scale(1.02);
-  border-color: #ff2e63;
-}
-
-.content h2 { margin: 0; font-size: 1.5rem; }
-.content p { font-size: 0.9rem; opacity: 0.8; font-family: Arial, sans-serif; margin: 6px 0; }
-
-.tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
-.tags span { background: #ff2e63; padding: 4px 8px; font-size: 0.7rem; transform: skewX(-10deg); }
-
-.open-btn {
-  margin-top: 12px; background: transparent; border: 1px solid #ff2e63;
-  color: white; padding: 6px 16px; cursor: pointer; font-family: Impact; letter-spacing: 1px;
-}
-.card:hover .open-btn { background: #ff2e63; }
-
-/* ================= THE REENGINEERED HIGH VISIBILITY POPUP MODAL ================= */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(4, 5, 10, 0.88);
-  backdrop-filter: blur(8px);
-  z-index: 999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Widen container to 920px to host a generous side-by-side split screen view */
-.modal-window {
-  position: relative;
-  width: 920px;
-  max-width: 92%;
-  transform: rotate(-1deg);
-  filter: drop-shadow(16px 16px 0px #ff2e63);
-}
-
-/* Structural White Layer Geometric Angles */
-.modal-window::before {
-  content: '';
-  position: absolute;
-  inset: -5px;
-  background-color: #fff;
-  z-index: 1;
-  clip-path: polygon(0 8%, 2% 0, 96% 0, 100% 8%, 100% 92%, 98% 100%, 4% 100%, 0 92%);
-}
-
-/* Core Dark Mask Layer */
-.modal-window::after {
-  content: '';
-  position: absolute;
-  inset: 0px;
-  background-color: #0b0d17;
-  z-index: 2;
-  clip-path: polygon(0 8%, 2% 0, 96% 0, 100% 8%, 100% 92%, 98% 100%, 4% 100%, 0 92%);
-}
-
-/* Aligned Close tag sitting on top of the cut outline corner */
-.close-slice {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  background: #ff2e63;
-  border: none;
-  color: white;
-  font-family: Impact;
-  padding: 14px 28px 11px 28px;
-  cursor: pointer;
   z-index: 10;
-  clip-path: polygon(15% 0, 100% 0, 100% 100%, 0 100%);
-  transition: background 0.15s, color 0.15s;
-  font-size: 1rem;
-  letter-spacing: 1px;
-}
-.close-slice:hover {
-  background: #fff;
-  color: #000;
+  box-sizing: border-box;
+  scrollbar-width: none; /* Firefox invisible track toggle */
 }
 
-/* CSS Grid Flex Split Layout for Visuals + Info Panels */
-.modal-content {
-  position: relative;
-  color: white;
-  z-index: 5;
-  padding: 35px;
+/* Chrome, Safari, and Modern Edge scroll track hidden layout formulas */
+.panel::-webkit-scrollbar {
+  width: 0px !important;
+  height: 0px !important;
+  background: transparent !important;
+}
+.panel::-webkit-scrollbar-thumb {
+  background: transparent !important;
+}
+
+/* HEADER HUD MECHANICS */
+.top-header {
+  margin-bottom: 40px;
+  transform: skewX(-5deg);
+}
+
+.status-badge {
+  background: var(--p3r-pure-white);
+  color: #03060f;
+  display: inline-block;
+  padding: 3px 14px;
+  font-size: 0.75rem;
+  letter-spacing: 3px;
+  font-weight: 900;
+  transform: skewX(-12deg);
+  margin-bottom: 8px;
+}
+
+.main-title {
+  font-size: 5.5rem;
+  margin: 0;
+  line-height: 0.85;
+  color: var(--p3r-pure-white);
+  text-shadow: 4px 4px 0px var(--p3r-cyan);
+  font-style: italic;
+}
+
+.subtitle {
+  margin: 10px 0 0 0;
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: var(--p3r-cyan);
+  letter-spacing: 2px;
+}
+
+/* ================= SKURVED ITERATION LIST ================= */
+.grid {
   display: flex;
-  gap: 30px;
-  align-items: stretch;
+  flex-direction: column;
+  gap: 24px;
+  padding-left: 20px;
 }
 
-/* LEFT WINDOW: MASSIVE LIVE SITE PREVIEW DOCK */
-.modal-left-deck {
-  flex: 1.2;
+.p3r-list-card {
+  position: relative;
+  height: 110px;
+  cursor: pointer;
+  transform: skewX(-12deg);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0;
+  animation: cardFlyIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: calc(var(--i) * 0.1s);
+}
+
+@keyframes cardFlyIn {
+  from { opacity: 0; transform: translateX(-100px) skewX(-12deg); }
+  to { opacity: 1; transform: translateX(0) skewX(-12deg); }
+}
+
+.card-bg-base {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #070c17 0%, #10192e 100%);
+  border: 3px solid var(--p3r-pure-white);
+  box-shadow: -6px 6px 0px var(--p3r-shadow-blue);
+  z-index: 1;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-bg-accent {
+  position: absolute;
+  top: 0; right: 0; bottom: 0; width: 0;
+  background: var(--p3r-cyan);
+  z-index: 2;
+  transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.corner-cross {
+  position: absolute;
+  left: -8px; top: -8px; width: 16px; height: 16px;
+  border-left: 2px solid var(--p3r-cyan);
+  border-top: 2px solid var(--p3r-cyan);
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.p3r-list-card:hover,
+.p3r-list-card.is-active {
+  transform: translateX(25px) skewX(-12deg) scale(1.02);
+}
+
+.p3r-list-card:hover .card-bg-base,
+.p3r-list-card.is-active .card-bg-base {
+  border-color: var(--p3r-cyan);
+  box-shadow: -14px 14px 0px var(--p3r-magenta);
+}
+
+.p3r-list-card:hover .card-bg-accent,
+.p3r-list-card.is-active .card-bg-accent {
+  width: 35%;
+}
+
+.p3r-list-card:hover .corner-cross,
+.p3r-list-card.is-active .corner-cross {
+  opacity: 1;
+}
+
+.card-body {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
+  z-index: 4;
+}
+
+.card-index {
+  font-size: 2.5rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.15);
+  margin-right: 25px;
+  font-weight: 900;
+  transition: color 0.2s;
+  transform: skewX(6deg);
+}
+.p3r-list-card:hover .card-index { color: var(--p3r-cyan); }
+
+.card-text-block {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  transform: skewX(12deg);
 }
 
-.display-deck {
-  background: #000;
-  width: 100%;
-  height: 340px; 
+.project-title {
+  margin: 0;
+  font-size: 1.4rem;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.project-summary {
+  margin: 3px 0 6px 0;
+  font-family: Arial, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.tag-ribbons { display: flex; gap: 5px; }
+.inline-tag {
+  background: var(--p3r-shadow-blue);
+  color: var(--p3r-cyan);
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  font-family: sans-serif;
+  font-weight: bold;
+}
+.p3r-list-card:hover .inline-tag {
+  background: var(--p3r-pure-white);
+  color: var(--p3r-deep-navy);
+}
+
+.action-arrow {
+  margin-left: auto;
+  z-index: 5;
+  transform: skewX(12deg);
+}
+.arrow-shape {
+  font-size: 1.2rem;
+  color: var(--p3r-pure-white);
+  transition: transform 0.25s, color 0.25s;
+}
+.p3r-list-card:hover .arrow-shape {
+  color: var(--p3r-deep-navy);
+  transform: scale(1.3) translateX(5px);
+}
+
+/* ================= SLICED PORAL MODAL VIEWPORTS ================= */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(3, 6, 15, 0.88);
+  backdrop-filter: blur(14px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.p3r-modal-window {
   position: relative;
-  overflow-y: auto; 
-  border: 3px solid #fff;
-  outline: 2px solid #000;
-  transform: rotate(-0.5deg);
+  width: 960px;
+  background: var(--p3r-deep-navy);
+  border: 4px solid var(--p3r-pure-white);
+  box-shadow: -22px 22px 0px var(--p3r-cyan);
+  transform: rotate(-1.5deg);
 }
 
-.display-deck::-webkit-scrollbar {
-  display: none;
+.p3r-close-anchor {
+  position: absolute;
+  top: -44px; right: -4px;
+  background: var(--p3r-magenta);
+  border: 4px solid var(--p3r-pure-white);
+  border-bottom: none;
+  color: var(--p3r-pure-white);
+  font-family: var(--p3r-font-family);
+  font-size: 0.95rem;
+  padding: 6px 26px;
+  cursor: pointer;
+  transform: skewX(-12deg);
+  transition: background 0.15s, color 0.15s;
+}
+.p3r-close-anchor:hover {
+  background: var(--p3r-pure-white);
+  color: var(--p3r-deep-navy);
+}
+
+.modal-layout-grid {
+  padding: 40px;
+  display: flex;
+  gap: 40px;
+}
+
+.modal-viewport-pane {
+  flex: 1.3;
+  display: flex;
+  flex-direction: column;
+}
+
+.cinematic-deck {
+  background: #02040a;
+  width: 100%;
+  height: 350px;
+  position: relative;
+  border: 3px solid var(--p3r-cyan);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.8);
 }
 
 .scanlines {
   position: absolute; inset: 0;
-  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
   background-size: 100% 4px;
-  z-index: 2; pointer-events: none;
+  z-index: 3; pointer-events: none;
 }
 
-.deck-inner.has-preview {
+.preview-wrap {
+  width: 90%;
+  height: 85%;
+  border: 2px solid var(--p3r-pure-white);
+  background: #090e1a;
+  transform: rotate(1.5deg);
+  overflow: hidden;
+  z-index: 2;
+}
+
+.screenshot-asset {
   width: 100%;
   height: 100%;
-  padding: 0;
-  background: #040509;
+  object-fit: cover;
+  object-position: top center;
 }
 
-/* Upgraded Site Image rendering styles */
-.site-screenshot {
-  width: 100%;
-  height: 100%;
-  object-fit: contain; 
-  object-position: center; 
-  display: block;
-  opacity: 0.95;
-}
-
-/* Custom HUD Label Bar */
-.hud-frame-label {
+.hud-watermark {
   position: absolute;
-  top: 8px;
-  left: 8px;
-  background: #000;
-  color: #61e1ff;
+  top: 10px; left: 10px;
+  background: var(--p3r-deep-navy);
+  color: var(--p3r-cyan);
   font-family: monospace;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   padding: 3px 8px;
-  z-index: 3;
+  border: 1px solid var(--p3r-cyan);
   letter-spacing: 1px;
-  border: 1px solid #61e1ff;
+  z-index: 4;
 }
 
-/* RIGHT WINDOW: TEXT METADATA CORE BLOCK */
-.modal-right-info {
+.modal-dossier-pane {
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding-top: 15px;
 }
 
-.modal-header .meta-tag {
-  background: #fff;
-  color: #000;
+.file-pill {
+  background: var(--p3r-pure-white);
+  color: var(--p3r-deep-navy);
   display: inline-block;
-  font-family: Impact;
-  padding: 3px 12px;
-  font-size: 0.85rem;
+  padding: 2px 12px;
+  font-size: 0.8rem;
   transform: skewX(-10deg);
   font-weight: bold;
 }
 
-.modal-header h2 {
-  font-family: Impact;
-  font-size: 2.5rem;
-  margin: 10px 0 5px 0;
-  line-height: 1.1;
-  letter-spacing: -0.5px;
-  color: #61e1ff; 
-  text-transform: uppercase;
-  transform: skewX(-4deg);
+.dossier-title {
+  font-size: 2.6rem;
+  margin: 8px 0;
+  line-height: 1.05;
+  color: var(--p3r-pure-white);
+  text-shadow: 2px 2px 0px var(--p3r-magenta);
 }
 
-.tags-row {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 20px;
-}
-.info-tag {
+.dossier-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 15px; }
+.dossier-tag-item {
   font-family: monospace;
   font-size: 0.75rem;
-  color: #ff2e63;
+  color: var(--p3r-cyan);
   font-weight: bold;
 }
 
-.modal-body h3 {
-  font-family: Impact;
-  color: #ff2e63;
+.section-indicator {
+  color: var(--p3r-magenta);
   font-size: 1.1rem;
-  margin: 0 0 6px 0;
+  margin: 0 0 8px 0;
   letter-spacing: 1px;
 }
-.modal-body p {
+
+.dossier-desc {
   font-family: Arial, sans-serif;
   font-size: 0.95rem;
   line-height: 1.6;
-  opacity: 0.85;
+  color: rgba(255,255,255,0.85);
   margin: 0;
 }
 
-/* Skewed UI Launch Action Button */
-.modal-footer { 
-  text-align: right; 
-  margin-top: 20px;
-}
-.launch-btn {
-  position: relative; background: transparent; border: none;
-  padding: 15px 45px; cursor: pointer; display: inline-block;
-}
-.btn-skew-bg {
-  position: absolute; inset: 0; background: #ff2e63;
-  clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
-  z-index: 1; transition: background 0.15s;
-}
-.btn-text {
-  position: relative; z-index: 2; font-family: Impact;
-  font-size: 1.3rem; color: white; letter-spacing: 1.5px;
-}
-.launch-btn:hover .btn-skew-bg { background: #61e1ff; }
-.launch-btn:hover .btn-text { color: #000; }
+.dossier-footer { text-align: right; margin-top: 20px; }
 
-/* ================= VUE MOUNT TRANSITIONS ================= */
-.persona-modal-enter-active,
-.persona-modal-leave-active {
-  transition: opacity 0.22s ease;
+.p3r-action-btn {
+  position: relative;
+  background: transparent;
+  border: none;
+  padding: 14px 35px;
+  cursor: pointer;
+  display: inline-block;
 }
 
-.persona-modal-enter-active .modal-window {
-  animation: slash-in 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-.persona-modal-leave-active .modal-window {
-  animation: slash-in 0.18s ease reverse forwards;
-}
-
-.persona-modal-enter-from,
-.persona-modal-leave-to {
-  opacity: 0;
+.btn-skew-fill {
+  position: absolute; inset: 0;
+  background: var(--p3r-magenta);
+  clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
+  z-index: 1;
+  transition: background 0.2s, transform 0.2s;
 }
 
-@keyframes slash-in {
-  0% {
-    transform: scale(0.85) rotate(-6deg) translateY(30px);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1) rotate(-1deg) translateY(0);
-    opacity: 1;
-  }
+.btn-inner-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--p3r-pure-white);
 }
 
-/* ANIMATION ENTRANCE SEQUENCING */
-.panel { animation: panelEnter 0.55s ease-out forwards; }
-@keyframes panelEnter {
-  from { opacity: 0; transform: translateX(-80px); }
-  to { opacity: 1; transform: translateX(0); }
+.p3r-action-btn:hover .btn-skew-fill {
+  background: var(--p3r-cyan);
+  transform: scaleX(1.04);
 }
-.card:nth-child(1) { animation-delay: 0.25s; }
-.card:nth-child(2) { animation-delay: 0.35s; }
-.card:nth-child(3) { animation-delay: 0.45s; }
+.p3r-action-btn:hover .btn-inner-content {
+  color: var(--p3r-deep-navy);
+}
 
-/* ================= MOBILE RESPONSIVE ADAPTATION ================= */
+.p3r-action-btn .btn-txt { font-family: var(--p3r-font-family); font-size: 1.2rem; letter-spacing: 1px; }
+.p3r-action-btn .btn-ico { font-size: 0.8rem; transform: rotate(-90deg); transition: transform 0.2s; }
+.p3r-action-btn:hover .btn-ico { transform: rotate(0deg); }
+
+.p3r-modal-enter-active, .p3r-modal-leave-active { transition: opacity 0.25s ease; }
+.p3r-modal-enter-active .p3r-modal-window { animation: p3rSlashIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.p3r-modal-leave-active .p3r-modal-window { animation: p3rSlashIn 0.2s ease reverse forwards; }
+.p3r-modal-enter-from, .p3r-modal-leave-to { opacity: 0; }
+
+@keyframes p3rSlashIn {
+  0% { transform: scale(0.88) rotate(-5deg) translateY(40px); opacity: 0; }
+  100% { transform: scale(1) rotate(-1.5deg) translateY(0); opacity: 1; }
+}
+
+/* ================= ADAPTIVE SCREEN BREAKPOINTS (768PX/868PX INLINE CODES) ================= */
+@media (max-width: 1150px) {
+  .panel { width: 55%; }
+}
+
 @media (max-width: 868px) {
-  .panel { width: 90%; left: 50%; transform: translateX(-50%); padding: 20px; }
-  .top h1 { font-size: 2.8rem; }
+  .p3r-theme {
+    overflow: hidden; /* Main viewport stays totally locked */
+  }
+
+  .panel {
+    width: 90% !important;
+    left: 5% !important;
+    top: 6% !important;
+    height: 88vh !important; /* Forces bounding layout structure on mobile screens */
+    padding: 20px 15px !important;
+    overflow-y: scroll !important;
+  }
+
+  .grid {
+    padding-left: 0;
+    gap: 15px;
+  }
+
+  .p3r-list-card {
+    height: auto;
+    padding: 15px 0;
+    transform: none !important; /* Drops hardware skew matrix locks to prevent unresponsiveness */
+  }
+
+  .p3r-list-card:hover,
+  .p3r-list-card.is-active {
+    transform: translateX(5px) !important;
+  }
+
+  .card-bg-base { transform: none; }
+  .card-bg-accent { display: none; }
+  .card-body { padding: 0 15px; }
+  .card-text-block { transform: none; }
+  .action-arrow { display: none; }
+
+  /* OVERLAY HANDLING FOR TARGET DOSSIERS */
+  .modal-backdrop {
+    overflow-y: auto;
+    align-items: flex-start;
+    padding: 60px 10px 20px 10px;
+  }
+
+  .main-title { font-size: 3rem; }
+
+  .p3r-modal-window {
+    width: 100%;
+    transform: none !important;
+    margin-bottom: 20px;
+  }
+
+  .modal-layout-grid {
+    flex-direction: column;
+    padding: 25px 15px;
+    gap: 20px;
+  }
+
+  .cinematic-deck {
+    height: 220px;
+  }
   
-  .modal-window { width: 95%; max-width: 480px; filter: drop-shadow(8px 8px 0px #ff2e63); }
-  .modal-window::before, .modal-window::after { clip-path: none; border-radius: 0; }
-  
-  .modal-content { flex-direction: column; padding: 40px 20px 20px 20px; gap: 15px; }
-  .display-deck { height: 200px; border-width: 2px; }
-  
-  .modal-header h2 { font-size: 2rem; }
-  .close-slice { top: 0; right: 0; clip-path: none; padding: 10px 20px; }
-  .launch-btn { width: 100%; text-align: center; }
-  .btn-skew-bg { clip-path: none; }
+  .p3r-close-anchor {
+    top: -42px; right: -4px;
+    transform: none;
+  }
 }
 </style>
