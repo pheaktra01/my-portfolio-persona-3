@@ -24,6 +24,7 @@
 
       <div class="album-cover" :class="{ 'active-cover': isExpanded }">
         <img src="../assets/images/albume.png" alt="Album Cover" />
+        <div class="album-cover-border"></div>
       </div>
     </div>
 
@@ -31,14 +32,17 @@
     <Transition name="fade-slide">
       <div v-if="isExpanded" class="song-list-panel">
         <div class="panel-header">
-          <h4>Persona 3 Reload Megamix</h4>
+          <div class="header-banner">
+            <span class="header-sub">SOUNDTRACK TRACKER //</span>
+            <h4>P3R MEGAMIX</h4>
+          </div>
           <button 
             v-if="selectedSong !== null" 
             @click.stop="togglePlay" 
             class="control-btn"
             :class="{ 'is-playing': isPlaying }"
           >
-            {{ isPlaying ? '⏸ Pause' : '▶ Play' }}
+            {{ isPlaying ? 'PAUSE //' : 'PLAY //' }}
           </button>
         </div>
         
@@ -49,8 +53,14 @@
             :class="{ active: selectedSong === song.id }" 
             @click.stop="selectSong(song.id)"
           >
+            <!-- ASYMMETRICAL SELECTION BACKGROUND PLATE -->
+            <div class="item-bg-slash"></div>
+
             <span class="track-num">0{{ song.id }}</span>
-            <span class="track-title">{{ song.title }}</span>
+            <div class="text-frame">
+              <span class="track-title shadow-text" :data-text="song.title">{{ song.title }}</span>
+              <span class="track-title main-text" :data-text="song.title">{{ song.title }}</span>
+            </div>
           </li>
         </ul>
       </div>
@@ -92,16 +102,10 @@ const currentDiscAsset = computed(() => {
   return disc1
 })
 
-// const songs = [
-//   { id: 1, title: 'Color Your Night', src: new URL('', import.meta.url).href },
-//   { id: 2, title: 'Memory Of You', src: new URL('', import.meta.url).href },
-//   { id: 3, title: 'Full Moon Full Life', src: new URL('', import.meta.url).href }
-// ]
-
 const songs = [
-  { id: 1, title: 'Color Your Night', src: new URL('../assets/musics/Color-Your-Night.mp3', import.meta.url).href },
-  { id: 2, title: 'Memory Of You', src: new URL('../assets/musics/Beneath-The-Mask.mp3', import.meta.url).href },
-  { id: 3, title: 'Full Moon Full Life', src: new URL('../assets/musics/Full-Moon-Full-Life.mp3', import.meta.url).href }
+  { id: 1, title: 'Color Your Night', src: new URL('', import.meta.url).href },
+  { id: 2, title: 'Memory Of You', src: new URL('', import.meta.url).href },
+  { id: 3, title: 'Full Moon Full Life', src: new URL('', import.meta.url).href }
 ]
 
 const widgetStyle = computed(() => {
@@ -253,20 +257,19 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+/* ================= GLOBAL MATRIX CONTAINER ================= */
 .album-widget {
   position: fixed;   
   display: flex;
   flex-direction: column;
   gap: 0.95rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   z-index: 999;
   touch-action: none;
   user-select: none;
-  transition: left 0.4s cubic-bezier(0.25, 1, 0.5, 1),
-              right 0.4s cubic-bezier(0.25, 1, 0.5, 1),
-              top 0.4s cubic-bezier(0.25, 1, 0.5, 1),
-              bottom 0.4s cubic-bezier(0.25, 1, 0.5, 1),
-              transform 0.2s ease;
+  transition: left 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              right 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              top 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .album-widget.is-dragging {
@@ -278,7 +281,7 @@ onBeforeUnmount(() => {
 .album-widget.bottom-left, .album-widget.bottom-right { flex-direction: column-reverse; }
 
 .album-container {
-  --size: clamp(120px, 15vw, 200px); 
+  --size: clamp(120px, 15vw, 180px); 
   width: var(--size);
   height: var(--size);
   position: relative;
@@ -289,17 +292,31 @@ onBeforeUnmount(() => {
 }
 .album-container:active { cursor: grabbing; }
 
+/* ================= COMPONENT MECHANICAL ASSETS ================= */
 .album-cover {
   position: absolute;
   width: 100%;
   height: 100%;
   z-index: 4; 
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  pointer-events: none; /* Let pointer events pass directly down to album-container */
+  box-shadow: -8px 8px 0px rgba(4, 8, 20, 0.9);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
 }
-.album-cover img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 4px; }
-.album-cover.active-cover { transform: scale(1.04); }
+.album-cover img { 
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover; 
+  display: block; 
+}
+.album-cover-border {
+  position: absolute;
+  inset: 0;
+  border: 2px solid #040814;
+  pointer-events: none;
+}
+.album-cover.active-cover { 
+  transform: scale(1.04) rotate(-3deg); 
+}
 
 .vinyl-disc {
   position: absolute;
@@ -307,58 +324,215 @@ onBeforeUnmount(() => {
   height: 96%;
   z-index: 1;
   opacity: 0;
-  transform: scale(0.95) translateX(0);
-  transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  transform: scale(0.9) translateX(0);
+  transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
 }
 .vinyl-disc.show { opacity: 1; }
 
-/* Clean transform alignments that won't distort underlying panels */
 .top-right .vinyl-disc.slide-out, .bottom-right .vinyl-disc.slide-out {
-  transform: scale(1) translateX(-45%);
+  transform: scale(1) translateX(-50%) rotate(-12deg);
 }
 .top-left .vinyl-disc.slide-out, .bottom-left .vinyl-disc.slide-out {
-  transform: scale(1) translateX(45%);
+  transform: scale(1) translateX(50%) rotate(12deg);
 }
 
 .rotating-disc { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; animation: spin 8s linear infinite; }
 .paused-rotation .rotating-disc { animation-play-state: paused; }
 
+/* ================= THE STYLIZED P3R PLAYLIST PANEL ================= */
 .song-list-panel {
-  background: linear-gradient(180deg, rgba(10, 12, 18, 0.98), rgba(5, 6, 10, 0.98));
-  border: 1px solid rgba(0, 170, 255, 0.35);
-  width: clamp(240px, 22vw, 300px); 
-  padding: 1rem;
-  box-shadow: 0 0 15px rgba(0, 170, 255, 0.1) inset, 0 18px 60px rgba(0, 0, 0, 0.7);
-  color: #d7e6ff;
-  pointer-events: auto; /* Explicitly guarantee click operations map cleanly */
+  background: #040814;
+  border: 2px solid #040814;
+  width: clamp(260px, 24vw, 320px); 
+  padding: 1.25rem 1rem;
+  box-shadow: -10px 10px 0px rgba(4, 8, 20, 0.4);
+  color: #a6f2ff;
+  pointer-events: auto;
   z-index: 10;
+  transform: rotate(-1deg);
 }
 
-.top-right .song-list-panel { transform-origin: top right; clip-path: polygon(0 0, 92% 0, 100% 10%, 100% 100%, 8% 100%, 0 90%); }
-.top-left .song-list-panel { transform-origin: top left; clip-path: polygon(8% 0, 100% 0, 100% 90%, 92% 100%, 0 100%, 0 10%); }
-.bottom-right .song-list-panel { transform-origin: bottom right; clip-path: polygon(0 10%, 8% 0, 100% 0, 100% 90%, 92% 100%, 0 100%); }
-.bottom-left .song-list-panel { transform-origin: bottom left; clip-path: polygon(0 0, 92% 0, 100% 10%, 100% 100%, 8% 100%, 0 90%); }
+/* Iconic Sharp Persona Slice Clips */
+.top-right .song-list-panel { transform-origin: top right; clip-path: polygon(0 0, 100% 0, 100% 90%, 92% 100%, 0 100%); }
+.top-left .song-list-panel { transform-origin: top left; clip-path: polygon(0 0, 100% 0, 100% 100%, 8% 100%, 0 88%); }
+.bottom-right .song-list-panel { transform-origin: bottom right; clip-path: polygon(0 0, 94% 0, 100% 12%, 100% 100%, 0 100%); }
+.bottom-left .song-list-panel { transform-origin: bottom left; clip-path: polygon(6% 0, 100% 0, 100% 100%, 0 100%); }
 
-.panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(0, 170, 255, 0.15); }
-.panel-header h4 { margin: 0; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(0, 200, 255, 0.85); font-weight: 700; }
+.panel-header { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: flex-end; 
+  margin-bottom: 1rem; 
+  padding-bottom: 0.6rem; 
+  border-bottom: 2px solid rgba(166, 242, 255, 0.2); 
+}
+.header-banner {
+  display: flex;
+  flex-direction: column;
+}
+.header-sub {
+  font-family: monospace;
+  font-size: 0.55rem;
+  color: rgba(166, 242, 255, 0.4);
+  letter-spacing: 1px;
+}
+.panel-header h4 { 
+  margin: 0; 
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-size: 1.2rem; 
+  font-style: italic;
+  letter-spacing: 0px; 
+  text-transform: uppercase; 
+  color: #ffffff; 
+  font-weight: 900; 
+}
 
-.control-btn { background: transparent; border: 1px solid rgba(0, 200, 255, 0.4); color: rgba(0, 200, 255, 0.9); padding: 4px 10px; font-size: 0.7rem; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: all 0.2s ease; border-radius: 2px; }
-.control-btn:hover { background: rgba(0, 200, 255, 0.1); box-shadow: 0 0 12px rgba(0, 200, 255, 0.25); }
-.control-btn.is-playing { border-color: rgba(255, 60, 60, 0.6); color: rgba(255, 80, 80, 0.9); }
+/* ================= HIGH LEVEL CONTROL PUNCH BUTTONS ================= */
+.control-btn { 
+  background: transparent; 
+  border: 2px solid #a6f2ff; 
+  color: #a6f2ff; 
+  padding: 4px 12px; 
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-style: italic;
+  font-size: 0.8rem; 
+  cursor: pointer; 
+  text-transform: uppercase; 
+  letter-spacing: 1px; 
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1); 
+  transform: skewX(-8deg);
+}
+.control-btn:hover { 
+  background: #a6f2ff; 
+  color: #040814;
+  transform: skewX(-8deg) scale(1.05);
+}
+.control-btn.is-playing { 
+  border-color: #ff0055; 
+  color: #ff0055; 
+}
+.control-btn.is-playing:hover {
+  background: #ff0055;
+  color: #ffffff;
+}
 
-.song-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 2px; }
-.song-list li { position: relative; display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem; cursor: pointer; color: rgba(210, 230, 255, 0.7); border-left: 2px solid transparent; transition: all 0.15s ease; }
-.song-list li:hover { background: rgba(0, 180, 255, 0.1); color: #eaf4ff; transform: translateX(4px); }
-.song-list li.active { background: linear-gradient(90deg, rgba(0, 180, 255, 0.2), transparent); color: #ffffff; border-left: 2px solid #00c8ff; text-shadow: 0 0 8px rgba(0, 200, 255, 0.4); animation: personaFlicker 2.5s infinite; }
+/* ================= TRACK ITEM FRAMEWORK LISTS ================= */
+.song-list { 
+  list-style: none; 
+  padding: 0; 
+  margin: 0; 
+  display: flex; 
+  flex-direction: column; 
+  gap: 4px; 
+}
 
-.track-num { font-size: 0.7rem; opacity: 0.5; width: 1.2rem; color: rgba(0, 200, 255, 0.6); font-weight: bold; }
-.track-title { font-size: 0.85rem; letter-spacing: 0.3px; }
+.song-list li { 
+  position: relative; 
+  display: flex; 
+  align-items: center; 
+  gap: 0.85rem; 
+  padding: 0.5rem 0.75rem; 
+  cursor: pointer; 
+  overflow: hidden;
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
-/* Smooth fade transistion details */
-.fade-slide-enter-active, .fade-slide-leave-active { transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
-.fade-slide-enter-from, .fade-slide-leave-to { opacity: 0; transform: translateY(-10px) scale(0.95); }
+/* Alternating Staggered Offset Base Rules */
+.song-list li:nth-child(even) {
+  transform: translateX(-4px);
+}
 
-@keyframes personaFlicker { 0%, 100% { opacity: 1; } 50% { opacity: 0.92; } }
+.song-list li:hover { 
+  transform: translateX(4px) skewX(-4deg); 
+}
+
+/* THE BACKGROUND SHARD SPLIT PLATE FOR SELECTION ACTIVE STATES */
+.item-bg-slash {
+  position: absolute;
+  inset: 0;
+  background: #ff0055; /* Pure P3R Magenta */
+  z-index: 1;
+  clip-path: polygon(4% 0, 100% 0, 96% 100%, 0 100%);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.track-num { 
+  position: relative;
+  font-family: 'Impact', sans-serif;
+  font-size: 1.1rem; 
+  font-style: italic;
+  z-index: 3;
+  color: rgba(166, 242, 255, 0.4); 
+  font-weight: bold; 
+  transition: color 0.15s ease;
+}
+
+.text-frame {
+  position: relative;
+  height: 1.4rem;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+
+.track-title { 
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-size: 1.15rem; 
+  font-style: italic;
+  text-transform: uppercase;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+  display: block;
+  transition: color 0.18s ease, transform 0.18s ease;
+}
+
+.track-title.shadow-text {
+  color: #040814;
+  z-index: 2;
+  transform: translate(2px, 1px);
+  opacity: 0; /* Only visible when backdropped by the crimson slash banner */
+}
+
+.track-title.main-text {
+  color: #a6f2ff;
+  position: absolute;
+  top: 0; left: 0;
+  z-index: 3;
+}
+
+/* Active Track Layout Triggers */
+.song-list li.active {
+  transform: translateX(8px) skewX(-6deg);
+}
+
+.song-list li.active .item-bg-slash {
+  transform: scaleX(1);
+}
+
+.song-list li.active .track-num {
+  color: #ffffff;
+}
+
+.song-list li.active .track-title.shadow-text {
+  opacity: 1;
+}
+
+.song-list li.active .track-title.main-text {
+  color: #ffffff;
+  transform: translate(-2px, -1px);
+}
+
+/* Smooth fade transition parameters */
+.fade-slide-enter-active, .fade-slide-leave-active { 
+  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1); 
+}
+.fade-slide-enter-from, .fade-slide-leave-to { 
+  opacity: 0; 
+  transform: translateY(10px) scale(0.95); 
+}
+
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 </style>
