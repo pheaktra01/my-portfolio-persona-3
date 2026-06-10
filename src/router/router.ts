@@ -11,6 +11,7 @@ import TimelineView from '../views/TimelineView.vue'
 import SocialLinksView from '../views/SocialView.vue'
 import CalendarView from '../views/CalendarView.vue'
 import ResumeView from '../views/ResumeView.vue'
+import JourneyView from '../views/JourneyView.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -44,9 +45,9 @@ const routes: RouteRecordRaw[] = [
     component: ExperienceView,
   },
   {
-    path: '/timeline',
-    name: 'timeline',
-    component: TimelineView,
+    path: '/journey',
+    name: 'journey',
+    component: JourneyView,
   },
   {
     path: '/social-links',

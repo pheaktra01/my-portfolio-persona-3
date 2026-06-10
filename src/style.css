@@ -20,3 +20,59 @@
   }
 }
 
+/* ================= GLOBAL OVERRIDES DISENGAGED ================= */
+@media (max-width: 768px) {
+  html.p3r-mobile-scroll-override,
+  body.p3r-mobile-scroll-override,
+  #app.p3r-mobile-scroll-override {
+    /* Allow safe scrolling across global viewport wrappers */
+    overflow: hidden !important;
+    height: 100vh !important;
+    position: relative !important;
+  }
+
+  .panel {
+    width: 90% !important;
+    left: 5% !important;
+    top: 5% !important;
+    height: 90vh !important; 
+    padding: 20px !important;
+    transform: none !important;
+    
+    /* Absolute insurance that the touch-events layer is capturing your swiping fingers */
+    pointer-events: auto !important;
+  }
+  
+  /* Prevent fixed videos or background decoration blocks from blocking screen touches */
+  .bg-fallback-image,
+  .bg-video,
+  .overlay,
+  .giant-bg-text {
+    pointer-events: none !important;
+  }
+}
+
+/* 1. Reset the Header to be truly fixed and unskewed */
+.global-page-header {
+  position: fixed !important;
+  top: 15%;      /* Adjust to align with your design */
+  left: 5%;      /* Matches your BackBtn alignment */
+  z-index: 100;
+  pointer-events: none;
+  transform: none !important; /* Force no skew */
+}
+
+/* 2. Ensure the title inside the header doesn't inherit transforms */
+.main-title {
+  transform: none !important;
+  font-size: 5.5rem;
+  /* ... rest of your styling ... */
+}
+
+/* 3. Keep the skew ONLY on the scrolling panel */
+.panel {
+  position: fixed;
+  top: 35%; /* Start the panel lower so it doesn't overlap the header */
+  height: 60vh;
+  transform: skewX(-4deg); /* Skew only applies here */
+}
