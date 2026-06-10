@@ -92,17 +92,17 @@ const currentDiscAsset = computed(() => {
   return disc1
 })
 
-const songs = [
-  { id: 1, title: 'Color Your Night', src: new URL('', import.meta.url).href },
-  { id: 2, title: 'Memory Of You', src: new URL('', import.meta.url).href },
-  { id: 3, title: 'Full Moon Full Life', src: new URL('', import.meta.url).href }
-]
-
 // const songs = [
-//   { id: 1, title: 'Color Your Night', src: new URL('../assets/musics/Color-Your-Night.mp3', import.meta.url).href },
-//   { id: 2, title: 'Memory Of You', src: new URL('../assets/musics/Beneath-The-Mask.mp3', import.meta.url).href },
-//   { id: 3, title: 'Full Moon Full Life', src: new URL('../assets/musics/Full-Moon-Full-Life.mp3', import.meta.url).href }
+//   { id: 1, title: 'Color Your Night', src: new URL('', import.meta.url).href },
+//   { id: 2, title: 'Memory Of You', src: new URL('', import.meta.url).href },
+//   { id: 3, title: 'Full Moon Full Life', src: new URL('', import.meta.url).href }
 // ]
+
+const songs = [
+  { id: 1, title: 'Color Your Night', src: new URL('../assets/musics/Color-Your-Night.mp3', import.meta.url).href },
+  { id: 2, title: 'Memory Of You', src: new URL('../assets/musics/Beneath-The-Mask.mp3', import.meta.url).href },
+  { id: 3, title: 'Full Moon Full Life', src: new URL('../assets/musics/Full-Moon-Full-Life.mp3', import.meta.url).href }
+]
 
 const widgetStyle = computed(() => {
   if (useRawPosition.value) {
