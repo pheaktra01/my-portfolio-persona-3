@@ -201,7 +201,6 @@ const launchProject = (url: string) => {
   --p3r-magenta: #ff0055;
   --p3r-pure-white: #ffffff;
   --p3r-font-family: 'Impact', 'Arial Black', sans-serif;
-  isolation: isolate;
   
   min-height: 100vh;
   height: 100vh;
@@ -209,7 +208,6 @@ const launchProject = (url: string) => {
   color: var(--p3r-pure-white);
   overflow: hidden; /* Lock the viewport boundaries securely */
   position: relative;
-  background-color: #03060f;
 }
 
 /* HIGH-INTEGRITY VISUAL LAYER HANDLING */
@@ -224,7 +222,6 @@ const launchProject = (url: string) => {
 .bg-video {
   object-fit: cover;
   z-index: 0;
-  opacity: 0.35;
 }
 
 .overlay {
@@ -237,7 +234,7 @@ const launchProject = (url: string) => {
   width: auto; height: auto;
   z-index: 1;
   font-size: 7rem;
-  color: rgba(0, 210, 255, 0.03);
+  color: rgba(0, 208, 255, 0.37);
   transform: rotate(-12deg);
   white-space: nowrap;
   user-select: none;

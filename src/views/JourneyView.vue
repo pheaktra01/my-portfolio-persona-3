@@ -154,7 +154,7 @@ const combinedLogs = ref([
 .bg-video {
   object-fit: cover;
   z-index: 0;
-  opacity: 0.38;
+  opacity: 0.8;
 }
 
 .overlay {

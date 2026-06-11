@@ -149,7 +149,7 @@ const experience = [
 .bg-video {
   object-fit: cover;
   z-index: 0;
-  opacity: 0.4;
+  opacity: 0.8;
 }
 
 .overlay {
@@ -157,8 +157,8 @@ const experience = [
 }
 
 .hud-grid-overlay {
-  background-image: linear-gradient(rgba(0, 210, 255, 0.03) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(0, 210, 255, 0.03) 1px, transparent 1px);
+  background-image: linear-gradient(rgba(0, 208, 255, 0.219) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(0, 208, 255, 0.219) 1px, transparent 1px);
   background-size: 40px 40px;
   z-index: 1;
 }

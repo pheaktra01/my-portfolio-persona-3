@@ -178,7 +178,7 @@ onBeforeUnmount(() => {
 .bg-video {
   object-fit: cover;
   z-index: 0;
-  opacity: 0.35;
+  opacity: 0.8;
 }
 
 .overlay {
