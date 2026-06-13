@@ -95,7 +95,7 @@ import BackBtn from '../components/BackBtn.vue'
 import IntroSlash from '../components/IntroSlash.vue'
 import { videos } from '../config/videos'
 import { useVideoManager } from '../composables/useVideoManager.ts'
-import { playClick, playSwitchToggle, playHover } from '../utils/sound.ts'
+import { playClick, playSwitchToggle } from '../utils/sound.ts'
 
 const { setVideo, clearVideo, currentVideo } = useVideoManager()
 
@@ -215,7 +215,6 @@ const combinedLogs = ref([
 /* ================= DARK OVERLAY ================= */
 .overlay {
   z-index: 2;
-  background: rgba(0, 0, 0, 0.35);
 }
 
 /* ================= SCANLINES ================= */

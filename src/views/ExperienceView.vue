@@ -4,7 +4,7 @@
       <!-- Background image -->
       <img
         class="bg-poster"
-        src="../assets/images/experience.jpg"
+        src="../assets/images/skill.jpg"
         alt="background"
       />
 
@@ -79,7 +79,7 @@ import BackBtn from '../components/BackBtn.vue'
 import IntroSlash from '../components/IntroSlash.vue'
 import { videos } from '../config/videos'
 import { useVideoManager } from "../composables/useVideoManager.ts"
-import { playSwitchToggle, playHover, playClick } from '../utils/sound.ts'
+import { playSwitchToggle, playClick } from '../utils/sound.ts'
 
 const { setVideo, clearVideo, currentVideo } = useVideoManager()
 
@@ -96,7 +96,7 @@ function onCardClick() {
 }
 
 onMounted(() => {
-  setVideo(videos.experience)
+  setVideo(videos.skill)
 })
 
 onBeforeUnmount(() => {
