@@ -53,22 +53,29 @@
     <Transition name="p3r-modal">
       <div class="modal-backdrop" v-if="isModalOpen" @click.self="isModalOpen = false">
         <div class="p3r-modal-window">
-          <button class="p3r-close-anchor" @click="isModalOpen = false">CLOSE ▲</button>
+          <button class="p3r-close-anchor" @click="onClickClose" @pointerenter="onHover" >CLOSE ▲</button>
           
           <div class="modal-content">
             <h2 class="dossier-title">{{ activeLink?.name }}</h2>
             
             <div v-if="activeLink?.type === 'form'" class="dossier-body">
+              <input type="text" v-model="formData.name" placeholder="SENDER // NAME" class="p3r-input" required>
               <input type="email" v-model="formData.email" placeholder="SENDER // EMAIL" class="p3r-input" required>
               <input type="text" v-model="formData.subject" placeholder="SUBJECT // INPUT" class="p3r-input" required>
               <textarea v-model="formData.message" placeholder="MESSAGE // DATA" class="p3r-input" rows="4" required></textarea>
               
-              <button class="p3r-action-btn" @click="sendTransmission" :disabled="isSending">SEND TRANSMISSION</button>
+              <button 
+                class="p3r-action-btn" 
+                @click="onClickSend"
+                @pointerenter="onHover"
+                :disabled="isSending || !formData.name || !formData.email || !formData.subject || !formData.message"
+                >SEND TRANSMISSION
+              </button>
             </div>
 
             <div v-else class="dossier-body">
               <p class="dossier-desc">{{ activeLink?.description }}</p>
-              <button class="p3r-action-btn" @click="launch(activeLink?.url)">OPEN INTERFACE ▼</button>
+              <button class="p3r-action-btn" @click="onClickLink(activeLink?.url)" @pointerenter="onHover">OPEN INTERFACE ▼</button>
             </div>
           </div>
         </div>
@@ -83,7 +90,7 @@ import BackBtn from '../components/BackBtn.vue'
 import IntroSlash from '../components/IntroSlash.vue'
 import { videos } from '../config/videos'
 import { useVideoManager } from '../composables/useVideoManager.ts'
-import { playClick, playSwitchToggle } from '../utils/sound.ts'
+import { playClick, playSwitchToggle, playHover } from '../utils/sound.ts'
 import emailjs from '@emailjs/browser';
 
 const { setVideo, clearVideo, currentVideo } = useVideoManager()
@@ -93,23 +100,37 @@ const activeLink = ref<any>(null)
 const isSending = ref(false)
 
 const formData = ref({
+  name: '',
   email: '',
   subject: '',
   message: ''
 });
 
 const sendTransmission = async () => {
+  // 1. Validation Check
+  if (!formData.value.name || !formData.value.email || !formData.value.subject || !formData.value.message) {
+    alert("SYSTEM WARNING: All fields are required for transmission.");
+    return;
+  }
+
+  // 2. Email format validation (Regex)
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(formData.value.email)) {
+    alert("SYSTEM WARNING: Invalid email address format.");
+    return;
+  }
+
   if (isSending.value) return;
   isSending.value = true;
   
   try {
     const templateParams = {
+      from_name: formData.value.name,
       from_email: formData.value.email,
       subject: formData.value.subject,
       message: formData.value.message,
     };
 
-    // REPLACE THESE WITH YOUR ACTUAL EMAILJS VALUES
     await emailjs.send(
       'service_yso6hxi', 
       'template_kk5gn3a', 
@@ -118,7 +139,7 @@ const sendTransmission = async () => {
     );
     
     alert("TRANSMISSION SUCCESSFUL: Data link established.");
-    formData.value = { email: '', subject: '', message: '' }; // Clear form
+    formData.value = {name: '', email: '', subject: '', message: '' };
     isModalOpen.value = false;
   } catch (error) {
     console.error("Transmission Failed:", error);
@@ -135,7 +156,23 @@ function onCardClick(link: any) {
   isModalOpen.value = true
 }
 
-function launch(url: string) {
+function onHover() {
+  const isMobile = window.innerWidth <= 868
+  playHover(isMobile)
+}
+
+function onClickClose() {
+  playClick();
+  isModalOpen.value = false
+}
+
+function onClickSend() {
+  playClick()
+  sendTransmission()
+}
+
+function onClickLink(url: string) {
+  playClick()
   window.open(url, '_blank')
   isModalOpen.value = false
 }
@@ -218,7 +255,6 @@ const links = [
 /* ================= OVERLAY ================= */
 .overlay {
   z-index: 2;
-  background: rgba(0, 0, 0, 0.35);
 }
 
 /* ================= HUD SCANLINES ================= */
