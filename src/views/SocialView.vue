@@ -59,11 +59,11 @@
             <h2 class="dossier-title">{{ activeLink?.name }}</h2>
             
             <div v-if="activeLink?.type === 'form'" class="dossier-body">
-              <!-- Inside your <div v-if="activeLink?.type === 'form'"> block -->
-              <input type="email" placeholder="SENDER // EMAIL_ADDRESS" class="p3r-input" required>
-              <input type="text" placeholder="SUBJECT // INPUT" class="p3r-input" required>
-              <textarea placeholder="MESSAGE // DATA" class="p3r-input" rows="4" required></textarea>
-              <button class="p3r-action-btn" @click="isModalOpen = false">SEND TRANSMISSION</button>
+              <input type="email" v-model="formData.email" placeholder="SENDER // EMAIL" class="p3r-input" required>
+              <input type="text" v-model="formData.subject" placeholder="SUBJECT // INPUT" class="p3r-input" required>
+              <textarea v-model="formData.message" placeholder="MESSAGE // DATA" class="p3r-input" rows="4" required></textarea>
+              
+              <button class="p3r-action-btn" @click="sendTransmission" :disabled="isSending">SEND TRANSMISSION</button>
             </div>
 
             <div v-else class="dossier-body">
@@ -84,14 +84,51 @@ import IntroSlash from '../components/IntroSlash.vue'
 import { videos } from '../config/videos'
 import { useVideoManager } from '../composables/useVideoManager.ts'
 import { playClick, playSwitchToggle } from '../utils/sound.ts'
+import emailjs from '@emailjs/browser';
 
 const { setVideo, clearVideo, currentVideo } = useVideoManager()
 const videoLoaded = ref(false)
 const isModalOpen = ref(false)
 const activeLink = ref<any>(null)
+const isSending = ref(false)
+
+const formData = ref({
+  email: '',
+  subject: '',
+  message: ''
+});
+
+const sendTransmission = async () => {
+  if (isSending.value) return;
+  isSending.value = true;
+  
+  try {
+    const templateParams = {
+      from_email: formData.value.email,
+      subject: formData.value.subject,
+      message: formData.value.message,
+    };
+
+    // REPLACE THESE WITH YOUR ACTUAL EMAILJS VALUES
+    await emailjs.send(
+      'service_yso6hxi', 
+      'template_kk5gn3a', 
+      templateParams, 
+      'YkW3h24fwb0oRjEt_'
+    );
+    
+    alert("TRANSMISSION SUCCESSFUL: Data link established.");
+    formData.value = { email: '', subject: '', message: '' }; // Clear form
+    isModalOpen.value = false;
+  } catch (error) {
+    console.error("Transmission Failed:", error);
+    alert("SYSTEM ERROR: Transmission failed.");
+  } finally {
+    isSending.value = false;
+  }
+};
 
 function onCardHover() { playSwitchToggle() }
-
 function onCardClick(link: any) {
   playClick()
   activeLink.value = link
@@ -633,5 +670,11 @@ const links = [
 
 @media (max-width: 768px) {
   .p3r-modal-window { width: 90%; transform: none !important; }
+}
+
+.p3r-action-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+  filter: grayscale(1);
 }
 </style>
