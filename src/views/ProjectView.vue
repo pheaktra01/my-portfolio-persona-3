@@ -188,7 +188,7 @@ const projects = [
     longDesc: 'A live interactive web application showcasing structural layout sections, crisp high-fidelity asset rendering pipelines, fully responsive interactive navigation mechanics, and modular UI cards.',
     tags: ['Vue 3', 'TypeScript', 'Spring-Boot', 'MongoDB'],
     url: 'https://tovrean.loengpheaktra.xyz/',
-    image: '../assets/images/tovrean-preview.png'
+    image: '@/assets/images/tovrean-preview.png'
   },
   {
     title: 'DoOrt C2C E-commerce Material Exchange',
@@ -196,7 +196,7 @@ const projects = [
     longDesc: 'A high-performance video deployment architecture featuring modular playback pipelines, continuous memory caching via Redis, and structural cluster layouts built inside NestJS backend layers.',
     tags: ['Vue', 'NestJS', 'MongoDB'],
     url: 'https://material-exchange-platform.pages.dev',
-    image: '../assets/images/doOrt-preview.png'
+    image: '@/assets/images/doOrt-preview.png'
   },
   {
     title: 'Persona 3 Reload Portfolio',
@@ -204,7 +204,7 @@ const projects = [
     longDesc: 'Biometric processing utility capable of charting critical dynamic glucose curves, setting telemetry triggers, and syncing state records seamlessly over encrypted firestore cloud channels.',
     tags: ['Vue.js', 'TypeScript'],
     url: 'https://www.loengpheaktra.xyz/',
-    image: '../assets/images/persona3-preview.png'
+    image: '@/assets/images/persona3-preview.png'
   }
 ]
 
