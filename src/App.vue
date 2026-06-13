@@ -8,7 +8,7 @@ const audioStore = useAudioStore()
 
 onMounted(() => {
   audioStore.init(
-    new URL('./assets/musics/Color-Your-Night.mp3', import.meta.url).href
+    new URL('', import.meta.url).href
   )
 
   audioStore.play()
@@ -28,29 +28,6 @@ const currentVideoSrc = computed(() => currentVideo.value)
 </template>
 
 <style setup>
-.mute-btn {
-  position: fixed;
-  right: 1rem;
-  bottom: 1rem;
-  z-index: 999;
-
-  width: 44px;
-  height: 44px;
-
-  border: none;
-  border-radius: 50%;
-
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  cursor: pointer;
-
-  transition: transform 0.15s ease, background 0.2s ease;
-}
 
 /* Persona-style hover */
 .mute-btn:hover {
