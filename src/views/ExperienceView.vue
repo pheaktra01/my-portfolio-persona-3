@@ -1,25 +1,35 @@
 <template>
   <div class="exp-page p3r-theme">
-    <video
-      class="bg-video"
-      :src="currentVideo"
-      autoplay
-      loop
-      muted
-      playsinline
-      poster="../assets/images/experience.jpg"
-      preload="metadata"
-    ></video>
+    <div class="bg-layer-container">
+      <!-- Background image -->
+      <img
+        class="bg-poster"
+        src="../assets/images/experience.jpg"
+        alt="background"
+      />
 
-    <div class="overlay"></div>
-    <div class="hud-grid-overlay"></div>
-    <div class="bg-watermark-strip">P3R_MISSION_LOG_SEQUENCE_2026</div>
+      <!-- Video -->
+      <video
+        class="bg-video"
+        :class="{ loaded: videoLoaded }"
+        :src="currentVideo"
+        autoplay
+        loop
+        muted
+        playsinline
+        preload="metadata"
+        @loadeddata="videoLoaded = true"
+      ></video>
+
+      <div class="overlay"></div>
+      <div class="hud-grid-overlay"></div>
+      <div class="bg-watermark-strip">P3R_MISSION_LOG_SEQUENCE_2026</div>
+    </div>
 
     <BackBtn />
     <IntroSlash />
 
     <div class="panel">
-      
       <header class="top-header">
         <div class="status-ribbon"><span>SYS_RECORD_LOG</span></div>
         <div class="title-container">
@@ -30,41 +40,35 @@
 
       <div class="timeline-container">
         <div class="central-spine-line"></div>
-
         <div
           v-for="(e, i) in experience"
           :key="e.title"
           class="p3r-shard-card"
+          @pointerenter="onCardHover"
+          @click="onCardClick"
           :style="{ '--i': i }"
         >
           <div class="shard-date-badge">
             <div class="date-corner-bracket"></div>
             <span class="date-text">{{ e.date }}</span>
           </div>
-
           <div class="shard-wrapper">
             <div class="shard-bg-dark"></div>
             <div class="shard-bg-cyan"></div>
-            
             <div class="shard-inner-content">
               <header class="shard-content-header">
                 <h2 class="role-title">{{ e.title }}</h2>
                 <p class="company-sub-link">{{ e.company }}</p>
               </header>
-
               <p class="shard-desc-body">{{ e.desc }}</p>
-
               <div class="tag-matrix-group">
                 <span v-for="t in e.tags" :key="t" class="p3r-matrix-tag">{{ t }}</span>
               </div>
             </div>
-            
             <div class="shard-hud-index">LOG_#0{{ i + 1 }}</div>
           </div>
         </div>
-
       </div>
-
     </div>
   </div>
 </template>
@@ -75,8 +79,21 @@ import BackBtn from '../components/BackBtn.vue'
 import IntroSlash from '../components/IntroSlash.vue'
 import { videos } from '../config/videos'
 import { useVideoManager } from "../composables/useVideoManager.ts"
+import { playSwitchToggle, playHover, playClick } from '../utils/sound.ts'
 
 const { setVideo, clearVideo, currentVideo } = useVideoManager()
+
+import { ref } from 'vue'
+
+const videoLoaded = ref(false)
+
+function onCardHover() {
+  playSwitchToggle()
+}
+
+function onCardClick() {
+  playClick()
+}
 
 onMounted(() => {
   setVideo(videos.experience)
@@ -152,29 +169,114 @@ const experience = [
   opacity: 0.8;
 }
 
-.overlay {
-  z-index: 1;
-}
-
-.hud-grid-overlay {
-  background-image: linear-gradient(rgba(0, 208, 255, 0.219) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(0, 208, 255, 0.219) 1px, transparent 1px);
-  background-size: 40px 40px;
-  z-index: 1;
-}
-
+/* HIGH-INTEGRITY VISUAL LAYER INTERACTION FLAGS */
+.bg-poster,
+.bg-video,
+.overlay,
+.hud-grid-overlay,
 .bg-watermark-strip {
-  top: auto; left: -2%;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* ================= BACKGROUND POSTER ================= */
+.bg-poster {
+  object-fit: cover;
+  z-index: 0;
+}
+
+/* ================= VIDEO ================= */
+.bg-video {
+  object-fit: cover;
+  z-index: 1;
+
+  /* Hidden before loaded */
+  opacity: 0;
+
+  /* Smooth fade in */
+  transition: opacity 0.8s ease;
+}
+
+/* Show video after loaded */
+.bg-video.loaded {
+  opacity: 1;
+}
+
+/* ================= OVERLAY ================= */
+.overlay {
+  z-index: 2;
+}
+
+/* ================= GRID ================= */
+.hud-grid-overlay {
+  background-image:
+    linear-gradient(rgba(0, 208, 255, 0.219) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 208, 255, 0.219) 1px, transparent 1px);
+
+  background-size: 40px 40px;
+  z-index: 3;
+}
+
+/* ================= WATERMARK ================= */
+.bg-watermark-strip {
+  top: auto;
+  left: -2%;
   bottom: 8%;
-  width: auto; height: auto;
+
+  width: auto;
+  height: auto;
+
   font-size: 6rem;
   color: rgba(0, 210, 255, 0.02);
+
   transform: rotate(-7deg);
+
   white-space: nowrap;
   user-select: none;
-  z-index: 0;
+
+  z-index: 1;
+
   font-weight: 900;
   font-style: italic;
+}
+
+/* ================= CONTAINER ================= */
+.bg-layer-container {
+  position: fixed;
+  inset: 0;
+
+  z-index: 0;
+  pointer-events: none;
+
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Simplified background elements to act as children of the container */
+.bg-video, .overlay, .hud-grid-overlay, .bg-watermark-strip {
+  position: absolute; /* Changed from fixed to absolute */
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.bg-video {
+  object-fit: cover;
+  opacity: 0.8;
+}
+
+/* Ensure these sit correctly above the video within the layer container */
+.overlay { z-index: 1; }
+.hud-grid-overlay { z-index: 2; }
+.bg-watermark-strip { z-index: 0; }
+
+/* Keep the content panel separated */
+.panel {
+  position: relative;
+  z-index: 10; /* Ensures content is always above the .bg-layer-container */
 }
 
 /* ================= THE OVERSIZED INTERFACE PANEL ================= */
@@ -267,7 +369,7 @@ const experience = [
   bottom: 0;
   width: 3px;
   background: linear-gradient(180deg, var(--p3r-cyan) 0%, rgba(0, 210, 255, 0.1) 100%);
-  z-index: 1;
+  z-index: 0;
 }
 
 .p3r-shard-card {

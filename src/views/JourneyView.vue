@@ -1,19 +1,34 @@
 <template>
   <div class="journey-page p3r-theme">
-    <video
-      class="bg-video"
-      :src="currentVideo"
-      autoplay
-      loop
-      muted
-      playsinline
-      poster="../assets/images/timeline.jpg"
-      preload="metadata"
-    ></video>
+    <div class="bg-layer-container">
 
-    <div class="overlay"></div>
-    <div class="screen-scan-overlay"></div>
-    <div class="ambient-ticker">SYS_TRACK_LOGS // TIMELINE_SEQUENCE_INITIALIZED</div>
+      <!-- Poster -->
+      <img
+        class="bg-poster"
+        src="../assets/images/timeline.jpg"
+        alt="background"
+      />
+
+      <!-- Video -->
+      <video
+        class="bg-video"
+        :class="{ loaded: videoLoaded }"
+        :src="currentVideo"
+        autoplay
+        loop
+        muted
+        playsinline
+        preload="metadata"
+        @loadeddata="videoLoaded = true"
+      ></video>
+
+      <div class="overlay"></div>
+      <div class="screen-scan-overlay"></div>
+      <div class="ambient-ticker">
+        SYS_TRACK_LOGS // TIMELINE_SEQUENCE_INITIALIZED
+      </div>
+
+    </div>
 
     <BackBtn />
     <IntroSlash />
@@ -34,6 +49,8 @@
           v-for="(item, i) in combinedLogs"
           :key="i"
           class="p3r-timeline-item"
+          @pointerenter="onCardHover"
+          @click="onCardClick"
           :style="{ '--i': i }"
         >
           <div class="node-anchor-zone">
@@ -78,8 +95,19 @@ import BackBtn from '../components/BackBtn.vue'
 import IntroSlash from '../components/IntroSlash.vue'
 import { videos } from '../config/videos'
 import { useVideoManager } from '../composables/useVideoManager.ts'
+import { playClick, playSwitchToggle, playHover } from '../utils/sound.ts'
 
 const { setVideo, clearVideo, currentVideo } = useVideoManager()
+
+const videoLoaded = ref(false)
+
+function onCardHover() {
+  playSwitchToggle()
+}
+
+function onCardClick() {
+  playClick()
+}
 
 onMounted(() => {
   setVideo(videos.timeline)
@@ -143,39 +171,83 @@ const combinedLogs = ref([
 }
 
 /* HIGH-INTEGRITY VISUAL LAYER INTERACTION FLAGS */
-.bg-video, .overlay, .screen-scan-overlay, .ambient-ticker {
+.bg-layer-container {
   position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.bg-poster,
+.bg-video,
+.overlay,
+.screen-scan-overlay,
+.ambient-ticker {
+  position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none; /* Passes touches straight to the scroll pane */
+  pointer-events: none;
 }
 
-.bg-video {
+/* ================= POSTER ================= */
+.bg-poster {
   object-fit: cover;
   z-index: 0;
-  opacity: 0.8;
 }
 
-.overlay {
+/* ================= VIDEO ================= */
+.bg-video {
+  object-fit: cover;
   z-index: 1;
+
+  opacity: 0;
+  transition: opacity 0.8s ease;
 }
 
-.screen-scan-overlay {
-  background: linear-gradient(rgba(0, 210, 255, 0.015) 50%, rgba(0, 0, 0, 0.25) 50%);
-  background-size: 100% 4px;
+.bg-video.loaded {
+  opacity: 1;
+}
+
+/* ================= DARK OVERLAY ================= */
+.overlay {
   z-index: 2;
+  background: rgba(0, 0, 0, 0.35);
 }
 
+/* ================= SCANLINES ================= */
+.screen-scan-overlay {
+  background:
+    linear-gradient(
+      rgba(0, 210, 255, 0.015) 50%,
+      rgba(0, 0, 0, 0.25) 50%
+    );
+
+  background-size: 100% 4px;
+  z-index: 3;
+}
+
+/* ================= AMBIENT TEXT ================= */
 .ambient-ticker {
-  top: 25%; right: -8%;
-  width: auto; height: auto;
+  top: 25%;
+  right: -8%;
+
+  width: auto;
+  height: auto;
+
   font-size: 6.5rem;
   color: rgba(0, 210, 255, 0.02);
+
   transform: rotate(-15deg);
+
   white-space: nowrap;
   user-select: none;
-  z-index: 0;
+
+  z-index: 1;
+
   font-style: italic;
   font-weight: 900;
 }
@@ -267,8 +339,8 @@ const combinedLogs = ref([
   left: 28px;
   top: 0; bottom: 0;
   width: 3px;
-  background: linear-gradient(180deg, var(--p3r-magenta) 0%, rgba(255,0,85,0.05) 100%);
-  z-index: 1;
+  background: linear-gradient(180deg, var(--p3r-magenta) 100%, rgba(255,0,85,0.05) 100%);
+  z-index: 0;
 }
 
 .p3r-timeline-item {

@@ -35,7 +35,8 @@
           class="p3r-list-card"
           @mouseenter="active = i"
           @mouseleave="active = null"
-          @click="openPreview(i)"
+          @pointerenter="onToggle"
+          @click="onClickCard(i)"
           :class="{ 'is-active': active === i }"
           :style="{ '--i': i }"
         >
@@ -68,7 +69,7 @@
       <div class="modal-backdrop" v-if="isPreviewOpen" @click.self="closePreview">
         
         <div class="p3r-modal-window">
-          <button class="p3r-close-anchor" @click="closePreview">
+          <button class="p3r-close-anchor" @click="onClickClose" @pointerenter="onHover">
             <span>CLOSE ▲</span>
           </button>
 
@@ -104,7 +105,7 @@
               </div>
 
               <footer class="dossier-footer">
-                <button class="p3r-action-btn" @click="launchProject(selectedProject.url)">
+                <button class="p3r-action-btn" @click="onClickLaunchProject(selectedProject.url)" @pointerenter="onHover">
                   <span class="btn-skew-fill"></span>
                   <span class="btn-inner-content">
                     <span class="btn-txt">LAUNCH INTERFACE</span>
@@ -128,8 +129,35 @@ import BackBtn from '../components/BackBtn.vue'
 import IntroSlash from '../components/IntroSlash.vue'
 import { videos } from '../config/videos'
 import { useVideoManager } from '../composables/useVideoManager.ts'
+import { playSwitchToggle, playClick, playHover } from '../utils/sound.ts'
 
 const { setVideo, clearVideo, currentVideo } = useVideoManager()
+const hovered = ref(false)
+
+function onToggle(){
+  hovered.value = true
+  playSwitchToggle()
+}
+
+function onClickCard(i: number) {
+  playClick()
+  openPreview(i)
+}
+
+function onClickClose(){
+  closePreview()
+  playClick()
+}
+
+function onClickLaunchProject(url: string) {
+  launchProject(url)
+  playClick()
+}
+
+function onHover() {
+  const isMobile = window.innerWidth <= 868
+  playHover(isMobile)
+}
 
 onMounted(() => {
   setVideo(videos.project)

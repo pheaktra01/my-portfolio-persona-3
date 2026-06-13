@@ -1,27 +1,17 @@
 <template>
   <div class="social-page p3r-theme">
-    <!-- BACKGROUND VIDEO & AMBIENT UI FILTERS (Bypassed touch block using pointer-events) -->
-    <video
-      class="bg-video"
-      :src="currentVideo"
-      autoplay
-      loop
-      muted
-      playsinline
-      poster="../assets/images/social.jpg"
-      preload="metadata"
-    ></video>
-
-    <div class="overlay"></div>
-    <div class="hud-scanline-matrix"></div>
-    <div class="background-velvet-ribbon">SYS_VAL_NETWORK_LINK_ESTABLISHED</div>
+    <div class="bg-layer-container">
+      <img class="bg-poster" src="../assets/images/social.jpg" alt="background" />
+      <video class="bg-video" :class="{ loaded: videoLoaded }" :src="currentVideo" autoplay loop muted playsinline preload="metadata" @loadeddata="videoLoaded = true"></video>
+      <div class="overlay"></div>
+      <div class="hud-scanline-matrix"></div>
+      <div class="background-velvet-ribbon">SYS_VAL_NETWORK_LINK_ESTABLISHED</div>
+    </div>
 
     <BackBtn />
     <IntroSlash />
 
-    <!-- RE-ARCHITECTED HUD PANEL -->
     <div class="panel">
-      
       <header class="top-header">
         <div class="status-tag"><span>COMM_OVERLINK_LOG</span></div>
         <div class="title-skew-container">
@@ -30,99 +20,97 @@
         <p class="subtitle">// CONNECTED_ARCHETYPE_NETWORKS</p>
       </header>
 
-      <!-- P3R AGGRESSIVE LINK LIST -->
       <div class="p3r-link-stack">
-
-        <a
+        <div
           v-for="(link, i) in links"
           :key="link.name"
-          :href="link.url"
-          target="_blank"
           class="p3r-social-card"
           :style="{ '--i': i }"
+          @pointerenter="onCardHover"
+          @click="onCardClick(link)"
         >
-          <!-- Dynamic High-Contrast Geometric Underlays -->
           <div class="card-base-plate"></div>
           <div class="card-accent-slash"></div>
-
           <div class="card-body-layout">
-            
-            <!-- LEFT: ARCANA DESIGNATION STAMP -->
             <div class="arcana-badge-sector">
               <div class="arcana-icon-bracket">✦</div>
               <div class="arcana-text">{{ link.arcana }}</div>
             </div>
-
-            <!-- CENTER: METADATA DOSSIER -->
             <div class="network-profile-sector">
               <h2 class="network-title">{{ link.name }}</h2>
               <p class="network-desc">{{ link.description }}</p>
             </div>
-
-            <!-- RIGHT: MAX/RANK BADGE RIBBON -->
             <div class="rank-indicator-sector" :class="{ 'is-max': link.rank === 'MAX' }">
               <span class="rank-label">LINK RANK</span>
               <span class="rank-value">{{ link.rank }}</span>
             </div>
-
           </div>
-
-          <!-- Decorative Telemetry Blueprint Accents -->
           <div class="card-hud-identifier">LINK_SYS_N°0{{ i + 1 }}</div>
-        </a>
-
+        </div>
       </div>
-
     </div>
+
+    <Transition name="p3r-modal">
+      <div class="modal-backdrop" v-if="isModalOpen" @click.self="isModalOpen = false">
+        <div class="p3r-modal-window">
+          <button class="p3r-close-anchor" @click="isModalOpen = false">CLOSE ▲</button>
+          
+          <div class="modal-content">
+            <h2 class="dossier-title">{{ activeLink?.name }}</h2>
+            
+            <div v-if="activeLink?.type === 'form'" class="dossier-body">
+              <!-- Inside your <div v-if="activeLink?.type === 'form'"> block -->
+              <input type="email" placeholder="SENDER // EMAIL_ADDRESS" class="p3r-input" required>
+              <input type="text" placeholder="SUBJECT // INPUT" class="p3r-input" required>
+              <textarea placeholder="MESSAGE // DATA" class="p3r-input" rows="4" required></textarea>
+              <button class="p3r-action-btn" @click="isModalOpen = false">SEND TRANSMISSION</button>
+            </div>
+
+            <div v-else class="dossier-body">
+              <p class="dossier-desc">{{ activeLink?.description }}</p>
+              <button class="p3r-action-btn" @click="launch(activeLink?.url)">OPEN INTERFACE ▼</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import BackBtn from '../components/BackBtn.vue'
 import IntroSlash from '../components/IntroSlash.vue'
 import { videos } from '../config/videos'
 import { useVideoManager } from '../composables/useVideoManager.ts'
+import { playClick, playSwitchToggle } from '../utils/sound.ts'
 
 const { setVideo, clearVideo, currentVideo } = useVideoManager()
+const videoLoaded = ref(false)
+const isModalOpen = ref(false)
+const activeLink = ref<any>(null)
 
-onMounted(() => {
-  setVideo(videos.social)
-})
+function onCardHover() { playSwitchToggle() }
 
-onBeforeUnmount(() => {
-  clearVideo()
-})
+function onCardClick(link: any) {
+  playClick()
+  activeLink.value = link
+  isModalOpen.value = true
+}
+
+function launch(url: string) {
+  window.open(url, '_blank')
+  isModalOpen.value = false
+}
+
+onMounted(() => setVideo(videos.social))
+onBeforeUnmount(() => clearVideo())
 
 const links = [
-  {
-    arcana: 'MAGICIAN',
-    name: 'GitHub',
-    rank: 'MAX',
-    description: 'Source code repositories and open-source project frameworks.',
-    url: 'https://github.com/pheaktra01'
-  },
-  {
-    arcana: 'PRIESTESS',
-    name: 'LinkedIn',
-    rank: '08',
-    description: 'Professional engineering profile and industry network connections.',
-    url: 'https://www.linkedin.com/in/loeng-pheaktra-2b9578413/'
-  },
-  {
-    arcana: 'CHARIOT',
-    name: 'Facebook',
-    rank: '10',
-    description: 'Personal updates, announcements, and direct community communication.',
-    url: 'https://web.facebook.com/loeng.pheaktra'
-  },
-  {
-    arcana: 'STAR',
-    name: 'Discord',
-    rank: '07',
-    description: 'Gaming channels, real-time audio telemetry, and developer servers.',
-    url: 'https://discord.com/users/yagami12629'
-  }
+  { arcana: 'FOOL', name: 'Email', type: 'form', rank: 'MAX', description: 'Direct secure communication channel.' },
+  { arcana: 'MAGICIAN', name: 'GitHub', type: 'link', url: 'https://github.com/pheaktra01', rank: 'MAX', description: 'Source code repositories and open-source project frameworks.' },
+  { arcana: 'PRIESTESS', name: 'LinkedIn', type: 'link', url: 'https://www.linkedin.com/in/loeng-pheaktra-2b9578413/', rank: '08', description: 'Professional engineering profile.' },
+  { arcana: 'CHARIOT', name: 'Facebook', type: 'link', url: 'https://web.facebook.com/loeng.pheaktra', rank: '10', description: 'Personal updates and community communication.' }
 ]
 </script>
 
@@ -146,39 +134,86 @@ const links = [
 }
 
 /* HIGH-INTEGRITY VISUAL LAYER INTERACTION FLAGS */
-.bg-video, .overlay, .hud-scanline-matrix, .background-velvet-ribbon {
+.bg-layer-container {
   position: fixed;
   inset: 0;
+
+  z-index: 0;
+  pointer-events: none;
+
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.bg-poster,
+.bg-video,
+.overlay,
+.hud-scanline-matrix,
+.background-velvet-ribbon {
+  position: absolute;
+  inset: 0;
+
   width: 100%;
   height: 100%;
-  pointer-events: none; /* Safely passes tap/drag interactions down to scroll layers */
+
+  pointer-events: none;
 }
 
-.bg-video {
+/* ================= POSTER ================= */
+.bg-poster {
   object-fit: cover;
   z-index: 0;
-  opacity: 0.8;
 }
 
-.overlay {
+/* ================= VIDEO ================= */
+.bg-video {
+  object-fit: cover;
   z-index: 1;
+
+  opacity: 0;
+  transition: opacity 0.8s ease;
 }
 
-.hud-scanline-matrix {
-  background: linear-gradient(rgba(0, 210, 255, 0.01) 50%, rgba(0, 0, 0, 0.2) 50%);
-  background-size: 100% 4px;
+.bg-video.loaded {
+  opacity: 1;
+}
+
+/* ================= OVERLAY ================= */
+.overlay {
   z-index: 2;
+  background: rgba(0, 0, 0, 0.35);
 }
 
+/* ================= HUD SCANLINES ================= */
+.hud-scanline-matrix {
+  background:
+    linear-gradient(
+      rgba(0, 210, 255, 0.01) 50%,
+      rgba(0, 0, 0, 0.2) 50%
+    );
+
+  background-size: 100% 4px;
+  z-index: 3;
+}
+
+/* ================= AMBIENT RIBBON ================= */
 .background-velvet-ribbon {
-  top: 20%; right: -10%;
-  width: auto; height: auto;
+  top: 20%;
+  right: -10%;
+
+  width: auto;
+  height: auto;
+
   font-size: 6.5rem;
   color: rgba(0, 210, 255, 0.02);
+
   transform: rotate(-14deg);
+
   white-space: nowrap;
   user-select: none;
-  z-index: 0;
+
+  z-index: 1;
+
   font-weight: 900;
   font-style: italic;
 }
@@ -492,5 +527,111 @@ const links = [
   .rank-value { font-size: 1.1rem; }
   
   .card-hud-identifier { display: none; }
+}
+
+
+/* ================= SLICED PORTAL MODAL VIEWPORTS ================= */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(3, 6, 15, 0.88);
+  backdrop-filter: blur(14px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.p3r-modal-window {
+  position: relative;
+  width: 600px; /* Adjusted for Social content */
+  background: var(--p3r-deep-blue);
+  border: 4px solid var(--p3r-pure-white);
+  box-shadow: -22px 22px 0px var(--p3r-cyan);
+  transform: rotate(-1.5deg);
+  padding: 40px;
+}
+
+.p3r-close-anchor {
+  position: absolute;
+  top: -44px; right: -4px;
+  background: var(--p3r-magenta);
+  border: 4px solid var(--p3r-pure-white);
+  border-bottom: none;
+  color: var(--p3r-pure-white);
+  font-family: var(--p3r-impact-font);
+  font-size: 0.95rem;
+  padding: 6px 26px;
+  cursor: pointer;
+  transform: skewX(-12deg);
+  transition: background 0.15s, color 0.15s;
+}
+.p3r-close-anchor:hover {
+  background: var(--p3r-pure-white);
+  color: var(--p3r-velvet-void);
+}
+
+.dossier-title {
+  font-size: 2.6rem;
+  margin: 0 0 20px 0;
+  line-height: 1.05;
+  color: var(--p3r-pure-white);
+  text-shadow: 2px 2px 0px var(--p3r-magenta);
+  transform: skewX(-5deg);
+}
+
+/* Inputs and Forms */
+.p3r-input {
+  width: 100%;
+  background: #02040a;
+  border: 2px solid var(--p3r-cyan);
+  padding: 12px;
+  color: var(--p3r-pure-white);
+  margin-bottom: 15px;
+  font-family: monospace;
+  box-sizing: border-box;
+}
+
+.dossier-desc {
+  font-family: Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 30px;
+}
+
+/* Action Button Matching the P3R Theme */
+.p3r-action-btn {
+  position: relative;
+  background: var(--p3r-magenta);
+  border: none;
+  padding: 14px 35px;
+  cursor: pointer;
+  width: 100%;
+  font-family: var(--p3r-impact-font);
+  font-size: 1.2rem;
+  color: var(--p3r-pure-white);
+  clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
+  transition: background 0.2s, transform 0.2s;
+}
+.p3r-action-btn:hover {
+  background: var(--p3r-cyan);
+  transform: scaleX(1.02);
+}
+
+/* Animations */
+.p3r-modal-enter-active, .p3r-modal-leave-active { transition: opacity 0.25s ease; }
+.p3r-modal-enter-active .p3r-modal-window { animation: p3rSlashIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.p3r-modal-leave-active .p3r-modal-window { animation: p3rSlashIn 0.2s ease reverse forwards; }
+.p3r-modal-enter-from, .p3r-modal-leave-to { opacity: 0; }
+
+@keyframes p3rSlashIn {
+  0% { transform: scale(0.88) rotate(-5deg) translateY(40px); opacity: 0; }
+  100% { transform: scale(1) rotate(-1.5deg) translateY(0); opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .p3r-modal-window { width: 90%; transform: none !important; }
 }
 </style>

@@ -34,7 +34,7 @@
       <div class="p3r-stat-grid">
 
         <!-- CARD 1: IDENTITY FILE -->
-        <section class="p3r-status-card" style="--i: 1">
+        <section class="p3r-status-card" style="--i: 1" @pointerenter="onCardHover">
           <div class="card-bg-mesh"></div>
           <div class="card-header-ribbon">IDENTITY DOSSIER</div>
           <div class="card-inner-content">
@@ -55,7 +55,7 @@
         </section>
 
         <!-- CARD 2: EDUCATION FILE -->
-        <section class="p3r-status-card" style="--i: 2">
+        <section class="p3r-status-card" style="--i: 2" @pointerenter="onCardHover">
           <div class="card-bg-mesh"></div>
           <div class="card-header-ribbon">EDUCATION ACADEMY</div>
           <div class="card-inner-content">
@@ -68,7 +68,7 @@
         </section>
 
         <!-- CARD 3: COMBAT MATRIX SKILLS -->
-        <section class="p3r-status-card" style="--i: 3">
+        <section class="p3r-status-card" style="--i: 3" @pointerenter="onCardHover">
           <div class="card-bg-mesh"></div>
           <div class="card-header-ribbon">MAIN SKILLS ATTRIBUTES</div>
           <div class="card-inner-content">
@@ -85,17 +85,17 @@
         </section>
 
         <!-- CARD 4: DOCUMENT DOWNLOAD INTERFACES -->
-        <section class="p3r-status-card action-card-plate" style="--i: 4">
+        <section class="p3r-status-card action-card-plate" style="--i: 4" @pointerenter="onCardHover">
           <div class="card-bg-mesh"></div>
           <div class="card-header-ribbon">DOCUMENT ARCHIVE</div>
           <div class="card-inner-content download-sector-layout">
             
-            <button class="p3r-action-btn" @click="downloadCV">
+            <button class="p3r-action-btn" @click="onClickDownload" @pointerenter="onHover">
               <span class="btn-skew-stabilizer">DOWNLOAD CV</span>
               <div class="btn-hologram-shifter"></div>
             </button>
 
-            <a :href="cvFile" target="_blank" class="p3r-action-btn view-variant">
+            <a :href="cvFile" target="_blank" class="p3r-action-btn view-variant" @click="onCardClick" @pointerenter="onHover">
               <span class="btn-skew-stabilizer">VIEW CV</span>
               <div class="btn-hologram-shifter"></div>
             </a>
@@ -118,6 +118,7 @@ import IntroSlash from '../components/IntroSlash.vue'
 import { videos } from '../config/videos'
 import { useVideoManager } from '../composables/useVideoManager.ts'
 import cvFile from "../assets/files/LoengPheaktra_DevOps_CV.pdf"
+import { playClick, playSwitchToggle, playHover } from '../utils/sound.ts'
 
 const { setVideo, clearVideo, currentVideo } = useVideoManager()
 
@@ -129,13 +130,31 @@ const downloadCV = () => {
   setTimeout(() => {
     const link = document.createElement("a")
     link.href = cvFile
-    link.download = "Yagami-CV.pdf"
+    link.download = "Loeng-Pheaktra-DevOps-CV.pdf"
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
 
     slashActive.value = false
   }, 450)
+}
+
+function onCardHover() {
+  playSwitchToggle()
+}
+
+function onClickDownload() {
+  downloadCV()
+  playClick()
+}
+
+function onCardClick() {
+  playClick()
+}
+
+function onHover() {
+  const isMobile = window.innerWidth <= 868
+  playHover(isMobile)
 }
 
 onMounted(() => {
@@ -167,7 +186,7 @@ onBeforeUnmount(() => {
 }
 
 /* HIGH-INTEGRITY VISUAL LAYER INTERACTION FLAGS */
-.bg-video, .overlay, .screen-interlace-grid, .ambient-stat-ticker {
+.overlay, .screen-interlace-grid, .ambient-stat-ticker {
   position: fixed;
   inset: 0;
   width: 100%;
@@ -176,9 +195,40 @@ onBeforeUnmount(() => {
 }
 
 .bg-video {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+
   z-index: 0;
-  opacity: 0.8;
+
+  /* ❌ REMOVE opacity (this causes poster bleed) */
+  opacity: 1;
+
+  /* smooth load instead of ghost image */
+  transition: opacity 0.6s ease;
+}
+
+.bg-video.loading {
+  opacity: 0;
+}
+
+.bg-video.ready {
+  opacity: 1;
+}
+
+.overlay,
+.screen-scan-overlay,
+.hud-scanline-matrix,
+.screen-interlace-grid {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+
+  /* important: avoid accidental blending artifacts */
+  opacity: 1;
 }
 
 .overlay {

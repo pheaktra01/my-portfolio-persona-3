@@ -4,22 +4,24 @@
     <IntroSlash />
     <div v-if="showSlash" class="page-slash-enter"></div>
 
-    <div 
-      class="bg-fallback-image"
-      :class="{ 'video-is-active': isVideoLoaded }"
-    ></div>
+    <div class="bg-layer-container">
+        <div 
+          class="bg-fallback-image"
+          :class="{ 'video-is-active': isVideoLoaded }"
+        ></div>
 
-    <video
-      class="bg-video"
-      :class="{ 'video-ready': isVideoLoaded }"
-      :src="currentVideo"
-      autoplay
-      loop
-      muted
-      playsinline
-      preload="auto"
-      @playing="handleVideoPlaying"
-    ></video>
+        <video
+          class="bg-video"
+          :class="{ 'video-ready': isVideoLoaded }"
+          :src="currentVideo"
+          autoplay
+          loop
+          muted
+          playsinline
+          preload="auto"
+          @playing="handleVideoPlaying"
+        ></video>
+      </div>
     
     <div class="overlay"></div>
     <div class="giant-bg-text">P3R_SYS_2026</div>
@@ -39,7 +41,8 @@
         <section 
           class="p3r-card profile-card clickable" 
           :style="{ '--i': 1 }"
-          @click="openProfileModal"
+          @click="onClick"
+          @pointerenter="onHoverCard"
         >
           <div class="avatar-container">
             <div class="avatar-bracket-tl"></div>
@@ -118,7 +121,7 @@
     <Transition name="p3r-modal">
       <div class="modal-backdrop" v-if="isProfileOpen" @click.self="closeProfileModal">
         <div class="p3r-modal-window">
-          <button class="p3r-close-btn" @click="closeProfileModal">
+          <button class="p3r-close-btn" @click="onClickClose" @pointerenter="onHover">
             <span>CLOSE ▲</span>
           </button>
 
@@ -166,6 +169,7 @@ import BackBtn from '../components/BackBtn.vue'
 import IntroSlash from '../components/IntroSlash.vue'
 import { videos } from '../config/videos'
 import { useVideoManager } from '../composables/useVideoManager.ts'
+import { playHover, playSwitchToggle, playClick } from '../utils/sound.ts'
 
 const { setVideo, clearVideo, currentVideo } = useVideoManager()
 
@@ -185,6 +189,25 @@ const isVideoLoaded = ref(false)
 
 const handleVideoPlaying = () => {
   isVideoLoaded.value = true
+}
+
+function onClick(){
+  openProfileModal()
+  playClick()
+}
+
+function onClickClose(){
+  closeProfileModal()
+  playClick()
+}
+
+function onHoverCard(){
+  playSwitchToggle()
+}
+
+function onHover() {
+  const isMobile = window.innerWidth <= 868
+  playHover(isMobile)
 }
 
 onMounted(() => {
@@ -227,14 +250,56 @@ const closeProfileModal = () => { isProfileOpen.value = false }
   overflow: hidden; /* Lock the global viewport to prevent background shifting */
 }
 
+/* New Parent Container */
+.bg-layer-container {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-color: var(--p3r-deep-bg); /* Match your theme */
+}
+
 /* HIGH-INTEGRITY VISUAL LAYER HANDLING */
-.bg-fallback-image, .bg-video, .overlay, .giant-bg-text {
+.overlay, .giant-bg-text {
   position: fixed;
   inset: 0;
   width: 100%;
   height: 100%;
   pointer-events: none; /* Crucial: Allows finger touch events to pass cleanly to the panel */
   z-index: 0;
+}
+
+.bg-fallback-image, .bg-video {
+  position: absolute; /* Changed from fixed to absolute within the container */
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.bg-fallback-image {
+  z-index: 1; /* Keeps image on top until video is ready */
+  transition: opacity 0.8s ease-in-out;
+}
+
+.bg-fallback-image.video-is-active { 
+  opacity: 0; 
+}
+
+.bg-video { 
+  z-index: 0; /* Sits behind image until triggered */
+  opacity: 0; 
+  transition: opacity 1.2s ease-in-out; 
+}
+
+.bg-video.video-ready { 
+  opacity: 0.8; 
+}
+
+/* Ensure other UI elements sit above the background container */
+.overlay, .giant-bg-text, .panel {
+  position: relative;
+  z-index: 2;
 }
 
 .bg-fallback-image {
@@ -246,8 +311,12 @@ const closeProfileModal = () => { isProfileOpen.value = false }
 }
 .bg-fallback-image.video-is-active { opacity: 0; }
 
-.bg-video { object-fit: cover; opacity: 0; transition: opacity 0.5s ease; }
-.bg-video.video-ready { opacity: 1; }
+.bg-video { 
+  object-fit: cover; 
+  opacity: 0; 
+  transition: opacity 0.5s ease; 
+}
+.bg-video.video-ready { opacity: 0.8; }
 .overlay { z-index: 1; }
 
 .giant-bg-text {
