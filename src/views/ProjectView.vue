@@ -1,16 +1,18 @@
 <template>
   <div class="project-page p3r-theme">
     <!-- Background Video Layer (Touch inputs disabled via pointer-events) -->
-    <video
-      class="bg-video"
-      :key="currentVideo"
-      :src="currentVideo"
-      autoplay
-      loop
-      muted
-      playsinline
-      preload="metadata"
-    ></video>
+    <div class="bg-layer">
+      <img class="bg-poster" src="../assets/images/stack.jpg" />
+      <video
+        class="bg-video"
+        :src="currentVideo"
+        autoplay
+        loop
+        muted
+        playsinline
+        @loadeddata="onVideoReady"
+      />
+    </div>
     
     <div class="overlay"></div>
     <div class="moving-watermark">P3R_ARCHIVE_DATA // TYPE_PROJECT</div>
@@ -134,6 +136,14 @@ import { playSwitchToggle, playClick, playHover } from '../utils/sound.ts'
 const { setVideo, clearVideo, currentVideo } = useVideoManager()
 const hovered = ref(false)
 
+const videoReady = ref(false)
+
+function onVideoReady(e: Event) {
+  videoReady.value = true
+  const video = e.target as HTMLVideoElement
+  video.classList.add('ready')
+}
+
 function onToggle(){
   hovered.value = true
   playSwitchToggle()
@@ -160,7 +170,7 @@ function onHover() {
 }
 
 onMounted(() => {
-  setVideo(videos.project)
+  setVideo(videos.stack)
 })
 
 onBeforeUnmount(() => {
@@ -752,5 +762,42 @@ const launchProject = (url: string) => {
     top: -42px; right: -4px;
     transform: none;
   }
+}
+
+/* ============= Background Poster =============== */
+.bg-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+.bg-poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+  z-index: 0;
+}
+
+.bg-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.bg-video.ready {
+  opacity: 1;
+}
+
+.bg-poster.hidden {
+  opacity: 0;
 }
 </style>
