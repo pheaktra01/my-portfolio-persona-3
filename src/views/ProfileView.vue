@@ -58,7 +58,7 @@
 
             <div class="level-badge">
               <span class="lbl">LV</span>
-              <span class="val">22</span>
+              <span class="val">0</span>
             </div>
             <div class="click-prompt">TAP FOR DEEPER METADATA</div>
           </div>
@@ -90,28 +90,67 @@
             <span class="card-icon">◆</span>
             <h3 class="card-title">SPECIALIZATION LOADOUT</h3>
           </div>
+          <h3 class="card-title">DevOps / Deployment</h3>
           <div class="tag-cloud">
-            <span class="p3r-tag">Linux Ubuntu</span>
-            <span class="p3r-tag">Jenkins</span>
-            <span class="p3r-tag">Nginx</span>
-            <span class="p3r-tag">Kubernetes</span>
             <span class="p3r-tag">Docker Container</span>
-            <span class="p3r-tag">Cloud AWS</span>
-            <span class="p3r-tag">Springboot</span>
-            <span class="p3r-tag">Nest Js</span>
-            <span class="p3r-tag">Vue Js</span>
+            <span class="p3r-tag">Kubernetes</span>
+            <span class="p3r-tag">Nginx</span>
+            <span class="p3r-tag">GitHub Actions</span>
+            <span class="p3r-tag">Jenkins</span>
             <span class="p3r-tag">Ansible</span>
-            <span class="p3r-tag">Git/GitHub</span>
+            <span class="p3r-tag">Terraform(learning)</span>
+            <span class="p3r-tag">Load Balancing</span>
+            <span class="p3r-tag">AWS / Cloudflare / Vercel / Netlify</span>
+          </div>
+          <h3 class="card-title">Frontend Stack</h3>
+          <div class="tag-cloud">
+            <span class="p3r-tag">HTML / CSS / JavaScript</span>
+            <span class="p3r-tag">TypeScript</span>
+            <span class="p3r-tag">Vue</span>
+            <span class="p3r-tag">Tailwind CSS</span>
+          </div>
+          <h3 class="card-title">Backend Stack</h3>
+          <div class="tag-cloud">
+            <span class="p3r-tag">Node.js</span>
+            <span class="p3r-tag">Java (Spring Boot)</span>
+            <span class="p3r-tag">REST API / GraphQL</span>
+          </div>
+          <h3 class="card-title">Database</h3>
+          <div class="tag-cloud">
+            <span class="p3r-tag">MySQL</span>
+            <span class="p3r-tag">MongoDB</span>
+          </div>
+          <h3 class="card-title">Tools & Development Environment</h3>
+          <div class="tag-cloud">
+            <span class="p3r-tag">Git / GitHub</span>
+            <span class="p3r-tag">VS Code</span>
+            <span class="p3r-tag">Postman / API Dog</span>
+            <span class="p3r-tag">Figma</span>
+            <span class="p3r-tag">Linux (Ubuntu) / Bash</span>
+          </div>
+          <h3 class="card-title">Mobile</h3>
+          <div class="tag-cloud">
+            <span class="p3r-tag">Flutter</span>
+            <span class="p3r-tag">Dart</span>
+          </div>
+          <h3 class="card-title">Programming Languages</h3>
+          <div class="tag-cloud">
+            <span class="p3r-tag">Java</span>
+            <span class="p3r-tag">C / C++</span>
+          </div>
+          <h3 class="card-title">Game Engine</h3>
+          <div class="tag-cloud">
+            <span class="p3r-tag">Godot Engine</span>
           </div>
         </section>
 
         <section class="p3r-card xp-card" :style="{ '--i': 4 }">
           <div class="xp-meta">
             <span class="xp-lbl">EXP COMPILER</span>
-            <span class="xp-val">168 / 10000 NEXT</span>
+            <span class="xp-val">200 / 10000 NEXT</span>
           </div>
           <div class="p3r-bar-bg xp">
-            <div class="p3r-bar-fill xp-fill" style="width: 35%"></div>
+            <div class="p3r-bar-fill xp-fill" style="width: 2%"></div>
           </div>
         </section>
 
@@ -148,7 +187,7 @@
               <div class="modal-info-body">
                 <h3 class="body-title">CORE DESCRIPTION</h3>
                 <p class="body-desc">
-                  A meticulous DevOps Engineer specializing in building robust multi-container delivery pipelines, secure reverse proxies, automation playbooks, and fluid user interfaces. Dedicated to optimizing high-availability architecture metrics.
+                  I am a year 4 students of Institute of Technology of Cambodia (ITC) majoring in Computer Science and Engineering. I have a strong passion for technology and programming, and I am constantly seeking to expand my knowledge and skills in the field. My goal is to become a proficient DevOps engineer and contribute to innovative projects that make a positive impact on society.
                 </p>
               </div>
 
@@ -174,12 +213,19 @@ import { playHover, playSwitchToggle, playClick } from '../utils/sound.ts'
 const { setVideo, clearVideo, currentVideo } = useVideoManager()
 
 const skills = [
+  { name: 'GitHub', level: 80 },
   { name: 'Vue.js', level: 80 },
-  { name: 'TypeScript', level: 70 },
-  { name: 'NestJS', level: 60 },
-  { name: 'MongoDB', level: 55 },
-  { name: 'Flutter', level: 40 },
-  { name: 'Docker', level: 35 }
+  { name: 'MySQL', level: 70 },
+  { name: 'Figma', level: 70 },
+  { name: 'Java (Springboot)', level: 60 },
+  { name: 'Jenkins', level: 60 },
+  { name: 'Git Action', level: 60 },
+  { name: 'Docker', level: 60 },
+  { name: 'Nest JS', level: 60 },
+  { name: 'Nginx', level: 50 },
+  { name: 'MongoDB', level: 40 },
+  { name: 'Kubernetes', level: 40 },
+  { name: 'AWS (EC2)', level: 20 },
 ]
 
 const pageReady = ref(false)
@@ -462,7 +508,7 @@ const closeProfileModal = () => { isProfileOpen.value = false }
   padding-bottom: 6px;
 }
 .card-icon { color: var(--p3r-blue); font-size: 0.8rem; }
-.card-title { margin: 0; font-size: 1.2rem; letter-spacing: 1px; color: var(--p3r-white); }
+.card-title { margin: 5; font-size: 1.2rem; letter-spacing: 1px; color: var(--p3r-white); }
 
 /* ================= PROFILE CARD MODULE ================= */
 .profile-card {
