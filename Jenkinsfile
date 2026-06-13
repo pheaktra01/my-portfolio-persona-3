@@ -9,7 +9,10 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t vue-app .'
+                sh '''
+                docker build -t vue-container/vue-app:latest .
+                docker push vue-container/vue-app:latest
+                '''
             }
         }
 
