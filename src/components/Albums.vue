@@ -84,7 +84,7 @@ const widgetRef = ref(null)
 const discsReady = ref(false)
 const isSwapping = ref(false)
 
-const currentCorner = ref('top-right')
+const currentCorner = ref('bottom-right') 
 const isDragging = ref(false)
 const position = ref({ x: 0, y: 0 })
 const useRawPosition = ref(false)
@@ -103,9 +103,9 @@ const currentDiscAsset = computed(() => {
 })
 
 const songs = [
-  { id: 1, title: 'Color Your Night', src: new URL('', import.meta.url).href },
-  { id: 2, title: 'Memory Of You', src: new URL('', import.meta.url).href },
-  { id: 3, title: 'Full Moon Full Life', src: new URL('', import.meta.url).href }
+  { id: 1, title: 'Color Your Night', src: new URL('../assets/musics/Color-Your-Night.mp3', import.meta.url).href },
+  { id: 2, title: 'Memory Of You', src: new URL('../assets/musics/Memory_Of_You.mp3', import.meta.url).href },
+  { id: 3, title: 'Full Moon Full Life', src: new URL('../assets/musics/Full-Moon-Full-Life.mp3', import.meta.url).href }
 ]
 
 const widgetStyle = computed(() => {
