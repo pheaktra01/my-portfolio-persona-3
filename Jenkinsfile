@@ -10,8 +10,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 sh '''
-                docker build -t ubuntu/vue-app:latest .
-                docker push ubuntu/vue-app:latest
+                docker build -t yagami168/vue-app:latest .
+                docker push yagami168/vue-app:latest
                 '''
             }
         }
