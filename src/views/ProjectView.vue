@@ -132,6 +132,9 @@ import IntroSlash from '../components/IntroSlash.vue'
 import { videos } from '../config/videos'
 import { useVideoManager } from '../composables/useVideoManager.ts'
 import { playSwitchToggle, playClick, playHover } from '../utils/sound.ts'
+import tovreanPreview from '../assets/images/tovrean-preview.png'
+import doOrtPreview from '../assets/images/doOrt-preview.png'
+import persona3Preview from '../assets/images/persona3-preview.png'
 
 const { setVideo, clearVideo, currentVideo } = useVideoManager()
 const hovered = ref(false)
@@ -188,7 +191,7 @@ const projects = [
     longDesc: 'A live interactive web application showcasing structural layout sections, crisp high-fidelity asset rendering pipelines, fully responsive interactive navigation mechanics, and modular UI cards.',
     tags: ['Vue 3', 'TypeScript', 'Spring-Boot', 'MongoDB'],
     url: 'https://tovrean.loengpheaktra.xyz/',
-    image: '@/assets/images/tovrean-preview.png'
+    image: tovreanPreview
   },
   {
     title: 'DoOrt C2C E-commerce Material Exchange',
@@ -196,7 +199,7 @@ const projects = [
     longDesc: 'A high-performance video deployment architecture featuring modular playback pipelines, continuous memory caching via Redis, and structural cluster layouts built inside NestJS backend layers.',
     tags: ['Vue', 'NestJS', 'MongoDB'],
     url: 'https://material-exchange-platform.pages.dev',
-    image: '@/assets/images/doOrt-preview.png'
+    image: doOrtPreview
   },
   {
     title: 'Persona 3 Reload Portfolio',
@@ -204,7 +207,7 @@ const projects = [
     longDesc: 'Biometric processing utility capable of charting critical dynamic glucose curves, setting telemetry triggers, and syncing state records seamlessly over encrypted firestore cloud channels.',
     tags: ['Vue.js', 'TypeScript'],
     url: 'https://www.loengpheaktra.xyz/',
-    image: '@/assets/images/persona3-preview.png'
+    image: persona3Preview
   }
 ]
 
