@@ -15,7 +15,7 @@
         enabled: yes
 
     - name: Pull latest image
-      command: docker pull vue-container/vue-app:latest
+      command: docker pull ubuntu/vue-app:latest
 
     - name: Stop old container
       command: docker stop vue-container
@@ -26,4 +26,4 @@
       ignore_errors: yes
 
     - name: Run new container
-      command: docker run -d --name vue-container -p 3000:80 vue-container/vue-app:latest
+      command: docker run -d --name vue-container -p 3000:80 ubuntu/vue-app:latest
