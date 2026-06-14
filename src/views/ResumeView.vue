@@ -331,20 +331,24 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  padding: 10px 20px 20px 20px; 
 }
 
 .p3r-status-card {
   position: relative;
+  box-sizing: border-box; /* Crucial for keeping padding inside the width */
   background: linear-gradient(90deg, #050a1a 0%, #0d1730 100%);
   border: 3px solid var(--p3r-pure-white);
   box-shadow: -8px 8px 0px var(--p3r-deep-blue);
   padding: 20px;
-  transform: translateX(-60px) skewX(-10deg);
+  transform: translateX(-60px) skewX(-10deg); /* This is what was causing the cut-off */
   opacity: 0;
   z-index: 2;
   transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
   animation: p3rCardFlyIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   animation-delay: calc(var(--i) * 0.08s);
+  /* Prevent horizontal overflow during animation */
+  max-width: calc(100% - 20px); 
 }
 
 @keyframes p3rCardFlyIn {
@@ -572,7 +576,7 @@ onBeforeUnmount(() => {
   }
   
   .panel {
-    width: 90% !important; 
+    width: 100% !important; 
     left: 5% !important; 
     top: 5% !important;
     height: 90vh !important; /* Fixed bounds box allows safe touch container momentum */

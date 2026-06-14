@@ -189,7 +189,7 @@ const projects = [
     title: 'Tovrean E-commerce School Supply',
     shortDesc: 'Production platform core infrastructure.',
     longDesc: 'A live interactive web application showcasing structural layout sections, crisp high-fidelity asset rendering pipelines, fully responsive interactive navigation mechanics, and modular UI cards.',
-    tags: ['Vue 3', 'TypeScript', 'Spring-Boot', 'MongoDB'],
+    tags: ['Vue 3', 'TypeScript', 'Spring-Boot', 'MongoDB', 'TypeScript', 'Spring-Boot', 'MongoDB'],
     url: 'https://tovrean.loengpheaktra.xyz/',
     image: tovreanPreview
   },
@@ -200,6 +200,30 @@ const projects = [
     tags: ['Vue', 'NestJS', 'MongoDB'],
     url: 'https://material-exchange-platform.pages.dev',
     image: doOrtPreview
+  },
+  {
+    title: 'Persona 3 Reload Portfolio',
+    shortDesc: 'Health monitoring app with analytics dashboard.',
+    longDesc: 'Biometric processing utility capable of charting critical dynamic glucose curves, setting telemetry triggers, and syncing state records seamlessly over encrypted firestore cloud channels.',
+    tags: ['Vue.js', 'TypeScript'],
+    url: 'https://www.loengpheaktra.xyz/',
+    image: persona3Preview
+  },
+  {
+    title: 'Persona 3 Reload Portfolio',
+    shortDesc: 'Health monitoring app with analytics dashboard.',
+    longDesc: 'Biometric processing utility capable of charting critical dynamic glucose curves, setting telemetry triggers, and syncing state records seamlessly over encrypted firestore cloud channels.',
+    tags: ['Vue.js', 'TypeScript'],
+    url: 'https://www.loengpheaktra.xyz/',
+    image: persona3Preview
+  },
+  {
+    title: 'Persona 3 Reload Portfolio',
+    shortDesc: 'Health monitoring app with analytics dashboard.',
+    longDesc: 'Biometric processing utility capable of charting critical dynamic glucose curves, setting telemetry triggers, and syncing state records seamlessly over encrypted firestore cloud channels.',
+    tags: ['Vue.js', 'TypeScript'],
+    url: 'https://www.loengpheaktra.xyz/',
+    image: persona3Preview
   },
   {
     title: 'Persona 3 Reload Portfolio',
@@ -354,12 +378,14 @@ const launchProject = (url: string) => {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  padding-left: 20px;
+  padding: 5px 20px 20px 30px; /* Added left padding for skew safety */
+  box-sizing: border-box;
 }
 
 .p3r-list-card {
   position: relative;
-  height: 110px;
+  min-height: 110px;
+  height: auto;
   cursor: pointer;
   transform: skewX(-12deg);
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -448,6 +474,11 @@ const launchProject = (url: string) => {
   flex-direction: column;
   justify-content: center;
   transform: skewX(12deg);
+
+  /* Critical: forces text to wrap instead of overflowing */
+  width: 100%;
+  min-width: 0; 
+  overflow: hidden;
 }
 
 .project-title {
@@ -456,6 +487,10 @@ const launchProject = (url: string) => {
   letter-spacing: -0.5px;
   line-height: 1.1;
   text-transform: uppercase;
+
+  /* Prevent title from breaking the card */
+  word-wrap: break-word;
+  white-space: normal;
 }
 
 .project-summary {
@@ -466,7 +501,12 @@ const launchProject = (url: string) => {
   opacity: 0.7;
 }
 
-.tag-ribbons { display: flex; gap: 5px; }
+.tag-ribbons { 
+  display: flex;
+  gap: 5px; 
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
 .inline-tag {
   background: var(--p3r-shadow-blue);
   color: var(--p3r-cyan);

@@ -368,6 +368,7 @@ const links = [
   display: flex;
   flex-direction: column;
   gap: 20px;
+  padding: 10px 20px 20px 20px; 
 }
 
 .p3r-social-card {
@@ -381,6 +382,9 @@ const links = [
   opacity: 0;
   animation: p3rCardFlyIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   animation-delay: calc(var(--i) * 0.08s);
+
+  box-sizing: border-box;
+  max-width: calc(100% - 10px);
 }
 
 @keyframes p3rCardFlyIn {

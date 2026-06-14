@@ -109,7 +109,7 @@ const experience = [
     company: 'AniSuki Platform (Personal Project)',
     date: '2025 - Present',
     desc: 'Engineered a modular anime streaming platform interface. Built a component-driven architecture for media delivery, optimized layouts for performance, and integrated asynchronous media management layers.',
-    tags: ['Vue 3', 'TypeScript', 'Tailwind CSS', 'API Integration']
+    tags: ['Vue 3', 'TypeScript', 'Tailwind CSS', 'API Integration', 'TypeScript', 'Tailwind CSS', 'API Integration']
   },
   {
     title: 'Backend Systems Developer',
@@ -208,6 +208,7 @@ const experience = [
 /* ================= OVERLAY ================= */
 .overlay {
   z-index: 2;
+  background: linear-gradient(135deg, rgba(2, 71, 87, 0.575) 0%, rgba(0, 210, 255, 0.05) 100%);
 }
 
 /* ================= GRID ================= */
@@ -360,6 +361,7 @@ const experience = [
   gap: 32px;
   padding-left: 20px;
   margin-top: 20px;
+  padding: 5px 20px 20px 20px;
 }
 
 .central-spine-line {
@@ -455,7 +457,7 @@ const experience = [
   width: 45%;
 }
 .p3r-shard-card:hover .date-text {
-  color: var(--p3r-cyan);
+  color: var(--p3r-magenta);
 }
 
 .shard-inner-content {

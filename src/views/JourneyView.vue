@@ -258,7 +258,7 @@ const combinedLogs = ref([
   top: 8%;
   width: 46%;
   height: 84vh;
-  padding: 20px 30px 60px 10px;
+  padding: 20px 30px 60px 0px;
   
   /* FORCE NATIVE GESTURE CAPTURE MECHANICS */
   overflow-y: scroll !important;
@@ -330,6 +330,7 @@ const combinedLogs = ref([
   gap: 24px;
   position: relative;
   padding-left: 20px;
+  padding: 10px 20px 20px 70px;
 }
 
 .p3r-timeline-track::before {
@@ -350,6 +351,9 @@ const combinedLogs = ref([
   transform: translateX(-60px) skewX(-10deg);
   animation: p3rPlateEnter 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   animation-delay: calc(var(--i) * 0.1s);
+
+  box-sizing: border-box;
+  max-width: calc(100% - 5px);
 }
 
 @keyframes p3rPlateEnter {
@@ -566,18 +570,23 @@ const combinedLogs = ref([
   .p3r-timeline-item:hover .p3r-log-plate { transform: translateX(5px) !important; }
   .node-anchor-zone { display: none; }
   
-  .p3r-log-plate { flex-direction: column; width: 100%; transform: none; }
+  .p3r-log-plate { flex-direction: column; width: 100%; transform: none; overflow: hidden;}
   .plate-base-bg { transform: none; }
   .plate-accent-slash { display: none; }
   
   .chrono-stamp-sector {
-    width: 100%; min-width: unset; padding: 8px 15px;
-    clip-path: none; justify-content: center; align-items: flex-start;
+    width: 100%; /* Change from 90% to 100% */
+    min-width: 100%;
+    padding: 8px 15px;
+    box-sizing: border-box; /* Ensures padding doesn't push width out */
+    clip-path: none; 
+    justify-content: center; 
+    align-items: flex-start;
   }
   .stamp-txt { transform: none; font-size: 0.9rem; }
   
-  .plate-content-body { padding: 15px; transform: none; }
-  .log-heading { font-size: 1.15rem; }
+  .plate-content-body { padding: 15px; transform: none; min-width: 0; word-wrap: break-word; overflow-wrap: break-word;}
+  .log-heading { font-size: 1.15rem; white-space: normal;}
   .log-paragraph { font-size: 0.8rem; }
   .plate-hud-index { display: none; }
 }
