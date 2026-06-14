@@ -90,7 +90,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 import hoverSoundUrl from '../assets/sounds/hover.wav'
@@ -103,10 +103,8 @@ const introFinished = ref(false)
 const introVideoRef = ref<HTMLVideoElement | null>(null)
 const loopVideoRef = ref<HTMLVideoElement | null>(null)
 
-const currentVideo = ref('')
 const showMenu = ref(false)
 
-const videoRef = ref<HTMLVideoElement | null>(null)
 const router = useRouter()
 
 const routes = [
