@@ -135,6 +135,7 @@ import { playSwitchToggle, playClick, playHover } from '../utils/sound.ts'
 import tovreanPreview from '../assets/images/tovrean-preview.png'
 import doOrtPreview from '../assets/images/doOrt-preview.png'
 import persona3Preview from '../assets/images/persona3-preview.png'
+import anisukiPreview from '../assets/images/anisuki-preview.png'
 
 const { setVideo, clearVideo, currentVideo } = useVideoManager()
 const hovered = ref(false)
@@ -187,51 +188,35 @@ const isPreviewOpen = ref<boolean>(false)
 const projects = [
   {
     title: 'Tovrean E-commerce School Supply',
-    shortDesc: 'Production platform core infrastructure.',
-    longDesc: 'A live interactive web application showcasing structural layout sections, crisp high-fidelity asset rendering pipelines, fully responsive interactive navigation mechanics, and modular UI cards.',
-    tags: ['Vue 3', 'TypeScript', 'Spring-Boot', 'MongoDB', 'TypeScript', 'Spring-Boot', 'MongoDB'],
+    shortDesc: 'A web application for school supplies built with Vue 3 and Spring-Boot.',
+    longDesc: 'A platform that offers a seamless shopping experience for students and parents, featuring a user-friendly interface, secure payment processing, and a comprehensive inventory management system.',
+    tags: ['Vue JS', 'TypeScript', 'JavaScript', 'MongoDB', 'Spring-Boot Maven', 'MongoDB Atlas', 'AWS EC2', 'GitHub Actions', 'Docker', 'Nginx'],
     url: 'https://tovrean.loengpheaktra.xyz/',
     image: tovreanPreview
   },
   {
     title: 'DoOrt C2C E-commerce Material Exchange',
     shortDesc: 'Vue + NestJS full-stack streaming platform.',
-    longDesc: 'A high-performance video deployment architecture featuring modular playback pipelines, continuous memory caching via Redis, and structural cluster layouts built inside NestJS backend layers.',
-    tags: ['Vue', 'NestJS', 'MongoDB'],
+    longDesc: 'A platform that facilitates peer-to-peer exchange of materials, allowing users to list, discover, and trade items in a secure and efficient manner, leveraging real-time communication and robust backend services.',
+    tags: ['Vue JS', 'NestJS', 'MongoDB', 'MongoDB Atlas', 'Docker', 'TypeScript', 'JavaScript', 'Cloudflare', 'Render'],
     url: 'https://material-exchange-platform.pages.dev',
     image: doOrtPreview
   },
   {
     title: 'Persona 3 Reload Portfolio',
-    shortDesc: 'Health monitoring app with analytics dashboard.',
-    longDesc: 'Biometric processing utility capable of charting critical dynamic glucose curves, setting telemetry triggers, and syncing state records seamlessly over encrypted firestore cloud channels.',
-    tags: ['Vue.js', 'TypeScript'],
-    url: 'https://www.loengpheaktra.xyz/',
+    shortDesc: 'A Portfolio website inspired by Persona 3 Reload’s UI, showcasing projects with a sleek and dynamic interface.',
+    longDesc: 'The Portfolio website features a visually striking design inspired by the aesthetics of Persona 3 Reload, utilizing a combination of modern web technologies to create an engaging and interactive user experience. It serves as a showcase for various projects, highlighting their details and providing seamless navigation through a sleek and dynamic interface.',
+    tags: ['Vue.js', 'TypeScript', 'JavaScript', 'CSS', 'Docker', 'Jenkins', 'AWS EC2', 'Nginx', 'Ansible'],
+    url: 'https://www.loengpheaktra.me/',
     image: persona3Preview
   },
   {
-    title: 'Persona 3 Reload Portfolio',
-    shortDesc: 'Health monitoring app with analytics dashboard.',
-    longDesc: 'Biometric processing utility capable of charting critical dynamic glucose curves, setting telemetry triggers, and syncing state records seamlessly over encrypted firestore cloud channels.',
-    tags: ['Vue.js', 'TypeScript'],
-    url: 'https://www.loengpheaktra.xyz/',
-    image: persona3Preview
-  },
-  {
-    title: 'Persona 3 Reload Portfolio',
-    shortDesc: 'Health monitoring app with analytics dashboard.',
-    longDesc: 'Biometric processing utility capable of charting critical dynamic glucose curves, setting telemetry triggers, and syncing state records seamlessly over encrypted firestore cloud channels.',
-    tags: ['Vue.js', 'TypeScript'],
-    url: 'https://www.loengpheaktra.xyz/',
-    image: persona3Preview
-  },
-  {
-    title: 'Persona 3 Reload Portfolio',
-    shortDesc: 'Health monitoring app with analytics dashboard.',
-    longDesc: 'Biometric processing utility capable of charting critical dynamic glucose curves, setting telemetry triggers, and syncing state records seamlessly over encrypted firestore cloud channels.',
-    tags: ['Vue.js', 'TypeScript'],
-    url: 'https://www.loengpheaktra.xyz/',
-    image: persona3Preview
+    title: 'AniSuki Anime streaming platform',
+    shortDesc: 'A UI anime streaming web application.',
+    longDesc: 'A website that provides a user-friendly interface for streaming anime content, featuring a vast library of titles, personalized recommendations, and high-quality video playback.',
+    tags: ['HTML', 'CSS', 'JavaScript'],
+    url: 'https://anisuki.netlify.app/home',
+    image: anisukiPreview
   }
 ]
 
@@ -291,6 +276,7 @@ const launchProject = (url: string) => {
 
 .overlay {
   z-index: 1;
+  background: rgba(3, 6, 15, 0.274);
 }
 
 .moving-watermark {
@@ -392,6 +378,8 @@ const launchProject = (url: string) => {
   opacity: 0;
   animation: cardFlyIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   animation-delay: calc(var(--i) * 0.1s);
+
+  padding: 15px 0;
 }
 
 @keyframes cardFlyIn {
@@ -451,6 +439,7 @@ const launchProject = (url: string) => {
 
 .card-body {
   position: relative;
+  min-height: 80px;
   height: 100%;
   display: flex;
   align-items: center;
@@ -482,7 +471,7 @@ const launchProject = (url: string) => {
 }
 
 .project-title {
-  margin: 0;
+  margin-top: 5;
   font-size: 1.4rem;
   letter-spacing: -0.5px;
   line-height: 1.1;
