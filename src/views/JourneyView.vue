@@ -53,12 +53,11 @@
           @click="onCardClick"
           :style="{ '--i': i }"
         >
-          <div class="node-anchor-zone">
+          <div class="node-anchor-zone" style="transform: skewX(10deg);">
             <div class="p3r-pulse-core"></div>
-            <div class="node-tech-connector"></div>
           </div>
 
-          <div class="p3r-log-plate">
+          <div class="p3r-log-plate" style="transform: skewX(-5deg);">
             <div class="plate-base-bg"></div>
             <div class="plate-accent-slash"></div>
 
@@ -324,13 +323,13 @@ const combinedLogs = ref([
   gap: 24px;
   position: relative;
   padding-left: 20px;
-  padding: 10px 20px 20px 70px;
+  padding: 10px 20px 20px 20px;
 }
 
 .p3r-timeline-track::before {
   content: "";
   position: absolute;
-  left: 28px;
+  left: 27px;
   top: 0; bottom: 0;
   width: 3px;
   background: linear-gradient(180deg, var(--p3r-magenta) 100%, rgba(255,0,85,0.05) 100%);
@@ -356,6 +355,7 @@ const combinedLogs = ref([
 
 .node-anchor-zone {
   width: 20px;
+  margin-right: 50px;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -371,6 +371,7 @@ const combinedLogs = ref([
   border: 3px solid var(--p3r-magenta);
   margin-top: 36px;
   transform: rotate(45deg);
+  z-index: 3;
   transition: background 0.25s, transform 0.25s;
 }
 
@@ -379,6 +380,7 @@ const combinedLogs = ref([
   left: 14px; top: 42px;
   width: 15px; height: 2px;
   background: var(--p3r-magenta);
+  z-index: 1;
 }
 
 .p3r-timeline-item:hover .p3r-pulse-core {
@@ -435,7 +437,7 @@ const combinedLogs = ref([
   align-items: center;
   justify-content: center;
   z-index: 3;
-  clip-path: polygon(0 0, 100% 0, 82% 100%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   transition: background-color 0.25s;
 }
 .p3r-timeline-item:hover .chrono-stamp-sector {
