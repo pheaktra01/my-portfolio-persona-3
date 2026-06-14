@@ -54,7 +54,7 @@
           <div class="profile-info">
             <div class="meta-crumbs">SYS_LINK // OPERATOR</div>
             <h2 class="user-name">LOENG PHEAKTRA</h2>
-            <p class="user-role">DEVOPS ENGINEER / DEVELOPER</p>
+            <p class="user-role">COMPUTER SCIENCE STUDENT</p>
             <p class="user-role">> Student of Institute of Technology of Cambodia (ITC) majoring in Computer Science and Engineering.</p>
 
             <div class="level-badge">

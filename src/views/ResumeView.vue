@@ -44,7 +44,7 @@
             </div>
             <div class="stat-data-row">
               <span class="stat-field-label">ROLE</span>
-              <span class="stat-field-val">DEVOPS ENGINEER</span>
+              <span class="stat-field-val">COMPUTER SCIENCE STUDENT</span>
             </div>
             <div class="stat-data-row">
               <span class="stat-field-label">LEVEL</span>
