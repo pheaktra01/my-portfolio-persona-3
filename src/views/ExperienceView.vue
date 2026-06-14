@@ -105,33 +105,41 @@ onBeforeUnmount(() => {
 
 const experience = [
   {
-    title: 'Full-Stack Developer',
-    company: 'AniSuki Platform (Personal Project)',
-    date: '2025 - Present',
-    desc: 'Engineered a modular anime streaming platform interface. Built a component-driven architecture for media delivery, optimized layouts for performance, and integrated asynchronous media management layers.',
-    tags: ['Vue 3', 'TypeScript', 'Tailwind CSS', 'API Integration', 'TypeScript', 'Tailwind CSS', 'API Integration']
+    title: 'System Deployment Workflow',
+    company: 'DevOps Environment',
+    date: '2026 - Present',
+    desc: 'Built and maintained full deployment pipeline using containerized architecture. Managed build → test → deploy flow with automated delivery systems.',
+    tags: ['Docker', 'Nginx', 'CI/CD', 'Linux', 'GitHub Actions']
   },
   {
-    title: 'Backend Systems Developer',
-    company: 'Full-Stack Application Suite (Learning Project)',
+    title: 'Frontend Performance Optimization',
+    company: 'Web Applications',
+    date: '2026',
+    desc: 'Improved UI rendering performance by optimizing video backgrounds, component lifecycle handling, and lazy-loading strategies.',
+    tags: ['Vue 3', 'Performance', 'Lazy Loading', 'Animation Optimization']
+  },
+  {
+    title: 'Development Environment Engineering',
+    company: 'Local Infrastructure Setup',
+    date: '2026',
+    desc: 'Configured local virtual environments for testing distributed systems and deployment simulation.',
+    tags: ['VMware', 'Linux', 'Networking', 'Testing']
+  },
+  {
+    title: 'Backend API Integration Experience',
+    company: 'Full-Stack Systems',
     date: '2025',
-    desc: 'Architected robust REST APIs and secure authentication systems using a microservice-ready framework. Managed structural datastores, database modeling, and optimized server-side query flows.',
-    tags: ['NestJS', 'MongoDB', 'REST APIs', 'Node.js']
+    desc: 'Integrated REST APIs with frontend systems, handling authentication flows, structured responses, and error management layers.',
+    tags: ['REST API', 'Node.js', 'Auth', 'MySQL', 'MongoDB']
   },
   {
-    title: 'Distributed Systems Programmer',
-    company: 'Multiplayer Matchmaking Engine (Academic Project)',
+    title: 'Database Load Balancing',
+    company: 'Advanced Database Systems',
     date: '2025',
-    desc: 'Designed and implemented a distributed concurrent matchmaking system for a multiplayer turn-based engine using remote method invocations. Built custom automated socket listeners handling concurrent state updates.',
-    tags: ['Java RMI', 'Swing UI', 'Concurrency', 'Networking']
-  },
-  {
-    title: 'Systems & UI Prototyper',
-    company: 'Automata Logic & Mobile Development (Practice)',
-    date: '2024 - 2025',
-    desc: 'Created a structural finite automata management system layout engine. Additionally developed responsive multi-platform layout cards focusing on adaptive state transformations and strict responsive criteria.',
-    tags: ['Flutter', 'Dart', 'Automata Theory', 'UI/UX']
+    desc: 'Learn and implemented database load balancing techniques to optimize query performance and ensure high availability in distributed database environments.',
+    tags: ['REST API', 'Node.js', 'Auth', 'MySQL', 'MongoDB']
   }
+
 ]
 </script>
 
