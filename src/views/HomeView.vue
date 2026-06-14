@@ -1,65 +1,110 @@
 <template>
-    <div class="video-wrapper">
-        <video
-            v-if="!isMobile"
-            ref="videoRef"
-            :src="videos.home"
-            playsinline
-            autoplay
-            loop
-            muted
-            class="video-bg"
-            preload="metadata"
-        ></video>
+  <div class="video-wrapper">
 
-        <video
-            v-else
-            ref="videoRef"
-            :src="videos.mobile"
-            playsinline
-            autoplay
-            loop
-            muted
-            class="video-bg"
-            preload="metadata"
-        ></video>
+    <!-- INTRO VIDEO -->
+    <video
+      v-if="!isMobile"
+      ref="introVideoRef"
+      :class="['video-bg', { hidden: introFinished }]"
+      :src="videos.homeIntro"
+      playsinline
+      autoplay
+      muted
+      preload="auto"
+      @ended="onIntroEnded"
+    ></video>
 
-        <IntroSlash />
+    <!-- LOOP VIDEO -->
+    <video
+      v-if="!isMobile"
+      ref="loopVideoRef"
+      :class="['video-bg', 'loop-video', { visible: introFinished }]"
+      :src="videos.homeLoop"
+      playsinline
+      muted
+      loop
+      preload="auto"
+    ></video>
 
-        <div class="menu-container">
-            <ul class="menu-list">
-                <li v-for="(item, i) in menuItems" :key="item">
-                    <button
-                        class="persona-btn"
-                        :data-index="i"
-                        :class="{
-                            'is-active': hoveredIndex === i,
-                            'is-clicked': clickedIndex === i
-                        }"
-                        @click="handleClick(i)"
-                        @pointerdown="onPress(i)"
-                        @pointerup="onRelease"
-                        @pointercancel="onRelease"
-                    >
-                        <div class="btn-bg-slash"></div>
-                        <span class="text-layer shadow-text" :data-text="item" @pointerenter="setHover(i)" @pointerleave="clearHover">{{ item }}</span>
-                        <span class="text-layer main-text" :data-text="item" @pointerenter="setHover(i)" @pointerleave="clearHover">{{ item }}</span>
-                    </button>
-                </li>
-            </ul>
-        </div>
+    <!-- MOBILE -->
+    <video
+      v-else
+      class="video-bg"
+      :src="videos.mobile"
+      autoplay
+      muted
+      loop
+      playsinline
+    ></video>
+
+
+    <!-- SHOW ONLY AFTER LOOP VIDEO STARTS -->
+    <div
+      class="menu-container"
+      :class="{ 'menu-visible': showMenu }"
+    >
+      <ul class="menu-list">
+        <li
+          v-for="(item, i) in menuItems"
+          :key="item"
+          class="menu-item"
+          :style="{ '--delay': `${i * 90}ms` }"
+        >
+          <button
+            class="persona-btn"
+            :data-index="i"
+            :class="{
+              'is-active': hoveredIndex === i,
+              'is-clicked': clickedIndex === i
+            }"
+            @click="handleClick(i)"
+            @pointerdown="onPress(i)"
+            @pointerup="onRelease"
+            @pointercancel="onRelease"
+          >
+            <div class="btn-bg-slash"></div>
+
+            <span
+              class="text-layer shadow-text"
+              :data-text="item"
+              @pointerenter="setHover(i)"
+              @pointerleave="clearHover"
+            >
+              {{ item }}
+            </span>
+
+            <span
+              class="text-layer main-text"
+              :data-text="item"
+              @pointerenter="setHover(i)"
+              @pointerleave="clearHover"
+            >
+              {{ item }}
+            </span>
+          </button>
+        </li>
+      </ul>
     </div>
+
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 
 import hoverSoundUrl from '../assets/sounds/hover.wav'
 import clickSoundUrl from '../assets/sounds/click.wav'
 
-import IntroSlash from '../components/IntroSlash.vue'
 import { videos } from '../config/videos'
+
+const introFinished = ref(false)
+
+const introVideoRef = ref<HTMLVideoElement | null>(null)
+const loopVideoRef = ref<HTMLVideoElement | null>(null)
+
+const currentVideo = ref('')
+const showMenu = ref(false)
 
 const videoRef = ref<HTMLVideoElement | null>(null)
 const router = useRouter()
@@ -74,6 +119,17 @@ const routes = [
 ]
 
 const isMobile = ref(false)
+
+function onIntroEnded() {
+  const loopVideo = loopVideoRef.value
+  if (!loopVideo) return
+
+  introFinished.value = true
+
+  loopVideo.currentTime = 0
+
+  loopVideo.play().catch(() => {})
+}
 
 function updateIsMobile() {
   try {
@@ -151,12 +207,21 @@ function handleClick(i: number) {
 
 onMounted(() => {
   updateIsMobile()
-  const v = videoRef.value
-  if (v) {
-    v.muted = true
-    v.loop = true
-    v.play().catch(() => {
-      console.log('Autoplay blocked, waiting for interaction')
+
+  // SHOW MENU AFTER 1.5s
+  setTimeout(() => {
+    showMenu.value = true
+  }, 1500)
+
+  // MOBILE
+  if (isMobile.value) return
+
+  // DESKTOP
+  const introVideo = introVideoRef.value
+
+  if (introVideo) {
+    introVideo.play().catch(() => {
+      console.log('Autoplay blocked')
     })
   }
 })
@@ -236,6 +301,31 @@ onMounted(() => {
     justify-content: center;
     align-items: center;
     z-index: 20;
+}
+
+.menu-container {
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 0.8s ease,
+      transform 0.8s ease;
+
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform:
+      translate(-50%, -50%)
+      rotate(-6deg)
+      skewX(-8deg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+}
+
+.menu-container.menu-visible {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .menu-list {
@@ -375,5 +465,82 @@ onMounted(() => {
   0%   { transform: skewX(-14deg) translate(-6px, -4px); }
   50%  { transform: skewX(-18deg) translate(-10px, -6px); }
   100% { transform: skewX(-14deg) translate(-6px, -4px); }
+}
+
+/* ============ VIdeo BAckground ================ */
+.video-bg {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    z-index: -1;
+    pointer-events: none;
+
+    opacity: 1;
+    transition: opacity 0s ease;
+}
+
+/* INTRO HIDES */
+.video-bg.hidden {
+    opacity: 0;
+}
+
+/* LOOP STARTS INVISIBLE */
+.loop-video {
+    opacity: 0;
+}
+
+/* LOOP FADES IN */
+.loop-video.visible {
+    opacity: 1;
+}
+
+/* ===== BTN ===== */
+/* Update this block in your style section */
+.menu-item {
+  opacity: 0;
+  /* Start slightly shifted to the left */
+  transform: translateX(-100px) skewX(-12deg); 
+  transition: none; /* Disable standard transition to favor keyframe control */
+}
+
+.menu-visible .menu-item {
+  animation: p3rEntry 0.6s cubic-bezier(0.15, 0.9, 0.25, 1) forwards;
+  animation-delay: var(--delay);
+}
+
+@keyframes p3rEntry {
+  0% {
+    opacity: 0;
+    transform: translateX(-100px) skewX(-12deg);
+  }
+  60% {
+    opacity: 1;
+    transform: translateX(10px) skewX(-12deg); /* Overshoot */
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) skewX(-8deg); /* Lock in */
+  }
+}
+
+.menu-container {
+  opacity: 0;
+  transition: opacity 0.2s ease; /* Faster fade */
+}
+
+.menu-container.menu-visible {
+  opacity: 1;
+}
+
+.menu-visible {
+  animation: containerFlash 0.4s ease-out;
+}
+
+@keyframes containerFlash {
+  0% { filter: brightness(3) contrast(1.5); }
+  100% { filter: brightness(1) contrast(1); }
 }
 </style>

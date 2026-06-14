@@ -11,5 +11,7 @@ export const videos = {
   stack: `${BASE_URL}/video/persona-p3-stack.mp4`,
   timeline: `${BASE_URL}/video/persona-p3-timeline.mp4`,
   home: `${BASE_URL}/video/mylivewallpapers.com-Makoto-Yuki-Persona-3.mp4`,
-  mobile: `${BASE_URL}/video/MOBILE-Makoto-Yuki-Persona-3.mp4`
+  mobile: `${BASE_URL}/video/MOBILE-Makoto-Yuki-Persona-3.mp4`,
+  homeIntro: `${BASE_URL}/video/home-intro.mp4`,
+  homeLoop: `${BASE_URL}/video/home-loop.mp4`
 }
