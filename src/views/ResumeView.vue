@@ -40,15 +40,15 @@
           <div class="card-inner-content">
             <div class="stat-data-row">
               <span class="stat-field-label">NAME</span>
-              <span class="stat-field-val highlight-cyan">YAGAMI DEVILATHAN</span>
+              <span class="stat-field-val highlight-cyan">LOENG PHEAKTRA</span>
             </div>
             <div class="stat-data-row">
               <span class="stat-field-label">ROLE</span>
-              <span class="stat-field-val">FULL STACK DEVELOPER</span>
+              <span class="stat-field-val">DEVOPS ENGINEER</span>
             </div>
             <div class="stat-data-row">
               <span class="stat-field-label">LEVEL</span>
-              <span class="stat-field-val level-badge">22</span>
+              <span class="stat-field-val level-badge">0</span>
             </div>
           </div>
           <div class="card-hud-sub-index">// REG_ID_01</div>
@@ -61,7 +61,7 @@
           <div class="card-inner-content">
             <div class="education-block">
               <h3 class="edu-major-title">Computer Science</h3>
-              <p class="edu-degree-subtitle">University Student / Software Architecture Branch</p>
+              <p class="edu-degree-subtitle">Student of Institution of Technology of Cambodia(ITC)</p>
             </div>
           </div>
           <div class="card-hud-sub-index">// REG_EDU_02</div>
@@ -73,12 +73,13 @@
           <div class="card-header-ribbon">MAIN SKILLS ATTRIBUTES</div>
           <div class="card-inner-content">
             <div class="p3r-matrix-tags">
-              <span class="skill-shard">Vue</span>
-              <span class="skill-shard">NestJS</span>
+              <span class="skill-shard">Vue Js/ Nest Js</span>
               <span class="skill-shard">Flutter</span>
-              <span class="skill-shard">MongoDB</span>
+              <span class="skill-shard">CI/CD</span>
+              <span class="skill-shard">Git</span>
               <span class="skill-shard">Docker</span>
-              <span class="skill-shard">Azure</span>
+              <span class="skill-shard">Automation</span>
+              <span class="skill-shard">Cloud Infrastructure</span>
             </div>
           </div>
           <div class="card-hud-sub-index">// SKL_ATTRIB_03</div>
