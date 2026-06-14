@@ -119,34 +119,28 @@ onBeforeUnmount(() => {
 
 const combinedLogs = ref([
   {
-    date: '2024-09',
-    title: 'Started Web Development',
-    desc: 'Learned HTML, CSS, JavaScript fundamentals and modern layouts.',
-    tags: ['HTML', 'CSS', 'JS']
+    date: '2022',
+    title: 'Finish High School',
+    desc: 'Completed high school education and enrolled in the Computer Science program at the Institution of Technology of Cambodia (ITC).',
+    tags: []
   },
   {
-    date: '2025-01',
-    title: 'NestJS Framework Implementation',
-    desc: 'Built first structural full-stack application connecting APIs to datastores.',
-    tags: ['NestJS', 'MongoDB', 'Backend']
+    date: '2022-2024',
+    title: 'Study year 1 and 2 at ITC',
+    desc: 'Studying foundational general education at the Institution of Technology of Cambodia (ITC).',
+    tags: ['Design', 'Calculus', 'Thermodynamics', 'Programming Fundamentals', 'Statistics']
   },
   {
-    date: '2025-05',
-    title: 'Automata Theory System Engine',
-    desc: 'Created dynamic abstract finite automata management layout engines.',
-    tags: ['Automata', 'Vue', 'CS Core']
+    date: '2024-2025',
+    title: 'Study year 3 at ITC',
+    desc: 'Studying programming languages, data structures, algorithms, and software engineering principles at the Institution of Technology of Cambodia (ITC).',
+    tags: ['Java', 'C / C++', 'OPP', 'Data Structures', 'Algorithms', 'Database', 'Assembly', 'Web Design', 'Computer Architecture', 'Operating Systems']
   },
   {
-    date: '2025-06',
-    title: 'AniSuki Streaming Architecture',
-    desc: 'Initiated open design modular anime streaming distribution media interfaces.',
-    tags: ['Vue', 'API Integration', 'UX']
-  },
-  {
-    date: '2026-06',
-    title: 'Persona UI System Portfolio',
-    desc: 'Released advanced custom Persona 3 inspired hyper-stylized portfolio application layer.',
-    tags: ['Vue 3', 'TypeScript', 'Animation']
+    date: '2025-2026',
+    title: 'Study year 4 at ITC',
+    desc: 'Studying advanced computer science topics, include frameworks, cloud computing, and software development methodologies at the Institution of Technology of Cambodia (ITC).',
+    tags: ['Internet Programming', 'Mobile App Development', 'Advanced Database', 'Cloud Computing', 'DevOps', 'System Administration', 'Nettwork Design', 'Telecommunications', 'Human Computer Interaction', 'Network I&II']
   }
 ])
 </script>
