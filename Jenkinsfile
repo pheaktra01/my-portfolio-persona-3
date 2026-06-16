@@ -28,7 +28,9 @@ pipeline {
         stage('Fetch Server Report') {
             steps {
                 sh '''
-                scp ubuntu@YOUR_SERVER_IP:/tmp/server_report.txt .
+                scp -i ~/.ssh/ubuntu_key \
+                    -o StrictHostKeyChecking=no \
+                    ubuntu@13.54.88.26:/tmp/server_report.txt .
                 '''
             }
         }
