@@ -1,7 +1,9 @@
+
 - hosts: web
   become: true
 
   tasks:
+
     - name: Install Docker
       apt:
         name: docker.io
@@ -27,3 +29,79 @@
 
     - name: Run new container
       command: docker run -d --name vue-container -p 3000:80 yagami168/vue-app:latest
+
+    # =========================
+    # HEALTH CHECK
+    # =========================
+
+    - name: Wait for app
+      wait_for:
+        port: 3000
+        delay: 5
+        timeout: 30
+
+    - name: Check HTTP response
+      uri:
+        url: http://localhost:3000
+        status_code: 200
+      register: healthcheck
+
+    # =========================
+    # CPU USAGE
+    # =========================
+
+    - name: Get CPU usage
+      shell: |
+        top -bn1 | grep "Cpu(s)" | awk '{print $2 + $4}'
+      register: cpu_usage
+
+    # =========================
+    # RAM USAGE
+    # =========================
+
+    - name: Get RAM usage
+      shell: |
+        free -m | awk 'NR==2{printf "%.2f%%", $3*100/$2 }'
+      register: ram_usage
+
+    # =========================
+    # DISK USAGE
+    # =========================
+
+    - name: Get Disk usage
+      shell: |
+        df -h / | awk 'NR==2 {print $5}'
+      register: disk_usage
+
+    # =========================
+    # DOCKER STATUS
+    # =========================
+
+    - name: Get container status
+      shell: docker ps --filter "name=vue-container" --format "{{'{{'}}.Status{{'}}'}}"
+      register: container_status
+
+    # =========================
+    # SAVE REPORT
+    # =========================
+
+    - name: Create health report
+      copy:
+        dest: /tmp/server_report.txt
+        content: |
+          ===== SERVER HEALTH REPORT =====
+
+          Application Health:
+          Status Code: {{ healthcheck.status }}
+
+          CPU Usage:
+          {{ cpu_usage.stdout }}%
+
+          RAM Usage:
+          {{ ram_usage.stdout }}
+
+          Disk Usage:
+          {{ disk_usage.stdout }}
+
+          Container Status:
+          {{ container_status.stdout }}
