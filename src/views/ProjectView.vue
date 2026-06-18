@@ -37,8 +37,8 @@
           class="p3r-list-card"
           @mouseenter="active = i"
           @mouseleave="active = null"
-          @pointerenter="onToggle"
-          @click="onClickCard(i)"
+          @pointerenter="onCardHover(i)"
+          @click="handleCardClick(i)"
           :class="{ 'is-active': active === i }"
           :style="{ '--i': i }"
         >
@@ -148,12 +148,12 @@ function onVideoReady(e: Event) {
   video.classList.add('ready')
 }
 
-function onToggle(){
-  hovered.value = true
+function onCardHover(i: number) {
+  active.value = i
   playSwitchToggle()
 }
 
-function onClickCard(i: number) {
+const handleCardClick = (i: number) => {
   playClick()
   openPreview(i)
 }
@@ -174,8 +174,16 @@ function onHover() {
 }
 
 onMounted(() => {
-  setVideo(videos.stack)
+  window.addEventListener('keydown', handleEsc)
 })
+
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', handleEsc)
+})
+
+function handleEsc(e: KeyboardEvent) {
+  if (e.key === 'Escape') closePreview()
+}
 
 onBeforeUnmount(() => {
   clearVideo()
