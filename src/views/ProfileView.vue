@@ -18,7 +18,6 @@
           loop
           muted
           playsinline
-          preload="auto"
           @playing="handleVideoPlaying"
         ></video>
       </div>
@@ -258,12 +257,16 @@ function onHover() {
 }
 
 onMounted(() => {
-  setVideo(videos.profile)
-  
-  // CLEANED UP: No longer injecting problematic layout classes dynamically
+  const isMobile = window.innerWidth <= 868
+
+  if (!isMobile) {
+    setVideo(videos.profile)
+  }
+
   requestAnimationFrame(() => {
     pageReady.value = true
   })
+
   setTimeout(() => {
     showSlash.value = false
   }, 650)
