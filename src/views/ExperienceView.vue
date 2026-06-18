@@ -45,7 +45,7 @@
           :key="e.title"
           class="p3r-shard-card"
           @pointerenter="onCardHover"
-          @click="onCardClick"
+          @click="() => onCardClick(e)"s
           :style="{ '--i': i }"
         >
           <div class="shard-date-badge">
@@ -91,8 +91,9 @@ function onCardHover() {
   playSwitchToggle()
 }
 
-function onCardClick() {
+function onCardClick(item: any) {
   playClick()
+  console.log(item)
 }
 
 onMounted(() => {
