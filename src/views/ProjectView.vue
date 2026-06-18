@@ -129,7 +129,6 @@
 import { onBeforeUnmount, onMounted, ref, computed } from 'vue'
 import BackBtn from '../components/BackBtn.vue'
 import IntroSlash from '../components/IntroSlash.vue'
-import { videos } from '../config/videos'
 import { useVideoManager } from '../composables/useVideoManager.ts'
 import { playSwitchToggle, playClick, playHover } from '../utils/sound.ts'
 import tovreanPreview from '../assets/images/tovrean-preview.png'
@@ -137,8 +136,7 @@ import doOrtPreview from '../assets/images/doOrt-preview.png'
 import persona3Preview from '../assets/images/persona3-preview.png'
 import anisukiPreview from '../assets/images/anisuki-preview.png'
 
-const { setVideo, clearVideo, currentVideo } = useVideoManager()
-const hovered = ref(false)
+const { clearVideo, currentVideo } = useVideoManager()
 
 const videoReady = ref(false)
 
