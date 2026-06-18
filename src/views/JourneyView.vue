@@ -109,7 +109,16 @@ function onCardClick() {
 }
 
 onMounted(() => {
-  setVideo(videos.timeline)
+  const isMobile = window.innerWidth <= 868
+
+  // Let poster become LCP first
+  requestAnimationFrame(() => {
+    if (!isMobile) {
+      setTimeout(() => {
+        setVideo(videos.timeline)
+      }, 1500)
+    }
+  })
 })
 
 onBeforeUnmount(() => {
