@@ -1,23 +1,25 @@
 <template>
-  <div v-if="show" class="p3-container">
+  <div v-if="show" class="p3r-container">
     <div class="slash-layer primary"></div>
     <div class="slash-layer secondary"></div>
   </div>
 </template>
+
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
 const show = ref(true)
 
 onMounted(() => {
+  // Extended to 1.5s to match the animation duration
   setTimeout(() => {
     show.value = false
-  }, 700)
+  }, 1500)
 })
 </script>
 
 <style scoped>
-.p3-container {
+.p3r-container {
   position: fixed;
   inset: 0;
   z-index: 9999;
@@ -34,19 +36,21 @@ onMounted(() => {
 }
 
 .primary {
-  background-color: #f7e600; /* Iconic P3 Yellow */
-  animation: p3-slash 0.6s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+  background-color: #00f2ff; 
+  /* 1.5s duration */
+  animation: p3r-slash 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   left: -150%;
 }
 
 .secondary {
-  background-color: #000;
-  animation: p3-slash 0.7s cubic-bezier(0.77, 0, 0.175, 1) forwards;
-  left: -160%; /* Slightly offset to create a "border" effect */
-  mix-blend-mode: multiply;
+  background-color: #050505;
+  /* 1.8s duration to trail slightly behind the primary */
+  animation: p3r-slash 1.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  left: -160%; 
+  z-index: -1;
 }
 
-@keyframes p3-slash {
+@keyframes p3r-slash {
   0% { left: -150%; }
   100% { left: 100%; }
 }
