@@ -9,7 +9,7 @@ export const videos = {
   skill: `${BASE_URL}/video/persona-p3-skill.mp4`,
   social: `${BASE_URL}/video/persona-p3-social.mp4`,
   stack: `${BASE_URL}/video/persona-p3-stack.mp4`,
-  timeline: `${BASE_URL}/video/persona-p3-timeline.mp4`,
+  journey: `${BASE_URL}/video/persona-p3-journey.mp4`,
   home: `${BASE_URL}/video/mylivewallpapers.com-Makoto-Yuki-Persona-3.mp4`,
   mobile: `${BASE_URL}/video/MOBILE-Makoto-Yuki-Persona-3.mp4`,
   homeIntro: `${BASE_URL}/video/home-intro.mp4`,
