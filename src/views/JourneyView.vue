@@ -115,7 +115,7 @@ onMounted(() => {
   requestAnimationFrame(() => {
     if (!isMobile) {
       setTimeout(() => {
-        setVideo(videos.timeline)
+        setVideo(videos.journey)
       }, 1500)
     }
   })
