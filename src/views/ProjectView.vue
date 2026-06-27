@@ -135,8 +135,13 @@ import tovreanPreview from '../assets/images/tovrean-preview.png'
 import doOrtPreview from '../assets/images/doOrt-preview.png'
 import persona3Preview from '../assets/images/persona3-preview.png'
 import anisukiPreview from '../assets/images/anisuki-preview.png'
+import { videos } from '../config/videos'
 
-const { clearVideo, currentVideo } = useVideoManager()
+const {
+  setVideo,
+  clearVideo,
+  currentVideo
+} = useVideoManager()
 
 const videoReady = ref(false)
 
@@ -172,6 +177,8 @@ function onHover() {
 }
 
 onMounted(() => {
+  setVideo(videos.project)
+
   window.addEventListener('keydown', handleEsc)
 })
 
