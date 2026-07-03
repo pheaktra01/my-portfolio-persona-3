@@ -184,11 +184,39 @@
                 </div>
               </header>
 
+              <div class="modal-data-block">
+                <div class="data-row">
+                  <span class="d-key">AGE</span>
+                  <span class="d-val">22</span>
+                </div>
+                <div class="data-row">
+                  <span class="d-key">LOCATION</span>
+                  <span class="d-val">Phnom Penh, Cambodia</span>
+                </div>
+                <div class="data-row">
+                  <span class="d-key">ROLE</span>
+                  <span class="d-val">Student</span>
+                </div>
+                <div class="data-row">
+                  <span class="d-key">FOCUS</span>
+                  <span class="d-val">Developer</span>
+                </div>
+              </div>
+
               <div class="modal-info-body">
                 <h3 class="body-title">CORE DESCRIPTION</h3>
                 <p class="body-desc">
-                  I am a year 4 students of Institute of Technology of Cambodia (ITC) majoring in Computer Science and Engineering. I have a strong passion for technology and programming, and I am constantly seeking to expand my knowledge and skills in the field. My goal is to become a proficient DevOps engineer and contribute to innovative projects that make a positive impact on society.
+                  I am a fourth-year Computer Science and Engineering student at the Institute of Technology of Cambodia (ITC). I am passionate about software development, especially mobile application development, and I enjoy creating applications that provide practical solutions to real-world problems. Through academic and personal projects, I have gained hands-on experience in Flutter, web development, UI implementation, and problem-solving. I am always eager to learn new technologies, collaborate with others, and continuously improve my skills. In the future, I hope to expand my expertise into cloud technologies and DevOps while continuing to grow as a software engineer.
                 </p>
+              </div>
+
+              <div class="modal-social-links">
+                <h3 class="body-title">SYSTEM_NODE_LINKS</h3>
+                <div class="tag-cloud">
+                  <a href="https://github.com/pheaktra01" target="_blank" class="p3r-tag link">GitHub</a>
+                  <a href="https://linkedin.com/in/loeng-pheaktra-2b9578413" target="_blank" class="p3r-tag link">LinkedIn</a>
+                  <a href="mailto:pheaktra.loeng25@gmail.com" class="p3r-tag link">Email</a>
+                </div>
               </div>
 
               <footer class="modal-info-footer">
@@ -524,9 +552,9 @@ const closeProfileModal = () => { isProfileOpen.value = false }
   border: 4px solid var(--p3r-deep-bg);
   box-shadow: -8px 8px 0px var(--p3r-blue);
 }
-.avatar-container { position: relative; width: 100px; height: 100px; flex-shrink: 0; }
+.avatar-container { position: relative; width: clamp(80px, 15vw, 100px); height: clamp(80px, 15vw, 100px); flex-shrink: 0; }
 .avatar-skew-bg { position: absolute; inset: -2px; background: var(--p3r-magenta); transform: rotate(-6deg); z-index: 1; }
-.avatar-img { position: relative; width: 100%; height: 100%; object-fit: cover; border: 2px solid var(--p3r-deep-bg); z-index: 2; transform: rotate(-2deg); }
+.avatar-img { position: relative; width: 100%; height: 100%; object-fit: cover; border: 2px solid var(--p3r-deep-bg); z-index: 2; transform: rotate(-2deg); object-fit: cover; object-position: center;}
 
 .profile-info { position: relative; width: 100%; }
 .meta-crumbs { font-family: monospace; font-size: 0.65rem; color: var(--p3r-magenta); font-weight: bold; }
@@ -578,7 +606,7 @@ const closeProfileModal = () => { isProfileOpen.value = false }
 }
 .p3r-modal-window {
   position: relative;
-  width: 860px;
+  width: 1000px;
   background: var(--p3r-deep-bg);
   border: 4px solid var(--p3r-white);
   box-shadow: -20px 20px 0px var(--p3r-blue);
@@ -600,9 +628,9 @@ const closeProfileModal = () => { isProfileOpen.value = false }
 .p3r-close-btn:hover { background: var(--p3r-white); color: var(--p3r-deep-bg); }
 
 .modal-layout { padding: 40px; display: flex; gap: 40px; }
-.modal-portrait-deck { flex: 0.9; min-width: 0; }
-.portrait-frame { background: var(--p3r-dark-blue); width: 100%; height: 280px; position: relative; border: 3px solid var(--p3r-blue); display: flex; justify-content: center; align-items: center; overflow: hidden; }
-.modal-img { width: 80%; height: 80%; object-fit: cover; border: 3px solid var(--p3r-white); z-index: 2; transform: rotate(3deg); }
+.modal-portrait-deck { flex: 1; min-width: 0; }
+.portrait-frame { aspect-ratio: 3 / 4; background: var(--p3r-dark-blue); width: 100%; position: relative; border: 3px solid var(--p3r-blue); display: flex; justify-content: center; align-items: center; overflow: hidden; }
+.modal-img { width: 80%; height: 80%; object-fit: cover; border: 3px solid var(--p3r-white); z-index: 2; transform: rotate(3deg) scale(1.05); object-position: top center; }
 .hud-tag { position: absolute; bottom: 8px; left: 8px; background: var(--p3r-deep-bg); color: var(--p3r-blue); font-family: monospace; font-size: 0.65rem; padding: 2px 6px; z-index: 3; border: 1px solid var(--p3r-blue); }
 
 .modal-info-deck { flex: 1.3; display: flex; flex-direction: column; justify-content: space-between; }
@@ -659,5 +687,53 @@ const closeProfileModal = () => { isProfileOpen.value = false }
   }
   .modal-layout { flex-direction: column; padding: 25px 15px; gap: 20px; }
   .p3r-close-btn { top: -42px; right: -4px; transform: none; }
+}
+
+
+/* =============== SOCIAL LINKS ============== */
+.modal-social-links {
+  margin-top: 20px;
+  border-top: 1px solid rgba(0, 210, 255, 0.2);
+  padding-top: 15px;
+}
+
+.p3r-tag.link {
+  display: inline-block;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--p3r-white);
+  transition: all 0.2s ease;
+}
+
+.p3r-tag.link:hover {
+  background: var(--p3r-blue);
+  color: var(--p3r-deep-bg);
+  transform: translateY(-2px);
+}
+
+/* ========== DATA BLOCK ========= */
+.modal-data-block {
+  margin: 15px 0;
+  padding: 10px;
+  background: rgba(0, 210, 255, 0.05);
+  border-left: 2px solid var(--p3r-blue);
+  font-family: monospace;
+}
+
+.data-row {
+  display: flex;
+  margin-bottom: 4px;
+}
+
+.d-key {
+  width: 100px; /* Aligns all values vertically */
+  color: var(--p3r-blue);
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+
+.d-val {
+  color: var(--p3r-white);
+  font-size: 0.85rem;
 }
 </style>
