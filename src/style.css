@@ -47,10 +47,16 @@
   /* ... rest of your styling ... */
 }
 
-/* 3. Keep the skew ONLY on the scrolling panel */
+/* 3. GPU Hardware Acceleration & Smooth Scrolling Defaults */
 .panel {
-  position: fixed;
-  top: 35%; /* Start the panel lower so it doesn't overlap the header */
-  height: 60vh;
-  transform: skewX(-4deg); /* Skew only applies here */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+/* Optimize font rendering and prevent micro-stutters during animations */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
