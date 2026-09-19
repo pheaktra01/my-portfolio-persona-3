@@ -306,6 +306,8 @@ const links = [
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   pointer-events: auto !important;
+  will-change: scroll-position;
+  transform: translate3d(0, 0, 0) skewX(-3deg);
 
   z-index: 3;
   box-sizing: border-box;
@@ -325,8 +327,8 @@ const links = [
 }
 
 @keyframes p3rPanelEnter {
-  from { opacity: 0; transform: translateX(-100px) skewX(-3deg); }
-  to { opacity: 1; transform: translateX(0) skewX(-3deg); }
+  from { opacity: 0; transform: translate3d(-100px, 0, 0) skewX(-3deg); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) skewX(-3deg); }
 }
 
 /* MENU HEADER DESIGNATION */
