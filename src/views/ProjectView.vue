@@ -35,9 +35,8 @@
           v-for="(p, i) in projects"
           :key="p.title"
           class="p3r-list-card"
-          @mouseenter="active = i"
-          @mouseleave="active = null"
           @pointerenter="onCardHover(i)"
+          @pointerleave="active = null"
           @click="handleCardClick(i)"
           :class="{ 'is-active': active === i }"
           :style="{ '--i': i }"
@@ -321,6 +320,8 @@ const launchProject = (url: string) => {
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   pointer-events: auto !important;
+  will-change: scroll-position;
+  transform: translate3d(0, 0, 0);
 
   z-index: 10;
   box-sizing: border-box;
@@ -391,13 +392,15 @@ const launchProject = (url: string) => {
   opacity: 0;
   animation: cardFlyIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   animation-delay: calc(var(--i) * 0.1s);
+  will-change: transform;
+  backface-visibility: hidden;
 
   padding: 15px 0;
 }
 
 @keyframes cardFlyIn {
-  from { opacity: 0; transform: translateX(-100px) skewX(-12deg); }
-  to { opacity: 1; transform: translateX(0) skewX(-12deg); }
+  from { opacity: 0; transform: translate3d(-100px, 0, 0) skewX(-12deg); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) skewX(-12deg); }
 }
 
 .card-bg-base {
