@@ -42,24 +42,51 @@
           @click="onClick"
           @pointerenter="onHoverCard"
         >
+          <div class="card-bg-accent-slash"></div>
+
           <div class="avatar-container">
             <div class="avatar-bracket-tl"></div>
             <div class="avatar-bracket-br"></div>
             <div class="avatar-skew-bg"></div>
             <img src="../assets/images/e20220993.png" class="avatar-img" alt="Avatar" />
+            <div class="sees-armband-tag">S.E.E.S.</div>
           </div>
 
           <div class="profile-info">
-            <div class="meta-crumbs">SYS_LINK // OPERATOR</div>
-            <h2 class="user-name">LOENG PHEAKTRA</h2>
-            <p class="user-role">COMPUTER SCIENCE STUDENT</p>
-            <p class="user-role">> Student of Institute of Technology of Cambodia (ITC) majoring in Computer Science and Engineering.</p>
-
-            <div class="level-badge">
-              <span class="lbl">LV</span>
-              <span class="val">0</span>
+            <div class="meta-crumbs">
+              <span class="sees-insignia">◆ S.E.E.S. COMBAT DOSSIER</span>
+              <span class="arcana-badge-mini">ARCANA: 0 THE FOOL 愚者</span>
             </div>
-            <div class="click-prompt">TAP FOR DEEPER METADATA</div>
+            <h2 class="user-name">LOENG PHEAKTRA</h2>
+            <p class="user-role">COMPUTER SCIENCE & ENGINEERING // ITC</p>
+            <p class="user-desc">> Majoring in Computer Science and Engineering. Specializing in DevOps, Containerization & Full-Stack Systems.</p>
+
+            <!-- P3R COMBAT HP & SP GAUGES -->
+            <div class="combat-gauges">
+              <div class="gauge-row hp-row">
+                <span class="gauge-lbl">HP</span>
+                <div class="gauge-bar-frame">
+                  <div class="gauge-fill hp-fill" style="width: 100%"></div>
+                </div>
+                <span class="gauge-val">999<small>/999</small></span>
+              </div>
+              <div class="gauge-row sp-row">
+                <span class="gauge-lbl">SP</span>
+                <div class="gauge-bar-frame">
+                  <div class="gauge-fill sp-fill" style="width: 100%"></div>
+                </div>
+                <span class="gauge-val">999<small>/999</small></span>
+              </div>
+            </div>
+
+            <div class="level-badge-row">
+              <div class="level-badge">
+                <span class="lbl">LV</span>
+                <span class="val">99</span>
+                <span class="sub-lbl">MAX</span>
+              </div>
+              <div class="click-prompt">▲ TAP FOR SYSTEM OVERLINK</div>
+            </div>
           </div>
         </section>
 
@@ -541,46 +568,296 @@ const closeProfileModal = () => { isProfileOpen.value = false }
 .profile-card {
   display: flex;
   align-items: center;
-  gap: 24px;
-  background: var(--p3r-white);
-  color: var(--p3r-deep-bg);
-  border: 4px solid var(--p3r-deep-bg);
-  box-shadow: -8px 8px 0px var(--p3r-blue);
+  gap: 20px;
+  background: linear-gradient(135deg, rgba(6, 14, 32, 0.95) 0%, rgba(12, 26, 60, 0.95) 100%);
+  color: #ffffff;
+  border: 3px solid #00d2ff;
+  box-shadow: -8px 8px 0px rgba(4, 8, 20, 0.95), 0 0 18px rgba(0, 210, 255, 0.25);
+  transform: skewX(-4deg);
+  padding: 22px;
 }
-.avatar-container { position: relative; width: clamp(80px, 15vw, 100px); height: clamp(80px, 15vw, 100px); flex-shrink: 0; }
-.avatar-skew-bg { position: absolute; inset: -2px; background: var(--p3r-magenta); transform: rotate(-6deg); z-index: 1; }
-.avatar-img { position: relative; width: 100%; height: 100%; object-fit: cover; border: 2px solid var(--p3r-deep-bg); z-index: 2; transform: rotate(-2deg); object-fit: cover; object-position: center;}
+
+.card-bg-accent-slash {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 35%;
+  height: 100%;
+  background: linear-gradient(135deg, transparent 0%, rgba(0, 210, 255, 0.08) 100%);
+  clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 100%);
+  pointer-events: none;
+}
+
+.avatar-container {
+  position: relative;
+  width: clamp(90px, 14vw, 110px);
+  height: clamp(90px, 14vw, 110px);
+  flex-shrink: 0;
+}
+.avatar-skew-bg {
+  position: absolute;
+  inset: -3px;
+  background: #ff0055;
+  transform: rotate(-6deg);
+  z-index: 1;
+  box-shadow: -3px 3px 0px #040814;
+}
+.avatar-img {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 3px solid #ffffff;
+  z-index: 2;
+  transform: rotate(-2deg);
+  object-position: center;
+}
+
+.sees-armband-tag {
+  position: absolute;
+  bottom: -6px;
+  right: -8px;
+  background: #ff0055;
+  color: #ffffff;
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-size: 0.75rem;
+  font-style: italic;
+  letter-spacing: 1px;
+  padding: 2px 6px;
+  border: 1px solid #ffffff;
+  transform: skewX(-10deg);
+  box-shadow: -2px 2px 0px #040814;
+  z-index: 10;
+}
 
 .profile-info { position: relative; width: 100%; }
-.meta-crumbs { font-family: monospace; font-size: 0.65rem; color: var(--p3r-magenta); font-weight: bold; }
-.user-name { margin: 2px 0; font-size: 1.9rem; line-height: 1; font-weight: 900; }
-.user-role { font-family: sans-serif; font-weight: 700; font-size: 0.75rem; opacity: 0.8; margin: 0; }
+
+.meta-crumbs {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.sees-insignia {
+  font-family: monospace;
+  font-size: 0.65rem;
+  color: #ff0055;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+.arcana-badge-mini {
+  font-family: monospace;
+  font-size: 0.6rem;
+  color: #00d2ff;
+  background: rgba(0, 210, 255, 0.15);
+  border: 1px solid #00d2ff;
+  padding: 1px 6px;
+  transform: skewX(-8deg);
+  font-weight: bold;
+}
+
+.user-name {
+  margin: 2px 0;
+  font-size: 2.1rem;
+  line-height: 1;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: 0px;
+  color: #ffffff;
+  text-shadow: 2px 2px 0px #040814;
+}
+.user-role {
+  font-family: monospace;
+  font-weight: 900;
+  font-size: 0.75rem;
+  color: #00d2ff;
+  letter-spacing: 1px;
+  margin: 3px 0;
+}
+.user-desc {
+  font-family: sans-serif;
+  font-size: 0.72rem;
+  opacity: 0.85;
+  line-height: 1.35;
+  margin: 4px 0 8px 0;
+  color: #d0e8ff;
+}
+
+/* ================= COMBAT HP & SP GAUGES ================= */
+.combat-gauges {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 10px 0;
+  background: rgba(3, 7, 18, 0.85);
+  border: 1px solid rgba(0, 210, 255, 0.4);
+  border-left: 4px solid #00d2ff;
+  padding: 8px 12px;
+  transform: skewX(-4deg);
+}
+
+.gauge-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gauge-lbl {
+  font-family: 'Impact', sans-serif;
+  font-size: 0.95rem;
+  font-style: italic;
+  font-weight: 900;
+  width: 24px;
+}
+.hp-row .gauge-lbl { color: #00ff88; text-shadow: 0 0 8px rgba(0, 255, 136, 0.7); }
+.sp-row .gauge-lbl { color: #00d2ff; text-shadow: 0 0 8px rgba(0, 210, 255, 0.7); }
+
+.gauge-bar-frame {
+  flex: 1;
+  height: 12px;
+  background: rgba(4, 8, 20, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.gauge-fill {
+  height: 100%;
+}
+
+.hp-fill {
+  background: repeating-linear-gradient(90deg, #00ff88 0px, #00ff88 8px, #003318 8px, #003318 10px);
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
+}
+
+.sp-fill {
+  background: repeating-linear-gradient(90deg, #00d2ff 0px, #00d2ff 8px, #002b44 8px, #002b44 10px);
+  box-shadow: 0 0 10px rgba(0, 210, 255, 0.6);
+}
+
+.gauge-val {
+  font-family: monospace;
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: #ffffff;
+  width: 75px;
+  text-align: right;
+  letter-spacing: 0.5px;
+}
+.gauge-val small { color: rgba(255, 255, 255, 0.5); font-size: 0.7rem; }
+
+.level-badge-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
 
 .level-badge {
-  margin-top: 8px;
-  background: var(--p3r-deep-bg);
-  color: var(--p3r-white);
+  background: #ff0055;
+  color: #ffffff;
   display: inline-flex;
   align-items: baseline;
-  padding: 2px 10px;
+  padding: 3px 12px;
   transform: skewX(-10deg);
+  border: 1px solid #ffffff;
+  box-shadow: -3px 3px 0px #040814;
 }
-.level-badge .lbl { font-size: 0.7rem; color: var(--p3r-blue); margin-right: 4px; }
-.level-badge .val { font-size: 1.2rem; font-weight: 900; }
-.click-prompt { font-family: monospace; font-size: 0.65rem; color: var(--p3r-blue); margin-top: 5px; text-align: right; }
+.level-badge .lbl { font-size: 0.8rem; color: #ffffff; margin-right: 4px; font-weight: 900; font-style: italic; }
+.level-badge .val { font-size: 1.4rem; font-weight: 900; line-height: 1; font-style: italic; }
+.level-badge .sub-lbl { font-size: 0.7rem; color: #ffee00; margin-left: 4px; font-weight: 900; font-style: italic; }
+
+.click-prompt {
+  font-family: monospace;
+  font-size: 0.7rem;
+  font-weight: 900;
+  color: #00d2ff;
+  letter-spacing: 1px;
+}
 
 /* ================= METERS & PROGRESS BARS ================= */
-.skills-list { display: flex; flex-direction: column; gap: 12px; }
-.skill-row { display: flex; flex-direction: column; }
-.skill-meta { display: flex; justify-content: space-between; font-size: 1.05rem; margin-bottom: 2px; }
-.skill-val { color: var(--p3r-blue); font-weight: 900; }
-.p3r-bar-bg { height: 12px; background: var(--p3r-deep-bg); border: 1px solid rgba(255, 255, 255, 0.2); padding: 2px; overflow: hidden; }
-.p3r-bar-fill { height: 100%; background: var(--p3r-blue); position: relative; transition: width 0.5s ease-in-out; }
-.bar-glare { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%); }
+.skills-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skill-row {
+  background: rgba(6, 14, 32, 0.85);
+  border: 1px solid rgba(0, 210, 255, 0.3);
+  padding: 8px 14px;
+  transform: skewX(-4deg);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.skill-row:hover {
+  border-color: #00d2ff;
+  background: rgba(10, 24, 55, 0.95);
+  transform: skewX(-4deg) translateX(6px);
+  box-shadow: -4px 4px 0px #ff0055, 0 0 12px rgba(0, 210, 255, 0.3);
+}
+
+.skill-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+.skill-name {
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+}
+.skill-val {
+  font-family: monospace;
+  font-size: 0.9rem;
+  font-weight: 900;
+  color: #00d2ff;
+}
+
+.p3r-bar-bg {
+  height: 11px;
+  background: rgba(3, 7, 18, 0.95);
+  border: 1px solid rgba(0, 210, 255, 0.35);
+  overflow: hidden;
+  position: relative;
+}
+
+.p3r-bar-fill {
+  height: 100%;
+  background: repeating-linear-gradient(90deg, #00d2ff 0px, #00d2ff 7px, #041224 7px, #041224 9px);
+  box-shadow: 0 0 10px rgba(0, 210, 255, 0.7);
+  position: relative;
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bar-glare {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
+}
 
 /* ================= SPECIALIZATION TAG MATRIX ================= */
-.tag-cloud { display: flex; flex-wrap: wrap; gap: 6px; }
-.p3r-tag { background: var(--p3r-dark-blue); border-left: 3px solid var(--p3r-blue); padding: 4px 10px; font-size: 0.8rem; font-family: sans-serif; font-weight: bold; }
+.tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+.p3r-tag {
+  background: rgba(6, 14, 32, 0.9);
+  color: #ffffff;
+  border: 1px solid rgba(0, 210, 255, 0.4);
+  border-left: 3px solid #ff0055;
+  padding: 5px 12px;
+  font-size: 0.82rem;
+  font-family: monospace;
+  font-weight: bold;
+  transform: skewX(-6deg);
+  transition: all 0.2s ease;
+}
+.p3r-tag:hover {
+  background: #00d2ff;
+  color: #040814;
+  border-color: #ffffff;
+  box-shadow: -2px 2px 0px #040814;
+}
 
 /* ================= EXPERIENCE METERS ================= */
 .xp-meta { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 4px; }
