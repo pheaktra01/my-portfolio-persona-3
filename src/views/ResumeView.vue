@@ -270,6 +270,8 @@ onBeforeUnmount(() => {
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   pointer-events: auto !important;
+  will-change: scroll-position;
+  transform: translate3d(0, 0, 0) skewX(-2.5deg);
 
   z-index: 3;
   box-sizing: border-box;
@@ -289,8 +291,8 @@ onBeforeUnmount(() => {
 }
 
 @keyframes p3rPanelEnter {
-  from { opacity: 0; transform: translateX(-120px) skewX(-2.5deg); }
-  to { opacity: 1; transform: translateX(0) skewX(-2.5deg); }
+  from { opacity: 0; transform: translate3d(-120px, 0, 0) skewX(-2.5deg); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) skewX(-2.5deg); }
 }
 
 /* MENU OVERLINK HEADER */
