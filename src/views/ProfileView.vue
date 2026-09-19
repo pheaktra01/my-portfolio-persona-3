@@ -2,7 +2,6 @@
   <div class="profile-page p3r-theme">
     <BackBtn />
     <IntroSlash />
-    <div v-if="showSlash" class="page-slash-enter"></div>
 
     <div class="bg-layer-container">
         <div 
@@ -257,7 +256,6 @@ const skills = [
 ]
 
 const pageReady = ref(false)
-const showSlash = ref(true)
 const isProfileOpen = ref(false)
 const isVideoLoaded = ref(false)
 
@@ -294,10 +292,6 @@ onMounted(() => {
   requestAnimationFrame(() => {
     pageReady.value = true
   })
-
-  setTimeout(() => {
-    showSlash.value = false
-  }, 650)
 })
 
 onBeforeUnmount(() => {
@@ -424,11 +418,12 @@ const closeProfileModal = () => { isProfileOpen.value = false }
   -webkit-overflow-scrolling: touch; 
   overscroll-behavior: contain;
   pointer-events: auto !important;
+  will-change: scroll-position;
   
   z-index: 2;
   box-sizing: border-box;
   opacity: 0;
-  transform: translateX(-100px) skewX(-4deg);
+  transform: translate3d(-100px, 0, 0) skewX(-4deg);
   scrollbar-width: none; /* Hides on Firefox */
 }
 
@@ -449,7 +444,7 @@ const closeProfileModal = () => { isProfileOpen.value = false }
 @keyframes p3rPanelIn {
   to {
     opacity: 1;
-    transform: translateX(0) skewX(-4deg);
+    transform: translate3d(0, 0, 0) skewX(-4deg);
   }
 }
 
