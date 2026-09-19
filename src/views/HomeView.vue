@@ -23,7 +23,7 @@
       playsinline
       muted
       loop
-      preload="auto"
+      preload="metadata"
     ></video>
 
     <!-- MOBILE -->
@@ -61,14 +61,14 @@
             @pointerdown="onPress(i)"
             @pointerup="onRelease"
             @pointercancel="onRelease"
+            @pointerenter="setHover(i)"
+            @pointerleave="clearHover"
           >
             <div class="btn-bg-slash"></div>
 
             <span
               class="text-layer shadow-text"
               :data-text="item"
-              @pointerenter="setHover(i)"
-              @pointerleave="clearHover"
             >
               {{ item }}
             </span>
@@ -76,8 +76,6 @@
             <span
               class="text-layer main-text"
               :data-text="item"
-              @pointerenter="setHover(i)"
-              @pointerleave="clearHover"
             >
               {{ item }}
             </span>
@@ -92,10 +90,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-
-import hoverSoundUrl from '../assets/sounds/hover.wav'
-import clickSoundUrl from '../assets/sounds/click.wav'
-
+import { playHover, playClick } from '../utils/sound'
 import { videos } from '../config/videos'
 
 const introFinished = ref(false)
@@ -123,9 +118,7 @@ function onIntroEnded() {
   if (!loopVideo) return
 
   introFinished.value = true
-
   loopVideo.currentTime = 0
-
   loopVideo.play().catch(() => {})
 }
 
@@ -144,37 +137,11 @@ const menuItems = [
 ]
 
 const hoveredIndex = ref<number | null>(null)
-let lastHoverPlay = 0
-const HOVER_THROTTLE_MS = 150
-
-const hoverAudio = new Audio(hoverSoundUrl)
-hoverAudio.volume = 0.35
-hoverAudio.preload = 'auto'
-
-function playHoverSound() {
-  if (isMobile.value) return
-  const now = Date.now()
-  if (now - lastHoverPlay < HOVER_THROTTLE_MS) return
-
-  lastHoverPlay = now
-  hoverAudio.pause()
-  hoverAudio.currentTime = 0
-  hoverAudio.play().catch(() => {})
-}
-
-const clickAudio = new Audio(clickSoundUrl)
-clickAudio.volume = 0.6
-clickAudio.preload = 'auto'
-
-function playClickSound() {
-  clickAudio.currentTime = 0
-  clickAudio.play().catch(() => {})
-}
 
 function setHover(i: number) {
   if (hoveredIndex.value === i) return
   hoveredIndex.value = i
-  playHoverSound()
+  playHover(isMobile.value)
 }
 
 function clearHover() {
@@ -194,7 +161,7 @@ function onRelease() {
 const clickedIndex = ref<number | null>(null)
 
 function handleClick(i: number) {
-  playClickSound()
+  playClick()
   clickedIndex.value = i
 
   setTimeout(() => {
@@ -355,6 +322,8 @@ onMounted(() => {
   justify-content: center;
   transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .persona-btn:hover {
@@ -375,6 +344,9 @@ onMounted(() => {
   transform-origin: left;
   transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: -8px 8px 0px rgba(4, 8, 20, 0.9);
+  pointer-events: none;
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 /* --- TYPOGRAPHY INTERFACE LAYERS --- */
@@ -383,6 +355,10 @@ onMounted(() => {
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-block;
   white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 /* Deep Velvet Midnight Drop Shadow Text State */
