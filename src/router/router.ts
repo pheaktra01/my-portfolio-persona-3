@@ -1,13 +1,7 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
-// Pages views
+// Pages views (Lazy-loaded for optimal initial bundle and smooth transitions)
 import HomeView from '../views/HomeView.vue'
-import ProjectsView from '../views/ProjectView.vue'
-import ProfileView from '../views/ProfileView.vue'
-import ExperienceView from '../views/ExperienceView.vue'
-import SocialLinksView from '../views/SocialView.vue'
-import ResumeView from '../views/ResumeView.vue'
-import JourneyView from '../views/JourneyView.vue'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -18,32 +12,32 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/projects',
     name: 'projects',
-    component: ProjectsView,
+    component: () => import('../views/ProjectView.vue'),
   },
   {
     path: '/profile',
     name: 'profile',
-    component: ProfileView,
+    component: () => import('../views/ProfileView.vue'),
   },
   {
     path: '/experience',
     name: 'experience',
-    component: ExperienceView,
+    component: () => import('../views/ExperienceView.vue'),
   },
   {
     path: '/journey',
     name: 'journey',
-    component: JourneyView,
+    component: () => import('../views/JourneyView.vue'),
   },
   {
     path: '/social-links',
     name: 'social-links',
-    component: SocialLinksView,
+    component: () => import('../views/SocialView.vue'),
   },
   {
     path: '/resume',
     name: 'resume',
-    component: ResumeView,
+    component: () => import('../views/ResumeView.vue'),
   }
 ]
 
