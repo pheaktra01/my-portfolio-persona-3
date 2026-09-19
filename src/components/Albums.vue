@@ -92,6 +92,11 @@ const useRawPosition = ref(false)
 let dragStartX = 0
 let dragStartY = 0
 let hasMovedSignificantDistance = false
+let cachedW = 0
+let cachedH = 0
+let cachedWinW = 0
+let cachedWinH = 0
+let rafId = 0
 
 const isPlaying = computed(() => audioStore.isPlaying)
 const isDiscSlidOut = computed(() => isPlaying.value && !isSwapping.value)
@@ -102,23 +107,18 @@ const currentDiscAsset = computed(() => {
   return disc1
 })
 
-// const songs = [
-//   { id: 1, title: 'Color Your Night', src: new URL('../assets/musics/Color-Your-Night.mp3', import.meta.url).href },
-//   { id: 2, title: 'Memory Of You', src: new URL('../assets/musics/Memory_Of_You.mp3', import.meta.url).href },
-//   { id: 3, title: 'Full Moon Full Life', src: new URL('../assets/musics/Full-Moon-Full-Life.mp3', import.meta.url).href }
-// ]
-
 const songs = [
-  { id: 1, title: 'Color Your Night', src: new URL('', import.meta.url).href },
-  { id: 2, title: 'Memory Of You', src: new URL('', import.meta.url).href },
-  { id: 3, title: 'Full Moon Full Life', src: new URL('', import.meta.url).href }
+  { id: 1, title: 'Color Your Night', src: '' },
+  { id: 2, title: 'Memory Of You', src: '' },
+  { id: 3, title: 'Full Moon Full Life', src: '' }
 ]
 
 const widgetStyle = computed(() => {
   if (useRawPosition.value) {
     return {
-      left: `${position.value.x}px`,
-      top: `${position.value.y}px`,
+      transform: `translate3d(${position.value.x}px, ${position.value.y}px, 0)`,
+      left: '0px',
+      top: '0px',
       right: 'auto',
       bottom: 'auto'
     }
@@ -136,40 +136,56 @@ const widgetStyle = computed(() => {
 const startDrag = (event) => {
   if (event.target.closest('.song-list-panel')) return
 
+  const rect = widgetRef.value.getBoundingClientRect()
+  cachedW = rect.width
+  cachedH = rect.height
+  cachedWinW = window.innerWidth
+  cachedWinH = window.innerHeight
+
   isDragging.value = true
   hasMovedSignificantDistance = false
   useRawPosition.value = true
 
-  const rect = widgetRef.value.getBoundingClientRect()
   dragStartX = event.clientX - rect.left
   dragStartY = event.clientY - rect.top
   position.value = { x: rect.left, y: rect.top }
 
-  window.addEventListener('pointermove', handleDrag)
+  window.addEventListener('pointermove', handleDrag, { passive: true })
   window.addEventListener('pointerup', stopDrag)
   
-  event.currentTarget.setPointerCapture(event.pointerId)
+  try {
+    event.currentTarget.setPointerCapture(event.pointerId)
+  } catch (e) {}
 }
 
 const handleDrag = (event) => {
   if (!isDragging.value) return
   
-  let newX = event.clientX - dragStartX
-  let newY = event.clientY - dragStartY
+  const clientX = event.clientX
+  const clientY = event.clientY
 
-  const padding = 20
-  newX = Math.max(padding, Math.min(window.innerWidth - widgetRef.value.offsetWidth - padding, newX))
-  newY = Math.max(padding, Math.min(window.innerHeight - widgetRef.value.offsetHeight - padding, newY))
+  if (rafId) cancelAnimationFrame(rafId)
 
-  if (Math.abs(newX - position.value.x) > 5 || Math.abs(newY - position.value.y) > 5) {
-    hasMovedSignificantDistance = true
-  }
+  rafId = requestAnimationFrame(() => {
+    let newX = clientX - dragStartX
+    let newY = clientY - dragStartY
 
-  position.value = { x: newX, y: newY }
+    const padding = 20
+    newX = Math.max(padding, Math.min(cachedWinW - cachedW - padding, newX))
+    newY = Math.max(padding, Math.min(cachedWinH - cachedH - padding, newY))
+
+    if (Math.abs(newX - position.value.x) > 4 || Math.abs(newY - position.value.y) > 4) {
+      hasMovedSignificantDistance = true
+    }
+
+    position.value = { x: newX, y: newY }
+  })
 }
 
 const stopDrag = (event) => {
   if (!isDragging.value) return
+  if (rafId) cancelAnimationFrame(rafId)
+
   isDragging.value = false
   useRawPosition.value = false
 
@@ -180,8 +196,8 @@ const stopDrag = (event) => {
     event.target.releasePointerCapture(event.pointerId)
   } catch (e) {}
 
-  const centerX = position.value.x + widgetRef.value.offsetWidth / 2
-  const centerY = position.value.y + widgetRef.value.offsetHeight / 2
+  const centerX = position.value.x + (cachedW || 120) / 2
+  const centerY = position.value.y + (cachedH || 120) / 2
   const screenW = window.innerWidth
   const screenH = window.innerHeight
 
@@ -210,8 +226,10 @@ onMounted(() => {
   preloadImages()
   document.addEventListener('click', handleClickOutside)
   selectedSong.value = 1
-  audioStore.init(songs[0].src)
-  audioStore.pause() 
+  if (songs[0].src) {
+    audioStore.init(songs[0].src)
+    audioStore.pause()
+  }
   requestAnimationFrame(() => { discsReady.value = true })
 })
 
