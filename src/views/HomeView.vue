@@ -38,6 +38,11 @@
     ></video>
 
 
+    <!-- FLOATING UNDERWATER AMBIENT BUBBLES -->
+    <div class="ambient-bubbles" aria-hidden="true">
+      <span v-for="n in 12" :key="n" class="bubble" :style="{ '--bi': n }"></span>
+    </div>
+
     <!-- SHOW ONLY AFTER LOOP VIDEO STARTS -->
     <div
       class="menu-container"
@@ -46,9 +51,9 @@
       <ul class="menu-list">
         <li
           v-for="(item, i) in menuItems"
-          :key="item"
+          :key="item.id"
           class="menu-item"
-          :style="{ '--delay': `${i * 90}ms` }"
+          :style="{ '--delay': `${i * 80}ms` }"
         >
           <button
             class="persona-btn"
@@ -64,21 +69,27 @@
             @pointerenter="setHover(i)"
             @pointerleave="clearHover"
           >
+            <!-- TARGET RETICLE POINTER -->
+            <span class="btn-arrow-reticle">▶</span>
+
+            <!-- NUMBER INDEX BADGE -->
+            <span class="btn-num-tag">{{ item.id }}</span>
+
+            <!-- VELOCITY SLASH BANNER -->
             <div class="btn-bg-slash"></div>
 
-            <span
-              class="text-layer shadow-text"
-              :data-text="item"
-            >
-              {{ item }}
-            </span>
+            <!-- TEXT LAYERS -->
+            <div class="btn-text-block">
+              <span class="text-layer shadow-text" :data-text="item.title">
+                {{ item.title }}
+              </span>
+              <span class="text-layer main-text" :data-text="item.title">
+                {{ item.title }}
+              </span>
+            </div>
 
-            <span
-              class="text-layer main-text"
-              :data-text="item"
-            >
-              {{ item }}
-            </span>
+            <!-- JAPANESE SUBTITLE -->
+            <span class="btn-jp-sub">{{ item.jp }}</span>
           </button>
         </li>
       </ul>
@@ -131,9 +142,12 @@ function updateIsMobile() {
 }
 
 const menuItems = [
-  'PROFILE','PROJECTS',
-  'EXPERIENCE','JOURNEY','SOCIAL LINK',
-  'RESUME'
+  { id: '01', title: 'PROFILE', jp: 'プロフィール' },
+  { id: '02', title: 'PROJECTS', jp: 'プロジェクト' },
+  { id: '03', title: 'EXPERIENCE', jp: '経歴' },
+  { id: '04', title: 'JOURNEY', jp: '軌跡' },
+  { id: '05', title: 'SOCIAL LINK', jp: 'コミュ' },
+  { id: '06', title: 'RESUME', jp: '履歴書' }
 ]
 
 const hoveredIndex = ref<number | null>(null)
@@ -309,25 +323,97 @@ onMounted(() => {
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 8px 35px;
+  padding: 8px 30px 8px 24px;
   font-family: 'Impact', 'Arial Black', sans-serif;
-  font-size: 4.2rem; /* Enhanced visibility threshold */
+  font-size: 3.8rem;
   font-style: italic;
   font-weight: 900;
-  letter-spacing: -1px; /* Tighter typography grouping */
+  letter-spacing: -1px;
   text-transform: uppercase;
   outline: none;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  justify-content: flex-start;
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
   white-space: nowrap;
   will-change: transform;
   backface-visibility: hidden;
+  gap: 12px;
 }
 
 .persona-btn:hover {
-  transform: scale(1.04) translate(-4px, -2px);
+  transform: scale(1.04) translate(-6px, -2px);
+}
+
+/* --- TARGET RETICLE POINTER --- */
+.btn-arrow-reticle {
+  color: #00d2ff;
+  font-size: 1.8rem;
+  opacity: 0;
+  transform: translateX(-15px);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  text-shadow: 0 0 10px #00d2ff, 0 0 20px #00d2ff;
+  z-index: 10;
+}
+
+.persona-btn:hover .btn-arrow-reticle,
+.persona-btn.is-active .btn-arrow-reticle {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* --- NUMBER INDEX BADGE --- */
+.btn-num-tag {
+  font-family: monospace;
+  font-size: 1.15rem;
+  font-weight: 900;
+  font-style: normal;
+  letter-spacing: 1px;
+  color: #00d2ff;
+  background: rgba(4, 8, 20, 0.85);
+  border: 1px solid rgba(0, 210, 255, 0.5);
+  padding: 3px 8px;
+  transform: skewX(-10deg);
+  box-shadow: -2px 2px 0px #040814;
+  transition: all 0.2s ease;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.persona-btn:hover .btn-num-tag,
+.persona-btn.is-active .btn-num-tag {
+  background: #00d2ff;
+  color: #040814;
+  border-color: #ffffff;
+  box-shadow: -3px 3px 0px #040814;
+}
+
+/* --- TEXT BLOCK --- */
+.btn-text-block {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* --- JAPANESE SUBTITLE --- */
+.btn-jp-sub {
+  font-family: 'Hiragino Kaku Gothic Pro', 'Yu Gothic', sans-serif;
+  font-size: 1.15rem;
+  font-style: italic;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: rgba(0, 210, 255, 0.6);
+  transform: skewX(-8deg);
+  transition: all 0.2s ease;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.persona-btn:hover .btn-jp-sub,
+.persona-btn.is-active .btn-jp-sub {
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(0, 210, 255, 0.9), 2px 2px 0px #040814;
 }
 
 /* --- JAGGED VELOCITY HOVER BANNER COLOR BLOCK --- */
@@ -337,9 +423,9 @@ onMounted(() => {
   left: 0;
   width: 100%;
   height: 100%;
-  background: #ff0055; /* Swapped to the pure P3R primary magenta */
+  background: #ff0055; /* Pure P3R primary magenta */
   z-index: 1;
-  clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
+  clip-path: polygon(6% 0%, 100% 0%, 94% 100%, 0% 100%);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
@@ -347,6 +433,11 @@ onMounted(() => {
   pointer-events: none;
   will-change: transform;
   backface-visibility: hidden;
+}
+
+.persona-btn:hover .btn-bg-slash,
+.persona-btn.is-active .btn-bg-slash {
+  transform: scaleX(1);
 }
 
 /* --- TYPOGRAPHY INTERFACE LAYERS --- */
@@ -378,21 +469,47 @@ onMounted(() => {
 }
 
 /* --- INTERACTIVE ACTION STATES --- */
-
-.persona-btn.is-active .btn-bg-slash {
-  transform: scaleX(1);
-}
-
-/* Shift Text Layer to High Contrast Pure White */
+.persona-btn:hover .text-layer.main-text,
 .persona-btn.is-active .text-layer.main-text {
   color: #ffffff;
   transform: skewX(-14deg) translate(-6px, -4px);
   text-shadow: 2px 2px 0px #040814;
 }
 
+.persona-btn:hover .text-layer.shadow-text,
 .persona-btn.is-active .text-layer.shadow-text {
   color: #000000;
   transform: skewX(-14deg) translate(3px, 2px);
+}
+
+/* ================= AMBIENT FLOATING BUBBLES ================= */
+.ambient-bubbles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.bubble {
+  position: absolute;
+  bottom: -40px;
+  left: calc(var(--bi) * 8.3%);
+  width: calc(6px + (var(--bi) * 2px));
+  height: calc(6px + (var(--bi) * 2px));
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8) 0%, rgba(0, 210, 255, 0.2) 60%, transparent 100%);
+  border: 1px solid rgba(0, 210, 255, 0.4);
+  border-radius: 50%;
+  animation: floatBubble calc(6s + var(--bi) * 0.8s) infinite linear;
+  animation-delay: calc(var(--bi) * 0.5s);
+  filter: drop-shadow(0 0 6px rgba(0, 210, 255, 0.4));
+}
+
+@keyframes floatBubble {
+  0% { transform: translateY(0) translateX(0); opacity: 0; }
+  10% { opacity: 0.8; }
+  90% { opacity: 0.6; }
+  100% { transform: translateY(-110vh) translateX(calc((var(--bi) % 2 == 0 ? 30px : -30px))); opacity: 0; }
 }
 
 /* ================= ADAPTIVE LAYOUT MATRIX ================= */
