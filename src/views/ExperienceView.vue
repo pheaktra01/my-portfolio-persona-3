@@ -45,7 +45,7 @@
           :key="e.title"
           class="p3r-shard-card"
           @pointerenter="onCardHover"
-          @click="() => onCardClick(e)"s
+          @click="() => onCardClick(e)"
           :style="{ '--i': i }"
         >
           <div class="shard-date-badge">
@@ -74,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import BackBtn from '../components/BackBtn.vue'
 import IntroSlash from '../components/IntroSlash.vue'
 import { videos } from '../config/videos'
@@ -82,8 +82,6 @@ import { useVideoManager } from "../composables/useVideoManager.ts"
 import { playSwitchToggle, playClick } from '../utils/sound.ts'
 
 const { setVideo, clearVideo, currentVideo } = useVideoManager()
-
-import { ref } from 'vue'
 
 const videoLoaded = ref(false)
 
@@ -97,7 +95,10 @@ function onCardClick(item: any) {
 }
 
 onMounted(() => {
-  setVideo(videos.skill)
+  const isMobile = window.innerWidth <= 868
+  if (!isMobile) {
+    setVideo(videos.skill)
+  }
 })
 
 onBeforeUnmount(() => {
@@ -304,6 +305,8 @@ const experience = [
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   pointer-events: auto !important;
+  will-change: scroll-position;
+  transform: translate3d(0, 0, 0) skewX(-2deg);
 
   z-index: 2;
   box-sizing: border-box;
@@ -323,8 +326,8 @@ const experience = [
 }
 
 @keyframes p3rPanelFlyIn {
-  from { opacity: 0; transform: translateX(-120px) skewX(-2deg); }
-  to { opacity: 1; transform: translateX(0) skewX(-2deg); }
+  from { opacity: 0; transform: translate3d(-120px, 0, 0) skewX(-2deg); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) skewX(-2deg); }
 }
 
 /* HEADER CONFIG */
